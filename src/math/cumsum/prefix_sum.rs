@@ -1,5 +1,6 @@
 use num::Num;
 
+/// TODO: Document this
 pub struct PrefixSum<T>
 where
     T: Num + Clone,

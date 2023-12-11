@@ -48,13 +48,13 @@ This is my library of useful tools for Advent of Code.
 
 ### Math
 
-- TODO: Greatest Common Divisor
-- TODO: Least Common Multiple
+- Greatest Common Divisor
+- Least Common Multiple
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
 - TODO: Disjoint-Set datastructure
 - Prefix sum
-- TODO: Summed Area Table
+- Summed Area Table
 - TODO: Ranges (Union, Intersection, One-sided intersection)
 
 #### Graphs
