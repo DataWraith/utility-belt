@@ -3,6 +3,8 @@ use std::hash::Hash;
 
 use ahash::AHashSet as HashSet;
 
+// TODO: Make a struct for the return type.
+// TODO: We may want to return the actual path...
 pub fn breadth_first_search<T: Hash + Eq + Clone>(
     start: T,
     is_goal: impl Fn(&T) -> bool,

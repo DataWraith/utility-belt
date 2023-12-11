@@ -14,7 +14,9 @@ use radix_heap::RadixHeapMap;
 /// * `Option<(T, usize)>` - The goal node and the cumulative cost of the path
 /// * `HashSet<T>` - The set of visited nodes
 ///
+// TODO: Make a struct for the return type
 // TODO: Currently costs are usize, but they should be generic
+// TODO: Return the actual path... 
 pub fn uniform_cost_search<T: Hash + Eq + Clone>(
     start: T,
     is_goal: impl Fn(&T) -> bool,
