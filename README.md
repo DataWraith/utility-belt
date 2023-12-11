@@ -31,6 +31,7 @@ This is my library of useful tools for Advent of Code.
 - TODO: Anytime Beam Search
 - TODO: Nested Search, maybe Nested Rollout Policy Adaptation
 - TODO: Nested Monte Carlo Search (low priority)
+- TODO: Cycle finding (Brent's algorithm)
 
 #### Pathfinding
 
