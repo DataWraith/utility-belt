@@ -26,15 +26,15 @@ This is my library of useful tools for Advent of Code.
 
 ### Search
 
-- TODO: Binary search
-- TODO: Exponential Search
+- Binary search
+- Exponential Search
 - TODO: Anytime Beam Search
 - TODO: Nested Search, maybe Nested Rollout Policy Adaptation
 - TODO: Nested Monte Carlo Search (low priority)
 
 #### Pathfinding
 
-- TODO: Breadth-First Search
+- Breadth-First Search
 - TODO: Depth-First Search
 - TODO: Uniform Cost Search (use a Radix heap)
 - TODO: Seidel's Algorithm

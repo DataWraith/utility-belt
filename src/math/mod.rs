@@ -5,7 +5,7 @@ pub mod cumsum;
 /// Greatest Common Divisor.
 ///
 /// Remember that you can fold this along a Vec as well.
-fn gcd<T: Num + Copy>(a: T, b: T) -> T {
+pub fn gcd<T: Num + Copy>(a: T, b: T) -> T {
     let mut a = a;
     let mut b = b;
 
@@ -21,7 +21,7 @@ fn gcd<T: Num + Copy>(a: T, b: T) -> T {
 /// Least Common Multiple.
 ///
 /// Remember that you can fold this along a Vec as well.
-fn lcm<T: Num + Copy>(a: T, b: T) -> T {
+pub fn lcm<T: Num + Copy>(a: T, b: T) -> T {
     a * b / gcd(a, b)
 }
 
