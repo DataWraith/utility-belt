@@ -53,7 +53,7 @@ This is my library of useful tools for Advent of Code.
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
 - TODO: Disjoint-Set datastructure
-- TODO: Prefix sum
+- Prefix sum
 - TODO: Summed Area Table
 - TODO: Ranges (Union, Intersection, One-sided intersection)
 
