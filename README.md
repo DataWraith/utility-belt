@@ -52,7 +52,7 @@ This is my library of useful tools for Advent of Code.
 - Least Common Multiple
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
-- TODO: Disjoint-Set datastructure
+- Disjoint-Set datastructure
 - Prefix sum
 - Summed Area Table
 - TODO: Ranges (Union, Intersection, One-sided intersection)
