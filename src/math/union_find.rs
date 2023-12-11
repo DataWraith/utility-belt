@@ -2,6 +2,16 @@ use std::hash::Hash;
 
 use ahash::AHashMap as HashMap;
 
+/// Union-find data structure, also known as a disjoint-set data structure.
+///
+/// This data structure allows you to keep track of disjoint sets of elements,
+/// and efficiently determine if two elements are in the same set, and to
+/// efficiently merge two sets.
+///
+/// This is useful, for example, if you want to find connected components of a
+/// graph.
+///
+/// See [Wikipedia](https://en.wikipedia.org/wiki/Disjoint-set_data_structure) for more information.
 #[derive(Default)]
 pub struct UnionFind<T: Hash + Eq> {
     indices: HashMap<T, usize>,
@@ -42,7 +52,7 @@ impl<T: Hash + Eq> UnionFind<T> {
         let y_root = self.find(y);
 
         if x_root.is_none() || y_root.is_none() {
-            // TODO: Make an error enum or something
+            // TODO: Make an error enum or something. Miette maybe?
             panic!("Cannot union elements that are not in the set");
         }
 
@@ -73,12 +83,12 @@ mod tests {
     fn union_find_test() {
         let mut uf = UnionFind::default();
 
-        let a = uf.make_set('a');
-        let b = uf.make_set('b');
-        let c = uf.make_set('c');
-        let d = uf.make_set('d');
-        let e = uf.make_set('e');
-        let f = uf.make_set('f');
+        let _a = uf.make_set('a');
+        let _b = uf.make_set('b');
+        let _c = uf.make_set('c');
+        let _d = uf.make_set('d');
+        let _e = uf.make_set('e');
+        let _f = uf.make_set('f');
 
         uf.union('a', 'b');
         uf.union('b', 'c');
