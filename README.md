@@ -36,15 +36,15 @@ This is my library of useful tools for Advent of Code.
 
 - Breadth-First Search
 - TODO: Depth-First Search
-- TODO: Uniform Cost Search (use a Radix heap)
+- Uniform Cost Search (use a Radix heap)
 - TODO: Seidel's Algorithm
 - TODO: Anytime Focal Search (use a Radix heap)
 
 ### Parsing
 
 - Nom parsers that are frequently useful
-  - TODO: `parse_usize`
-  - TODO: `parse_isize`
+  - `parse_usize`
+  - `parse_isize`
 
 ### Math
 

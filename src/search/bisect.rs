@@ -1,4 +1,6 @@
-/// A binary search implementation
+/// Binary search
+///
+/// TODO: Document this
 pub fn bisect(mut lo: usize, mut hi: usize, mut pred: impl FnMut(usize) -> bool) -> usize {
     let mut mid = (lo + hi) / 2;
 
@@ -29,5 +31,6 @@ mod tests {
         assert_eq!(bisect(0, v.len(), |i| v[i] >= 4), 3);
         assert_eq!(bisect(0, v.len(), |i| v[i] >= 5), 4);
         assert_eq!(bisect(0, v.len(), |i| v[i] >= 6), 5);
+        assert_eq!(bisect(0, v.len(), |i| v[i] >= 7), 5);
     }
 }

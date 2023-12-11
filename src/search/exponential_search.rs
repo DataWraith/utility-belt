@@ -1,8 +1,8 @@
 /// An exponential search.
 ///
-/// It starts at `lo` and doubles the search range until `hi` is reached or
-/// `pred` returns `true`. Then it performs a binary search on the range `[lo,
-/// hi)`.
+/// It starts at `lo` and a step size of one. The step size doubles each step
+/// until `hi` is reached or `pred` returns `true`. Then it performs a binary
+/// search on the range `[lo, hi)`.
 pub fn exponential_search(
     mut lo: usize,
     hi: usize,
@@ -19,9 +19,7 @@ pub fn exponential_search(
         return None;
     }
 
-    let mid = super::bisect::bisect(lo, hi, pred);
-
-    Some(mid)
+    Some(super::bisect::bisect(lo, hi, pred))
 }
 
 #[cfg(test)]
