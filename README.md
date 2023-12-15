@@ -6,18 +6,20 @@ This is my library of useful tools for Advent of Code.
 
 (These are all marked with TODO so my TodoTree extension picks them up)
 
-### Libraries to pull into a prelude
+### Utility-belt prelude re-exports
 
-- TODO: glam
-- TODO: pathfinding (maybe)
-- TODO: ndarray
-- TODO: nom, nom_locate, nom_supreme (maybe)
-- TODO: itertools
+- [x] ahash
+- [x]: glam
+- [x]: pathfinding
+- [x]: ndarray
+- [x]: nom, nom_locate
+- [x]: itertools
 - TODO: petgraph (maybe)
-- TODO: rayon
-- TODO: rstest (probably)
-- TODO: A memoization lib (cached?)
-- TODO: prehash (maybe)
+- [x]: rayon
+- [x]: rstest (probably)
+- TODO: A memoization lib
+- [x] TinyVec
+- [x] itertools
 
 ### Grids
 
