@@ -1,9 +1,13 @@
-use std::ops::{Index, IndexMut};
+use std::{
+    fmt::{Debug, Display},
+    ops::{Index, IndexMut},
+};
 
 use ndarray::Array2;
 
 use super::{Coordinate, Direction};
 
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Grid2D<T>
 where
     T: Clone,
@@ -108,6 +112,12 @@ impl<T: Clone> Grid2D<T> {
         self.data[(coord.y() as usize, coord.x() as usize)] = value;
     }
 
+    pub fn indexed_iter(&self) -> impl Iterator<Item = (Coordinate, &T)> + '_ {
+        self.data
+            .indexed_iter()
+            .map(|((y, x), value)| (Coordinate::new(x as i32, y as i32), value))
+    }
+
     pub fn row_iter(&self) -> impl Iterator<Item = T> + '_ {
         RowIter {
             grid: self,
@@ -120,6 +130,42 @@ impl<T: Clone> Grid2D<T> {
             grid: self,
             cur: Coordinate::new(0, 0),
         }
+    }
+
+    pub fn concat_x(&self, other: &Self) -> Self {
+        let mut result = Grid2D::new(
+            self.width() + other.width(),
+            self.height(),
+            self.data[[0, 0]].clone(),
+        );
+
+        for (coord, value) in self.indexed_iter() {
+            result.set(coord, value.clone());
+        }
+
+        for (coord, value) in other.indexed_iter() {
+            result.set(coord + Coordinate::new(self.width(), 0), value.clone());
+        }
+
+        result
+    }
+
+    pub fn concat_y(&self, other: &Self) -> Self {
+        let mut result = Grid2D::new(
+            self.width(),
+            self.height() + other.height(),
+            self.data[[0, 0]].clone(),
+        );
+
+        for (coord, value) in self.indexed_iter() {
+            result.set(coord, value.clone());
+        }
+
+        for (coord, value) in other.indexed_iter() {
+            result.set(coord + Coordinate::new(0, self.height()), value.clone());
+        }
+
+        result
     }
 }
 
@@ -155,6 +201,34 @@ impl<T: Clone> From<Vec<Vec<T>>> for Grid2D<T> {
             height: height as i32,
             data,
         }
+    }
+}
+
+impl<T: Display + Clone> Display for Grid2D<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                write!(f, "{}", self.get(Coordinate::new(x, y)).unwrap())?;
+            }
+
+            writeln!(f)?;
+        }
+
+        Ok(())
+    }
+}
+
+impl<T: Debug + Clone> Debug for Grid2D<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        for y in 0..self.height {
+            for x in 0..self.width {
+                write!(f, "[{:?}]", self.get(Coordinate::new(x, y)).unwrap())?;
+            }
+
+            writeln!(f)?;
+        }
+
+        Ok(())
     }
 }
 
@@ -316,6 +390,24 @@ mod tests {
     }
 
     #[test]
+    fn test_indexed_iter() {
+        let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+        let mut iter = grid.indexed_iter();
+
+        assert_eq!(iter.next(), Some((Coordinate::new(0, 0), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(1, 0), &2)));
+        assert_eq!(iter.next(), Some((Coordinate::new(2, 0), &3)));
+        assert_eq!(iter.next(), Some((Coordinate::new(0, 1), &4)));
+        assert_eq!(iter.next(), Some((Coordinate::new(1, 1), &5)));
+        assert_eq!(iter.next(), Some((Coordinate::new(2, 1), &6)));
+        assert_eq!(iter.next(), Some((Coordinate::new(0, 2), &7)));
+        assert_eq!(iter.next(), Some((Coordinate::new(1, 2), &8)));
+        assert_eq!(iter.next(), Some((Coordinate::new(2, 2), &9)));
+        assert_eq!(iter.next(), None);
+    }
+
+    #[test]
     fn test_row_iter() {
         let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
@@ -349,5 +441,33 @@ mod tests {
         assert_eq!(iter.next(), Some(6));
         assert_eq!(iter.next(), Some(9));
         assert_eq!(iter.next(), None);
+    }
+
+    #[test]
+    fn test_display() {
+        let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+        assert_eq!(
+            format!("{}", grid),
+            indoc! {"
+                123
+                456
+                789
+            "}
+        );
+    }
+
+    #[test]
+    fn test_debug() {
+        let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+
+        assert_eq!(
+            format!("{:?}", grid),
+            indoc! {"
+                [1][2][3]
+                [4][5][6]
+                [7][8][9]
+            "}
+        );
     }
 }
