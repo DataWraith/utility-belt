@@ -19,7 +19,7 @@ In your Advent of Code projects, simply `use utility_belt::prelude::*;`.
 
 ### Re-exports
 
-Most of the heavy-lifting is done by other libraries this crate re-exports:
+Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - [ahash](https://docs.rs/ahash) - fast HashMap and HashSet implementation, hashing of single values
 - [glam](https://docs.rs/glam) - convenient 2D vector types
@@ -76,9 +76,9 @@ have yet to add.
 
 - Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
-  - TODO Auto-generate a palette when saving to PNG (Martin Ankerl method via fibonacci hashing)
+  - TODO [Auto-generate a palette](https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/) when saving to PNG
   - TODO "Zoom in" by duplicating tiles
-  - TODO "Zoom in" with provided templates (to replace certain tiles)
+  - TODO "Zoom in" with provided templates (to replace certain tiles with zoomed in variants)
 
 ### Search for combinatorial optimization
 
@@ -100,8 +100,8 @@ have yet to add.
 
 ### Trees
 
-- TODO: Maybe: Fenwick Tree
-- TODO: SumTree / OrderStatistic Tree
+- TODO: Fenwick Tree (maybe)
+- TODO: SumTree / OrderStatisticTree
 
 ### Graphics
 
