@@ -1,7 +1,11 @@
 use ndarray::Array2;
 use num::Num;
 
-/// TODO: Document this
+/// A SummedAreaTable is the 2D-equivalent of a PrefixSum.
+///
+/// It allows you to query the sum of the values inside of a rectangular region
+/// in O(1) time.
+///
 pub struct SummedAreaTable<T>
 where
     T: Num + Clone,
