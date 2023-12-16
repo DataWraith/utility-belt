@@ -6,7 +6,7 @@ impl<T: Clone> Grid2D<T> {
         let mut new = self.clone();
         for (coord, value) in self.indexed_iter() {
             new.set(
-                Coordinate::new(self.height() - 1 - coord.y(), coord.x()),
+                Coordinate::new(self.height() as i32 - 1 - coord.y(), coord.x()),
                 value.clone(),
             )
         }
@@ -20,7 +20,7 @@ impl<T: Clone> Grid2D<T> {
 
         for (coord, value) in self.indexed_iter() {
             new.set(
-                Coordinate::new(coord.y(), self.width() - 1 - coord.x()),
+                Coordinate::new(coord.y(), self.width() as i32 - 1 - coord.x()),
                 value.clone(),
             );
         }
@@ -34,7 +34,10 @@ impl<T: Clone> Grid2D<T> {
 
         for (coord, value) in self.indexed_iter() {
             new.set(
-                Coordinate::new(self.width() - 1 - coord.x(), self.height() - 1 - coord.y()),
+                Coordinate::new(
+                    self.width() as i32 - 1 - coord.x(),
+                    self.height() as i32 - 1 - coord.y(),
+                ),
                 value.clone(),
             );
         }

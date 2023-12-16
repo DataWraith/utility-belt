@@ -88,13 +88,13 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns the width of the grid.
-    pub fn width(&self) -> i32 {
-        self.width
+    pub fn width(&self) -> usize {
+        self.width as usize
     }
 
     /// Returns the height of the grid
-    pub fn height(&self) -> i32 {
-        self.height
+    pub fn height(&self) -> usize {
+        self.height as usize
     }
 
     /// Returns the value at the given coordinate. Out-of-bounds accesses return
@@ -180,7 +180,10 @@ impl<T: Clone> Grid2D<T> {
         }
 
         for (coord, value) in other.indexed_iter() {
-            result.set(coord + Coordinate::new(self.width(), 0), value.clone());
+            result.set(
+                coord + Coordinate::new(self.width() as i32, 0),
+                value.clone(),
+            );
         }
 
         result
@@ -198,7 +201,10 @@ impl<T: Clone> Grid2D<T> {
         }
 
         for (coord, value) in other.indexed_iter() {
-            result.set(coord + Coordinate::new(0, self.height()), value.clone());
+            result.set(
+                coord + Coordinate::new(0, self.height() as i32),
+                value.clone(),
+            );
         }
 
         result

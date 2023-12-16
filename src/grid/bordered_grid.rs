@@ -29,22 +29,24 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         }
     }
 
-    pub fn width(&self) -> i32 {
-        self.grid.width() + self.border_size * 2
+    pub fn width(&self) -> usize {
+        self.grid.width() + self.border_size as usize * 2
     }
 
-    pub fn height(&self) -> i32 {
-        self.grid.height() + self.border_size * 2
+    pub fn height(&self) -> usize {
+        self.grid.height() + self.border_size as usize * 2
     }
 
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
         let x = coord.x();
         let y = coord.y();
+        let w = self.grid.width() as i32;
+        let h = self.grid.height() as i32;
 
         if x < -self.border_size
-            || x >= self.grid.width() + self.border_size
+            || x >= w + self.border_size
             || y < -self.border_size
-            || y >= self.grid.height() + self.border_size
+            || y >= h + self.border_size
         {
             return None;
         }
@@ -55,9 +57,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         }
 
         // Bottom/Right border
-        if x >= self.grid.width() && x < self.grid.width() + self.border_size
-            || y >= self.grid.height() && y < self.grid.height() + self.border_size
-        {
+        if x >= w && x < w + self.border_size || y >= h && y < h + self.border_size {
             return Some(&self.default);
         }
 
@@ -75,6 +75,9 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     pub fn indexed_iter(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         (0..self.height()).flat_map(move |y| {
             (0..self.width()).map(move |x| {
+                let x = x as i32;
+                let y = y as i32;
+
                 let c = Coordinate::new(x, y);
                 let c2 = Coordinate::new(x - self.border_size, y - self.border_size);
                 (c, self.get(c2).unwrap())
@@ -85,7 +88,10 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     pub fn row_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.height()).flat_map(move |y| {
             (0..self.width()).map(move |x| {
+                let x = x as i32;
+                let y = y as i32;
                 let c = Coordinate::new(x - self.border_size, y - self.border_size);
+
                 self.get(c).unwrap()
             })
         })
@@ -94,7 +100,10 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     pub fn col_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.width()).flat_map(move |x| {
             (0..self.height()).map(move |y| {
+                let x = x as i32;
+                let y = y as i32;
                 let c = Coordinate::new(x - self.border_size, y - self.border_size);
+
                 self.get(c).unwrap()
             })
         })

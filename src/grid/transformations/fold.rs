@@ -10,13 +10,13 @@ impl<T: Clone> Grid2D<T> {
     }
 
     // TODO: Figure out a better name for this
-    pub fn unfold_at_x(&self, column: i32) -> Self {
+    pub fn unfold_at_x(&self, column: usize) -> Self {
         let mut result = Grid2D::new(column * 2 + 1, self.height(), self.data[[0, 0]].clone());
 
         for x in 0..=column {
             for y in 0..self.height() {
-                let c = Coordinate::new(x, y);
-                let mirror = Coordinate::new(column * 2 - x, y);
+                let c = Coordinate::new(x as i32, y as i32);
+                let mirror = Coordinate::new(column as i32 * 2 - x as i32, y as i32);
                 result.set(c, self[c].clone());
                 result.set(mirror, self[c].clone());
             }
@@ -30,13 +30,17 @@ impl<T: Clone> Grid2D<T> {
     }
 
     // TODO: Figure out a better name for this
-    pub fn unfold_at_y(&self, row: i32) -> Self {
+    pub fn unfold_at_y(&self, row: usize) -> Self {
         let mut result = Grid2D::new(self.width(), row * 2 + 1, self.data[[0, 0]].clone());
 
         for x in 0..self.width() {
             for y in 0..=row {
+                let x = x as i32;
+                let y = y as i32;
+
                 let c = Coordinate::new(x, y);
-                let mirror = Coordinate::new(x, row * 2 - y);
+                let mirror = Coordinate::new(x, row as i32 * 2 - y);
+
                 result.set(c, self[c].clone());
                 result.set(mirror, self[c].clone());
             }
