@@ -116,7 +116,7 @@ impl<T: Clone> Grid2D<T> {
         self.data.get((y as usize, x as usize)).unwrap()
     }
 
-    // TODO: Document
+    // TODO: Document below methods
     pub fn get_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
         if coord.x() < 0 || coord.y() < 0 {
             return None;

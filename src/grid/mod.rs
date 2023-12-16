@@ -2,6 +2,7 @@ mod bordered_grid;
 mod coordinate;
 mod direction;
 mod grid2d;
+mod save_to_image;
 mod transformations;
 
 pub use bordered_grid::*;
