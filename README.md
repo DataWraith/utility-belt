@@ -9,15 +9,15 @@ This is my library of useful tools for Advent of Code.
 ### Utility-belt prelude re-exports
 
 - [x] ahash
-- [x]: glam
-- [x]: pathfinding
-- [x]: ndarray
-- [x]: nom, nom_locate
-- [x]: itertools
-- [x]: petgraph 
-- [x]: rayon
-- [x]: rstest (probably)
-- TODO: A memoization lib
+- [x] glam
+- [x] pathfinding
+- [x] ndarray
+- [x] nom, nom_locate
+- [x] itertools
+- [x] petgraph
+- [x] rayon
+- [x] rstest (probably)
+- TODO A memoization lib
 - [x] TinyVec
 - [x] itertools
 - [x] indoc
@@ -31,8 +31,8 @@ This is my library of useful tools for Advent of Code.
   - TODO: Ability to save as PNG, possibly with auto-generated palette
   - TODO: "Zoom in" by duplicating tiles
   - TODO: "Zoom in" with provided templates (to replace certain tiles)
-- TODO: A Wrapping Grid2D class (for toroidal problems)
-- TODO: A Bordered Grid that implicitly includes a border around the input
+- [x]: A way to access a grid as if it was a torus
+- [x]: A Bordered Grid that implicitly includes a border around the input
 - [x] Direction enum (NESW)
 - [x]: DirectionSet (u8)
 - [x]: Moore Neighborhood
@@ -57,8 +57,8 @@ This is my library of useful tools for Advent of Code.
 ### Parsing
 
 - Nom parsers that are frequently useful
-  - `parse_usize`
-  - `parse_isize`
+  - [x] `parse_usize`
+  - [x] `parse_isize`
 
 ### Math
 
