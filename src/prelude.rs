@@ -27,6 +27,9 @@ pub use nom_locate::LocatedSpan;
 // pathfinding
 pub use pathfinding::prelude::*;
 
+// petgraph
+pub use petgraph::prelude::*;
+
 // rayon
 pub use rayon::prelude::*;
 

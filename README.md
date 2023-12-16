@@ -14,7 +14,7 @@ This is my library of useful tools for Advent of Code.
 - [x]: ndarray
 - [x]: nom, nom_locate
 - [x]: itertools
-- TODO: petgraph (maybe)
+- [x]: petgraph 
 - [x]: rayon
 - [x]: rstest (probably)
 - TODO: A memoization lib
