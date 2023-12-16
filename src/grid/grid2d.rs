@@ -118,18 +118,22 @@ impl<T: Clone> Grid2D<T> {
             .map(|((y, x), value)| (Coordinate::new(x as i32, y as i32), value))
     }
 
-    pub fn row_iter(&self) -> impl Iterator<Item = T> + '_ {
-        RowIter {
-            grid: self,
-            cur: Coordinate::new(0, 0),
-        }
+    pub fn row_iter(&self) -> impl Iterator<Item = &T> {
+        (0..self.height).flat_map(move |y| {
+            (0..self.width).map(move |x| {
+                let c = Coordinate::new(x, y);
+                self.get(c).unwrap()
+            })
+        })
     }
 
-    pub fn col_iter(&self) -> impl Iterator<Item = T> + '_ {
-        ColIter {
-            grid: self,
-            cur: Coordinate::new(0, 0),
-        }
+    pub fn col_iter(&self) -> impl Iterator<Item = &T> {
+        (0..self.width).flat_map(move |x| {
+            (0..self.height).map(move |y| {
+                let c = Coordinate::new(x, y);
+                self.get(c).unwrap()
+            })
+        })
     }
 
     pub fn concat_x(&self, other: &Self) -> Self {
@@ -229,54 +233,6 @@ impl<T: Debug + Clone> Debug for Grid2D<T> {
         }
 
         Ok(())
-    }
-}
-
-pub struct RowIter<'a, T>
-where
-    T: Clone,
-{
-    grid: &'a Grid2D<T>,
-    cur: Coordinate,
-}
-
-impl<T: Clone> Iterator for RowIter<'_, T> {
-    type Item = T;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let result = self.grid.get(self.cur)?;
-
-        self.cur += Direction::Right.into();
-
-        if self.cur.x() >= self.grid.width {
-            self.cur = Coordinate::new(0, self.cur.y() + 1);
-        }
-
-        Some(result.clone())
-    }
-}
-
-pub struct ColIter<'a, T>
-where
-    T: Clone,
-{
-    grid: &'a Grid2D<T>,
-    cur: Coordinate,
-}
-
-impl<T: Clone> Iterator for ColIter<'_, T> {
-    type Item = T;
-
-    fn next(&mut self) -> Option<Self::Item> {
-        let result = self.grid.get(self.cur)?;
-
-        self.cur += Direction::Down.into();
-
-        if self.cur.y() >= self.grid.height {
-            self.cur = Coordinate::new(self.cur.x() + 1, 0);
-        }
-
-        Some(result.clone())
     }
 }
 
@@ -413,15 +369,15 @@ mod tests {
 
         let mut iter = grid.row_iter();
 
-        assert_eq!(iter.next(), Some(1));
-        assert_eq!(iter.next(), Some(2));
-        assert_eq!(iter.next(), Some(3));
-        assert_eq!(iter.next(), Some(4));
-        assert_eq!(iter.next(), Some(5));
-        assert_eq!(iter.next(), Some(6));
-        assert_eq!(iter.next(), Some(7));
-        assert_eq!(iter.next(), Some(8));
-        assert_eq!(iter.next(), Some(9));
+        assert_eq!(iter.next(), Some(&1));
+        assert_eq!(iter.next(), Some(&2));
+        assert_eq!(iter.next(), Some(&3));
+        assert_eq!(iter.next(), Some(&4));
+        assert_eq!(iter.next(), Some(&5));
+        assert_eq!(iter.next(), Some(&6));
+        assert_eq!(iter.next(), Some(&7));
+        assert_eq!(iter.next(), Some(&8));
+        assert_eq!(iter.next(), Some(&9));
         assert_eq!(iter.next(), None);
     }
 
@@ -431,15 +387,15 @@ mod tests {
 
         let mut iter = grid.col_iter();
 
-        assert_eq!(iter.next(), Some(1));
-        assert_eq!(iter.next(), Some(4));
-        assert_eq!(iter.next(), Some(7));
-        assert_eq!(iter.next(), Some(2));
-        assert_eq!(iter.next(), Some(5));
-        assert_eq!(iter.next(), Some(8));
-        assert_eq!(iter.next(), Some(3));
-        assert_eq!(iter.next(), Some(6));
-        assert_eq!(iter.next(), Some(9));
+        assert_eq!(iter.next(), Some(&1));
+        assert_eq!(iter.next(), Some(&4));
+        assert_eq!(iter.next(), Some(&7));
+        assert_eq!(iter.next(), Some(&2));
+        assert_eq!(iter.next(), Some(&5));
+        assert_eq!(iter.next(), Some(&8));
+        assert_eq!(iter.next(), Some(&3));
+        assert_eq!(iter.next(), Some(&6));
+        assert_eq!(iter.next(), Some(&9));
         assert_eq!(iter.next(), None);
     }
 
