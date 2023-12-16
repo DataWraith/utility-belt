@@ -1,4 +1,4 @@
-/// An exponential search.
+/// Exponential search
 ///
 /// It starts at `lo` and a step size of one. The step size doubles each step
 /// until `hi` is reached or `pred` returns `true`. Then it performs a binary

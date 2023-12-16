@@ -1,6 +1,7 @@
 /// Binary search
 ///
-/// TODO: Document this
+/// Finds the first index `i` in the range `[lo, hi)` such that `pred(i)` is `true`.
+///
 pub fn bisect(mut lo: usize, mut hi: usize, mut pred: impl FnMut(usize) -> bool) -> usize {
     let mut mid = (lo + hi) / 2;
 
