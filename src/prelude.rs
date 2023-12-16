@@ -7,6 +7,9 @@ pub use ahash::AHashSet as HashSet;
 pub use glam::I64Vec2;
 pub use glam::IVec2;
 
+// indoc
+pub use indoc::indoc;
+
 // itertools
 pub use itertools::*;
 

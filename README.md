@@ -20,6 +20,7 @@ This is my library of useful tools for Advent of Code.
 - TODO: A memoization lib
 - [x] TinyVec
 - [x] itertools
+- [x] indoc
 
 ### Grids
 
