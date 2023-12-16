@@ -1,4 +1,4 @@
-use std::ops::{Deref, DerefMut};
+
 
 use super::{Coordinate, Grid2D};
 
@@ -43,8 +43,8 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         }
 
         // Bottom/Right border
-        if x >= self.grid.width() as i32 && x < self.grid.width() as i32 + self.border_size
-            || y >= self.grid.height() as i32 && y < self.grid.height() as i32 + self.border_size
+        if x >= self.grid.width() && x < self.grid.width() + self.border_size
+            || y >= self.grid.height() && y < self.grid.height() + self.border_size
         {
             return Some(&self.default);
         }
