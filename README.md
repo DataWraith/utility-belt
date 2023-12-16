@@ -103,3 +103,36 @@ have yet to add.
 ### Graphics
 
 - TODO: Digital Differential Analyzer
+
+### Misc
+
+- TODO: State-iteration helper
+
+  The idea is to have a HashMap containing the current states. Then a transition
+  function is applied to each state, and the resulting state(s) are collected in
+  a new HashMap. The HashMap keeps track of how often a given state has
+  occurred. This can be used to, for example, count how often a state is visited
+  in a finite state machine after `n` iterations.
+
+- TODO: Path contraction / memoization (not sure what to name this)
+
+  Some Advent of Code puzzles involve finding the result of applying, say, one
+  billion operations to a data structure. Since this kind of problem would be
+  impossible otherwise, the problems usually contain a cycle we can find using,
+  for example, the `pathfinding` crate and Brent's algorithm.
+
+  Path contraction is an alternative that I want to investigate for this
+  use-case. The idea is to make short-cuts in the state-space, similar to the
+  `Contraction Hierarchies` idea in pathfinding.
+
+  For example, given a path from A to E, `A -> B -> C -> D -> E`, we can start
+  by moving from `A` to `B`, and then from `B` to `C`. Now that we know where
+  the transitions lead, we can add a shortcut from `A` to `C`, skipping `B`.
+
+  Short-cuts are themselves subject to being short-cut: When we're at `A` again,
+  we move through the short-cut `A--->C`. If there is already a short-cut
+  `C--->E`, we can combine the shortcuts to form a new shortcut `A--->E`.
+
+  We store the length of each short-cut in order to be able to track how many
+  operations we've done already. If a shortcut would overshoot the target, we
+  can simply ignore it.
