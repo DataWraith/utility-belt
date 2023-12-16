@@ -41,12 +41,12 @@ This is my library of useful tools for Advent of Code.
 
 ### Search
 
-- Binary search
-- Exponential Search
+- [x] Binary search
+- [x] Exponential Search
+- TODO: Branch&Bound
 - TODO: Anytime Beam Search
 - TODO: Nested Search, maybe Nested Rollout Policy Adaptation
 - TODO: Nested Monte Carlo Search (low priority)
-- TODO: Cycle finding (Brent's algorithm)
 
 #### Pathfinding
 
@@ -65,15 +65,9 @@ This is my library of useful tools for Advent of Code.
 - Least Common Multiple
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
-- Disjoint-Set datastructure
 - Prefix sum
 - Summed Area Table
 - TODO: Ranges (Union, Intersection, One-sided intersection)
-
-#### Graphs
-
-- TODO: Cycle finding (Tortoise-Hare algorihtm)
-- TODO: Hungarian Algorithm
 
 ### Trees
 
