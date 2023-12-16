@@ -7,6 +7,12 @@ pub use ahash::AHashSet as HashSet;
 pub use glam::I64Vec2;
 pub use glam::IVec2;
 
+// graph
+pub use petgraph::prelude as graph;
+
+// grid
+pub use crate::grid::*;
+
 // indoc
 pub use indoc::indoc;
 
@@ -27,9 +33,6 @@ pub use nom_locate::LocatedSpan;
 // pathfinding
 pub use pathfinding::prelude::*;
 
-// petgraph
-pub use petgraph::prelude::*;
-
 // rayon
 pub use rayon::prelude::*;
 
@@ -42,6 +45,3 @@ pub use crate::search::*;
 // tinyvec
 pub use tinyvec::ArrayVec;
 pub use tinyvec::TinyVec;
-
-// TODO: Grid utilities
-// TODO: Search utilities
