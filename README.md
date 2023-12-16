@@ -1,52 +1,84 @@
+# Utility-Belt
+
 [![No Maintenance Intended](http://unmaintained.tech/badge.svg)](http://unmaintained.tech/)
 
-# Utility Belt
+This is my Rust library of potentially useful tools for Advent of Code.
 
-This is my library of useful tools for Advent of Code.
+## Using
+
+Add `utility_belt` to your `Cargo.toml`:
+
+```toml
+[dependencies]
+utility_belt = { git = "https://github.com/DataWraith/utility-belt.git" }
+```
+
+In your Advent of Code projects, simply `use utility_belt::prelude::*;`.
+
+## What's currently here?
+
+### Re-exports
+
+Most of the heavy-lifting is done by other libraries this crate re-exports:
+
+- [ahash](https://docs.rs/ahash) - fast HashMap and HashSet implementation, hashing of single values
+- [glam](https://docs.rs/glam) - convenient 2D vector types
+- [indoc](https://docs.rs/indoc) - exposes macros for convenient inline String formatting
+- [itertools](https://docs.rs/itertools) - various tools for working with iterators
+- [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements
+- [nom](https://docs.rs/nom) and [nom_locate](https://docs.rs/nom_locate/latest/nom_locate/) - ergonomic parser combinators
+- [petgraph](https://docs.rs/petgraph) - a graph data structure library
+- [pathfinding](https://docs.rs/pathfinding) - BFS, A*, Brent's algorithm for cycle finding, conncted components, etc.
+- [rayon](https://docs.rs/rayon) - parallel iterators
+- [rstest](https://docs.rs/rstest) - table-driven testing (very useful for AoC!) and fixtures
+- [tinyvec](https://docs.rs/tinyvec) - stack-allocated (small) vectors
+
+### Advent of Code-specific tools
+
+- **Grid2D**, a convenient 2D grid backed by `ndarray::Array2`. It comes with
+  the ability to parse grids from the usual puzzle-input format for grids and
+  provides various utility functions for working with 2D grids.
+
+  Comes with various ancillary structs (e.g. `Direction` and `Coordinate`) to
+  make working with grids easier.
+
+- **BorderedGrid2D**, a wrapper around Grid2D that adds an implicit border
+  around the grid. This is sometimes useful, for example if you need to find
+  all tiles connected to the outside of the grid.
+
+- A few useful **math functions** (`gcd` and `lcm` for now)
+
+- **Cumulative sum** helpers in 1D (`PrefixSum`) and 2D (`SummedAreaTable`).
+
+  These allow you to quickly look up the sum of values in a given 1D range or 2D
+  rectangle.
+
+- **`nom` parsers** for `usize` and `isize` values.
+
+  I plan to add more parsers over time.
+
+- **search** functions, namely binary search and exponential search. The latter
+  is also known as galopping search.
 
 ## TODO
 
-(These are all marked with TODO so my TodoTree extension picks them up)
+The utility-belt is still under development. The following is a list of things I
+have yet to add.
 
-### Utility-belt prelude re-exports
+### Re-exports for the prelude
 
-- [x] ahash
-- [x] glam
-- [x] pathfinding
-- [x] ndarray
-- [x] nom, nom_locate
-- [x] itertools
-- [x] petgraph
-- [x] rayon
-- [x] rstest (probably)
 - TODO A memoization lib
-- [x] TinyVec
-- [x] itertools
-- [x] indoc
 
 ### Grids
 
-- TODO: A Grid2D class
-  - [x] Parsed from a chars() iter
-  - [x] Mirror Horizontally, Vertically
-  - [x] Rotate by +90/-90 degrees
+- Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
-  - TODO Ability to save as PNG, possibly with auto-generated palette
+  - TODO Auto-generate a palette when saving to PNG (Martin Ankerl method via fibonacci hashing)
   - TODO "Zoom in" by duplicating tiles
   - TODO "Zoom in" with provided templates (to replace certain tiles)
-- [x] A way to access a grid as if it was a torus
-- [x] A Bordered Grid that implicitly includes a border around the input
-- [x] Direction enum (NESW)
-- [x] DirectionSet (u8)
-- [x] Moore Neighborhood
-- [x] Von Neumann Neighborhood
-- [x] Knight's move neighborhood
-- [x] Adjacency testing
 
-### Search
+### Search for combinatorial optimization
 
-- [x] Binary search
-- [x] Exponential Search
 - TODO: Branch&Bound
 - TODO: Anytime Beam Search
 - TODO: Nested Search, maybe Nested Rollout Policy Adaptation
@@ -57,20 +89,10 @@ This is my library of useful tools for Advent of Code.
 - TODO: Seidel's Algorithm
 - TODO: Anytime Focal Search (use a Radix heap)
 
-### Parsing
-
-- Nom parsers that are frequently useful
-  - [x] `parse_usize`
-  - [x] `parse_isize`
-
 ### Math
 
-- Greatest Common Divisor
-- Least Common Multiple
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
-- Prefix sum
-- Summed Area Table
 - TODO: Ranges (Union, Intersection, One-sided intersection)
 
 ### Trees
