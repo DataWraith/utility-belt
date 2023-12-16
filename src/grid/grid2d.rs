@@ -116,7 +116,8 @@ impl<T: Clone> Grid2D<T> {
         self.data.get((y as usize, x as usize)).unwrap()
     }
 
-    // TODO: Document below methods
+    /// Returns a mutable reference to the value at the given coordinate,
+    /// or `None` if the coordinate is out-of-bounds.
     pub fn get_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
         if coord.x() < 0 || coord.y() < 0 {
             return None;
@@ -125,13 +126,17 @@ impl<T: Clone> Grid2D<T> {
         self.data.get_mut((coord.y() as usize, coord.x() as usize))
     }
 
-    pub fn get_wrap_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
+    /// Wraps the coordinate around the grid and returns a mutable reference to
+    /// the value at the given coordinate.
+    pub fn get_wrap_mut(&mut self, coord: Coordinate) -> &mut T {
         let x = coord.x() % self.width;
         let y = coord.y() % self.height;
 
-        self.data.get_mut((y as usize, x as usize))
+        self.data.get_mut((y as usize, x as usize)).unwrap()
     }
 
+    /// Sets the value at the given coordinate. Out-of-bounds accesses are
+    /// ignored.
     pub fn set(&mut self, coord: Coordinate, value: T) {
         if coord.x() < 0 || coord.y() < 0 {
             return;
@@ -144,12 +149,14 @@ impl<T: Clone> Grid2D<T> {
         self.data[(coord.y() as usize, coord.x() as usize)] = value;
     }
 
+    /// Returns an iterator over the grid's elements and their coordinates.
     pub fn indexed_iter(&self) -> impl Iterator<Item = (Coordinate, &T)> + '_ {
         self.data
             .indexed_iter()
             .map(|((y, x), value)| (Coordinate::new(x as i32, y as i32), value))
     }
 
+    /// Returns an iterator over the grid's elements in row-major order.
     pub fn row_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.height).flat_map(move |y| {
             (0..self.width).map(move |x| {
@@ -159,6 +166,7 @@ impl<T: Clone> Grid2D<T> {
         })
     }
 
+    /// Returns an iterator over the grid's elements in column-major order.
     pub fn col_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.width).flat_map(move |x| {
             (0..self.height).map(move |y| {
@@ -168,6 +176,7 @@ impl<T: Clone> Grid2D<T> {
         })
     }
 
+    /// Returns a the result of concatening `other` to the right of `self`.
     pub fn concat_x(&self, other: &Self) -> Self {
         let mut result = Grid2D::new(
             self.width() + other.width(),
@@ -189,6 +198,7 @@ impl<T: Clone> Grid2D<T> {
         result
     }
 
+    /// Returns a the result of concatening `other` below `self`.
     pub fn concat_y(&self, other: &Self) -> Self {
         let mut result = Grid2D::new(
             self.width(),
@@ -312,15 +322,15 @@ mod tests {
     fn get_wrap_mut_test() {
         let mut grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 0)), Some(&mut 1));
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(1, 0)), Some(&mut 2));
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(2, 0)), Some(&mut 3));
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(3, 0)), Some(&mut 1));
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 0)), &mut 1);
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(1, 0)), &mut 2);
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(2, 0)), &mut 3);
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(3, 0)), &mut 1);
 
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 0)), Some(&mut 1));
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 1)), Some(&mut 4));
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 2)), Some(&mut 7));
-        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 3)), Some(&mut 1));
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 0)), &mut 1);
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 1)), &mut 4);
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 2)), &mut 7);
+        assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 3)), &mut 1);
     }
 
     #[test]
