@@ -1,5 +1,3 @@
-use super::Coordinate;
-
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Direction {
     #[default]
