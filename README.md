@@ -50,9 +50,6 @@ This is my library of useful tools for Advent of Code.
 
 #### Pathfinding
 
-- Breadth-First Search
-- TODO: Depth-First Search
-- Uniform Cost Search (use a Radix heap)
 - TODO: Seidel's Algorithm
 - TODO: Anytime Focal Search (use a Radix heap)
 
