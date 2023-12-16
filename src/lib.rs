@@ -5,3 +5,4 @@ pub mod math;
 pub mod parsing;
 pub mod prelude;
 pub mod search;
+pub mod grid;

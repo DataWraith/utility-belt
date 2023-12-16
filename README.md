@@ -25,7 +25,7 @@ This is my library of useful tools for Advent of Code.
 ### Grids
 
 - TODO: A Grid2D class
-  - TODO: Parsed from a chars() iter
+  - [x] Parsed from a chars() iter
   - TODO: Mirror Horizontally, Vertically
   - TODO: Rotate by +90/-90 degrees
   - TODO: Ability to save as PNG, possibly with auto-generated palette
@@ -33,12 +33,12 @@ This is my library of useful tools for Advent of Code.
   - TODO: "Zoom in" with provided templates (to replace certain tiles)
 - TODO: A Wrapping Grid2D class (for toroidal problems)
 - TODO: A Bordered Grid that implicitly includes a border around the input
-- TODO: Direction enum (NESW)
-- TODO: DirectionSet (u8)
-- TODO: Moore Neighborhood
-- TODO: Von Neumann Neighborhood
-- TODO: Adjacency testing
-- TODO: Coordinate struct (x/y coordinates)
+- [x] Direction enum (NESW)
+- [x]: DirectionSet (u8)
+- [x]: Moore Neighborhood
+- [x]: Von Neumann Neighborhood
+- [x]: Knight's move neighborhood
+- [x]: Adjacency testing
 
 ### Search
 
