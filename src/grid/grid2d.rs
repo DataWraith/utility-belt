@@ -5,7 +5,7 @@ use std::{
 
 use ndarray::Array2;
 
-use super::{Coordinate, Direction};
+use super::Coordinate;
 
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Grid2D<T>
