@@ -155,8 +155,6 @@ impl From<(i32, i32)> for Coordinate {
     }
 }
 
-// TODO: Impl Display
-
 #[cfg(test)]
 mod tests {
     use rstest::rstest;

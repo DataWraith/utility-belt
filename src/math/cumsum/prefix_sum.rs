@@ -1,6 +1,21 @@
 use num::Num;
 
-/// TODO: Document this
+/// Prefix sum
+///
+/// The prefix sum is useful to be able to query the sum of a range of values.
+///
+/// # Examples
+///
+/// ```
+/// use utility_belt::math::cumsum::PrefixSum;
+///
+/// let v = [1, 2, 3, 4, 5];
+/// let psum = PrefixSum::new(&v);
+///
+/// assert_eq!(psum.query(0..1), 1); // 1
+/// assert_eq!(psum.query(0..3), 6); // 1 + 2 + 3
+/// assert_eq!(psum.query(1..4), 9); // 2 + 3 + 4
+/// ```
 pub struct PrefixSum<T>
 where
     T: Num + Clone,
