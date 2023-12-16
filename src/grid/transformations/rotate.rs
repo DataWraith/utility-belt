@@ -1,6 +1,7 @@
 use crate::grid::{Coordinate, Grid2D};
 
 impl<T: Clone> Grid2D<T> {
+    /// Rotates the grid 90 degrees clockwise and returns it as a new grid.
     pub fn rotate_right(&self) -> Self {
         let mut new = self.clone();
         for (coord, value) in self.indexed_iter() {
@@ -13,6 +14,7 @@ impl<T: Clone> Grid2D<T> {
         new
     }
 
+    /// Rotates the grid 90 degrees counter-clockwise and returns it as a new grid.
     pub fn rotate_left(&self) -> Self {
         let mut new = self.clone();
 
@@ -26,6 +28,7 @@ impl<T: Clone> Grid2D<T> {
         new
     }
 
+    /// Rotates the grid 180 degrees and returns it as a new grid.
     pub fn rotate_180(&self) -> Self {
         let mut new = self.clone();
 

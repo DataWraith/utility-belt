@@ -1,6 +1,7 @@
 use crate::grid::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
+    /// Mirrors the grid along the x-axis and returns it as a new grid.
     pub fn mirror_x(&self) -> Self {
         let mut new = self.clone();
 
@@ -11,6 +12,7 @@ impl<T: Clone> Grid2D<T> {
         new
     }
 
+    /// Mirrors the grid along the y-axis and returns it as a new grid.
     pub fn mirror_y(&self) -> Self {
         let mut new = self.clone();
 

@@ -1,3 +1,4 @@
+/// An enum representing the four cardinal directions.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Direction {
     #[default]
@@ -8,12 +9,14 @@ pub enum Direction {
 }
 
 impl Direction {
+    /// Returns an iterator over all four directions
     pub fn all() -> impl Iterator<Item = Self> {
         [Self::Up, Self::Right, Self::Down, Self::Left]
             .iter()
             .copied()
     }
 
+    /// Returns the direction one would be facing after a turning left
     pub fn turn_left(&self) -> Self {
         match self {
             Self::Up => Self::Left,
@@ -23,6 +26,7 @@ impl Direction {
         }
     }
 
+    /// Returns the direction one would be facing after a turning right
     pub fn turn_right(&self) -> Self {
         match self {
             Self::Up => Self::Right,
@@ -33,6 +37,7 @@ impl Direction {
     }
 }
 
+/// A set of directions
 pub struct DirectionSet(u8);
 
 impl DirectionSet {

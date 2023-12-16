@@ -5,6 +5,9 @@ use glam::IVec2;
 
 use super::Direction;
 
+/// A coordinate in a 2D grid.
+///
+/// This is a wrapper around `IVec2` that implements some useful methods.
 #[derive(
     Default,
     Debug,
@@ -43,46 +46,57 @@ impl Coordinate {
         self.0.y
     }
 
+    /// Rotate the coordinate 90 degrees clockwise. The anchor point is at the bottom left.
     pub fn rotate_right(self) -> Self {
         Self::new(self.y(), -self.x())
     }
 
+    /// Rotate the coordinate 90 degrees counter-clockwise. The anchor point is at the bottom left.
     pub fn rotate_left(self) -> Self {
         Self::new(-self.y(), self.x())
     }
 
+    /// Rotate the coordinate 180 degrees. The anchor point is at the bottom left.
     pub fn rotate_180(self) -> Self {
         Self::new(-self.x(), -self.y())
     }
 
+    /// Mirror the coordinate along the X axis. The anchor point is at the bottom left.
     pub fn mirror_x(self) -> Self {
         Self::new(-self.x(), self.y())
     }
 
+    /// Mirror the coordinate along the X axis, wrapping it so that it stays within the given width.
     pub fn mirror_x_wrap(self, width: i32) -> Self {
         Self::new(width - 1 - self.x(), self.y())
     }
 
+    /// Mirror the coordinate along the Y axis.
     pub fn mirror_y(self) -> Self {
         Self::new(self.x(), -self.y())
     }
 
+    /// Mirror the coordinate along the Y axis, wrapping it so that it stays within the given height.
     pub fn mirror_y_wrap(self, height: i32) -> Self {
         Self::new(self.x(), height - 1 - self.y())
     }
 
+    /// Returns neighboring Coordinate in the given direction
     pub fn neighbor(self, dir: Direction) -> Self {
         self + dir.into()
     }
 
+    /// Return a list of all neighboring coordinates (alias of `von_neumann_neighbors`)
     pub fn neighbors(self) -> impl Iterator<Item = Self> {
         Direction::all().map(move |dir| self + dir.into())
     }
 
+    /// Return a list of all neighboring coordinates (von Neumann Neighborhood)
     pub fn von_neumann_neighbors(self) -> impl Iterator<Item = Self> {
         self.neighbors()
     }
 
+    /// Return a list of all neighboring coordinates (Moore Neighborhood)
     pub fn moore_neighbors(self) -> impl Iterator<Item = Self> {
         [
             self + Direction::Up.into(),
@@ -97,6 +111,7 @@ impl Coordinate {
         .into_iter()
     }
 
+    /// Return a list of all coordinates reachable from self by a knight's move
     pub fn knight_move_neighbors(self) -> impl Iterator<Item = Self> {
         [
             self + Direction::Up.into() + Direction::Up.into() + Direction::Right.into(),
@@ -111,14 +126,17 @@ impl Coordinate {
         .into_iter()
     }
 
+    /// Returns whether the two coordinates are adjacent
     pub fn adjacent(self, other: Self) -> bool {
         self.manhattan_distance(other) == 1
     }
 
+    /// Returns the Manhattan distance between the two coordinates
     pub fn manhattan_distance(self, other: Self) -> i32 {
         (self.x().abs_diff(other.x()) + self.y().abs_diff(other.y())) as i32
     }
 
+    /// Returns the direction from self towards other
     pub fn towards(self, other: Self) -> Direction {
         if other.x() < self.x() {
             Direction::Left

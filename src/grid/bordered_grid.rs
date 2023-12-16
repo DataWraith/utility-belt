@@ -1,7 +1,19 @@
-
-
 use super::{Coordinate, Grid2D};
 
+/// A bordered grid is a wrapper around Grid2D that has an implicit border
+/// consisting of a default value. The original retains its coordinates but the
+/// border is added around it.
+///
+/// For example, a 3x3 grid with a border of 1 (of value 0) would look like this:
+///
+/// >  A 0 0 0 0
+/// >  0 1 1 1 0
+/// >  0 1 1 1 0
+/// >  0 1 1 1 0
+/// >  0 0 0 0 B
+///
+/// The element marked A is at (-1, -1) and the B is at (3, 3). Both A and B
+/// have, of course, the border-element value, 0.
 pub struct BorderedGrid2D<'a, T: Clone> {
     grid: &'a mut Grid2D<T>,
     border_size: i32,
@@ -9,11 +21,11 @@ pub struct BorderedGrid2D<'a, T: Clone> {
 }
 
 impl<'a, T: Clone> BorderedGrid2D<'a, T> {
-    pub fn new(border: usize, default: T, grid: &'a mut Grid2D<T>) -> Self {
+    pub fn new(border_size: usize, border_element: T, grid: &'a mut Grid2D<T>) -> Self {
         Self {
             grid,
-            default,
-            border_size: border as i32,
+            default: border_element,
+            border_size: border_size as i32,
         }
     }
 

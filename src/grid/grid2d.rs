@@ -7,6 +7,7 @@ use ndarray::Array2;
 
 use super::Coordinate;
 
+/// A 2D grid backed by ndarray.
 #[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Grid2D<T>
 where
@@ -18,6 +19,18 @@ where
 }
 
 impl<T: Clone + From<char>> Grid2D<T> {
+    /// Parses a grid from a string slice.
+    ///
+    /// This assumes that the string containing the grid is a well-formed n-by-m
+    /// grid, where each row is separated by a newline character. Fortunately
+    /// this is the case for all of the Advent of Code puzzles.
+    ///
+    /// The grid is indexed from the top-left corner, with the x-axis increasing
+    /// to the right and the y-axis increasing downwards.
+    ///
+    /// The type T must implement `From<char>`, which is used to convert each
+    /// character in the string to a value in the grid.
+    ///
     pub fn parse(input: &str) -> Self {
         let mut width = 0;
         let mut cur_width = 0;
@@ -46,30 +59,46 @@ impl<T: Clone + From<char>> Grid2D<T> {
 }
 
 impl<T: Clone> Grid2D<T> {
-    pub fn new(width: i32, height: i32, default: T) -> Self {
+    // Creates a new grid of the given size, with all elements initialized to
+    // the given value.
+    pub fn new(width: usize, height: usize, default: T) -> Self {
+        assert!(width > 0, "Grid width must be greater than 0");
+        assert!(height > 0, "Grid height must be greater than 0");
+
         Self {
-            width,
-            height,
-            data: Array2::from_elem((height as usize, width as usize), default),
+            width: width as i32,
+            height: height as i32,
+            data: Array2::from_elem((height, width), default),
         }
     }
 
-    pub fn from_shape_vec(width: i32, height: i32, data: Vec<T>) -> Self {
+    // Reshapes the given Vec<T> into a grid of the given size.
+    //
+    // Panics if the given width or height is 0 or if the given data does not
+    // have the same number of elements as a grid of the given width and height.
+    pub fn from_shape_vec(width: usize, height: usize, data: Vec<T>) -> Self {
+        assert!(width > 0, "Grid width must be greater than 0");
+        assert!(height > 0, "Grid height must be greater than 0");
+
         Self {
-            width,
-            height,
-            data: Array2::from_shape_vec((height as usize, width as usize), data).unwrap(),
+            width: width as i32,
+            height: height as i32,
+            data: Array2::from_shape_vec((height, width), data).unwrap(),
         }
     }
 
+    /// Returns the width of the grid.
     pub fn width(&self) -> i32 {
         self.width
     }
 
+    /// Returns the height of the grid
     pub fn height(&self) -> i32 {
         self.height
     }
 
+    /// Returns the value at the given coordinate. Out-of-bounds accesses return
+    /// `None`.
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
         if coord.x() < 0 || coord.y() < 0 {
             return None;
@@ -78,13 +107,16 @@ impl<T: Clone> Grid2D<T> {
         self.data.get((coord.y() as usize, coord.x() as usize))
     }
 
-    pub fn get_wrap(&self, coord: Coordinate) -> Option<&T> {
+    /// Returns the value at the given coordinate. Out-of-bound accesses wrap
+    /// around back into the grid.
+    pub fn get_wrap(&self, coord: Coordinate) -> &T {
         let x = coord.x() % self.width;
         let y = coord.y() % self.height;
 
-        self.data.get((y as usize, x as usize))
+        self.data.get((y as usize, x as usize)).unwrap()
     }
 
+    // TODO: Document
     pub fn get_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
         if coord.x() < 0 || coord.y() < 0 {
             return None;
@@ -259,15 +291,15 @@ mod tests {
     fn get_wrap_test() {
         let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-        assert_eq!(grid.get_wrap(Coordinate::new(0, 0)), Some(&1));
-        assert_eq!(grid.get_wrap(Coordinate::new(1, 0)), Some(&2));
-        assert_eq!(grid.get_wrap(Coordinate::new(2, 0)), Some(&3));
-        assert_eq!(grid.get_wrap(Coordinate::new(3, 0)), Some(&1));
+        assert_eq!(grid.get_wrap(Coordinate::new(0, 0)), &1);
+        assert_eq!(grid.get_wrap(Coordinate::new(1, 0)), &2);
+        assert_eq!(grid.get_wrap(Coordinate::new(2, 0)), &3);
+        assert_eq!(grid.get_wrap(Coordinate::new(3, 0)), &1);
 
-        assert_eq!(grid.get_wrap(Coordinate::new(0, 0)), Some(&1));
-        assert_eq!(grid.get_wrap(Coordinate::new(0, 1)), Some(&4));
-        assert_eq!(grid.get_wrap(Coordinate::new(0, 2)), Some(&7));
-        assert_eq!(grid.get_wrap(Coordinate::new(0, 3)), Some(&1));
+        assert_eq!(grid.get_wrap(Coordinate::new(0, 0)), &1);
+        assert_eq!(grid.get_wrap(Coordinate::new(0, 1)), &4);
+        assert_eq!(grid.get_wrap(Coordinate::new(0, 2)), &7);
+        assert_eq!(grid.get_wrap(Coordinate::new(0, 3)), &1);
     }
 
     #[test]
