@@ -25,6 +25,43 @@ impl<T: Clone> Grid2D<T> {
 
         new_grid
     }
+
+    pub fn template_zoom<const X: usize, const Y: usize, TMPL, T2>(
+        &self,
+        mut templater: TMPL,
+    ) -> Grid2D<T2>
+    where
+        TMPL: FnMut(&T) -> [[T2; X]; Y],
+        T2: Clone,
+    {
+        if X == 0 || Y == 0 {
+            panic!("Template size must be greater than 0");
+        }
+
+        let new_w = self.width as usize * X;
+        let new_h = self.height as usize * Y;
+        let default = templater(&self[Coordinate::new(0, 0)])[0][0].clone();
+
+        let mut new_grid = Grid2D::new(new_w, new_h, default);
+
+        for (coord, value) in self.indexed_iter() {
+            let template = templater(value);
+
+            for y in 0..Y {
+                for x in 0..X {
+                    new_grid.set(
+                        Coordinate::new(
+                            coord.x() * X as i32 + x as i32,
+                            coord.y() * Y as i32 + y as i32,
+                        ),
+                        template[y][x].clone(),
+                    );
+                }
+            }
+        }
+
+        new_grid
+    }
 }
 
 #[cfg(test)]
@@ -83,5 +120,60 @@ mod tests {
 
         let mirrored = grid.zoom(3);
         assert_eq!(mirrored, expected);
+    }
+
+    #[test]
+    fn test_template_zoom_2x2() {
+        let grid = Grid2D::from_shape_vec(
+            2,
+            2,
+            vec![
+                1, 2, //
+                3, 4, //
+            ],
+        );
+
+        let expectd = Grid2D::from_shape_vec(
+            4,
+            4,
+            vec![
+                1, 2, 2, 3, //
+                3, 4, 4, 0, //
+                3, 4, 4, 0, //
+                0, 1, 1, 2, //
+            ],
+        );
+
+        let templater = |v: &i32| [[*v, (v + 1) % 5], [(v + 2) % 5, (v + 3) % 5]];
+        let zoomed = grid.template_zoom(templater);
+        assert_eq!(zoomed, expectd);
+    }
+
+    #[test]
+    fn test_template_zoom_1x3() {
+        let grid = Grid2D::from_shape_vec(
+            2,
+            2,
+            vec![
+                1, 2, //
+                3, 4, //
+            ],
+        );
+
+        let expected = Grid2D::from_shape_vec(
+            2,
+            6,
+            vec![
+                1, 2, //
+                1, 2, //
+                1, 2, //
+                3, 4, //
+                3, 4, //
+                3, 4, //
+            ],
+        );
+
+        let zoomed = grid.template_zoom(|v| [[v.clone(); 1]; 3]);
+        assert_eq!(zoomed, expected);
     }
 }

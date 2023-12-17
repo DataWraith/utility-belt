@@ -77,8 +77,6 @@ have yet to add.
 - Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
   - TODO [Auto-generate a palette](https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/) when saving to PNG
-  - TODO "Zoom in" by duplicating tiles
-  - TODO "Zoom in" with provided templates (to replace certain tiles with zoomed in variants)
 
 ### Search for combinatorial optimization
 

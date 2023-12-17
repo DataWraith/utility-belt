@@ -61,6 +61,8 @@ impl<T: Clone + From<char>> Grid2D<T> {
     }
 }
 
+// TODO: map function
+
 impl<T: Clone> Grid2D<T> {
     // Creates a new grid of the given size, with all elements initialized to
     // the given value.
@@ -275,6 +277,8 @@ impl<T: Display + Clone> Display for Grid2D<T> {
 
 impl<T: Debug + Clone> Debug for Grid2D<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f)?;
+
         for y in 0..self.height {
             for x in 0..self.width {
                 write!(f, "[{:?}]", self.get(Coordinate::new(x, y)).unwrap())?;
@@ -471,6 +475,7 @@ mod tests {
         assert_eq!(
             format!("{:?}", grid),
             indoc! {"
+
                 [1][2][3]
                 [4][5][6]
                 [7][8][9]
