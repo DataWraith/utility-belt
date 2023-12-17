@@ -6,7 +6,7 @@ This is my Rust library of potentially useful tools for Advent of Code.
 
 ## Using
 
-Add `utility_belt` to your `Cargo.toml`:
+Add `utility-belt` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
