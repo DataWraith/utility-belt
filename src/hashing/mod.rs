@@ -2,6 +2,7 @@ use std::hash::Hash;
 
 use ahash::RandomState;
 
+/// Hashes a single value deterministically.
 pub fn hash_one<T>(x: T) -> u64
 where
     T: Hash,
