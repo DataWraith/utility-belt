@@ -63,6 +63,16 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - **path contraction** for iterating a function millions of times, provided that
   there are cycles in the state-space path the function induces.
 
+- **state iteration**
+
+  The idea is to have a HashMap containing the current states. Then a transition
+  function is applied to each state, and the resulting state(s) are collected in
+  a new HashMap.
+
+  The HashMap keeps track of how often a given state has occurred. This can be
+  used to, for example, count how often a state is visited in a finite state
+  machine after `n` iterations.
+
 ## TODO
 
 The utility-belt is still under development. The following is a list of things I
@@ -102,13 +112,3 @@ have yet to add.
 ### Graphics
 
 - TODO: Digital Differential Analyzer
-
-### Misc
-
-- TODO: State-iteration helper
-
-  The idea is to have a HashMap containing the current states. Then a transition
-  function is applied to each state, and the resulting state(s) are collected in
-  a new HashMap. The HashMap keeps track of how often a given state has
-  occurred. This can be used to, for example, count how often a state is visited
-  in a finite state machine after `n` iterations.
