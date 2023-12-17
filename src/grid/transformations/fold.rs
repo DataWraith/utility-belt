@@ -1,5 +1,7 @@
 use crate::grid::{Coordinate, Grid2D};
 
+// TODO: Docstrings
+
 impl<T: Clone> Grid2D<T> {
     // TODO: Fold along a row/column (closure determines what happens to overlapping elements)
     // TODO: Fold between two rows/columns (closure determines what happens to overlapping elements)

@@ -1,6 +1,7 @@
 use crate::{grid::Grid2D, prelude::Coordinate};
 
 impl<T: Clone> Grid2D<T> {
+    /// 'Zooms' the grid by a factor of `factor` and returns it as a new grid.
     pub fn zoom(&self, factor: u8) -> Self {
         assert!(factor > 0, "Zoom factor must be greater than 0");
 
@@ -26,6 +27,8 @@ impl<T: Clone> Grid2D<T> {
         new_grid
     }
 
+    /// Replaces every tile of the grid with a template that is provided by the
+    /// `templater` closure.
     pub fn template_zoom<const X: usize, const Y: usize, TMPL, T2>(
         &self,
         mut templater: TMPL,

@@ -61,7 +61,7 @@ impl<T: Clone + From<char>> Grid2D<T> {
     }
 }
 
-// TODO: map function
+// TODO: map function Grid2D<T> -> Grid2D<T2>
 
 impl<T: Clone> Grid2D<T> {
     // Creates a new grid of the given size, with all elements initialized to
