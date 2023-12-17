@@ -91,8 +91,7 @@ have yet to add.
 
 - TODO: Branch&Bound
 - TODO: Anytime Beam Search
-- TODO: Nested Search, maybe Nested Rollout Policy Adaptation
-- TODO: Nested Monte Carlo Search (low priority)
+- TODO: Nested Search
 
 #### Pathfinding
 
