@@ -66,7 +66,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - **state iteration**
 
   The idea is to have a HashMap containing the current states. Then a transition
-  function is applied to each state, and the resulting state(s) are collected in
+  function is applied to each state, and the resulting state(s) are collected into
   a new HashMap.
 
   The HashMap keeps track of how often a given state has occurred. This can be
