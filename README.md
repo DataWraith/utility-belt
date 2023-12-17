@@ -73,6 +73,8 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
   used to, for example, count how often a state is visited in a finite state
   machine after `n` iterations.
 
+- an implementation of **branch and bound**
+
 ## TODO
 
 The utility-belt is still under development. The following is a list of things I
@@ -89,7 +91,6 @@ have yet to add.
 
 ### Search for combinatorial optimization
 
-- TODO: Branch&Bound
 - TODO: Anytime Beam Search
 - TODO: Nested Search
 

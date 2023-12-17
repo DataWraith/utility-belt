@@ -30,6 +30,9 @@ pub use crate::parsing::*;
 pub use nom;
 pub use nom_locate::LocatedSpan;
 
+// optimization
+pub use crate::optimization::*;
+
 // pathfinding
 pub use pathfinding::prelude::*;
 
