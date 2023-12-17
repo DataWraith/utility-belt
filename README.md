@@ -76,7 +76,6 @@ have yet to add.
 
 - Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
-  - TODO [Auto-generate a palette](https://martin.ankerl.com/2009/12/09/how-to-create-random-colors-programmatically/) when saving to PNG
 
 ### Search for combinatorial optimization
 
