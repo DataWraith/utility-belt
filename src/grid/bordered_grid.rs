@@ -20,6 +20,8 @@ pub struct BorderedGrid2D<'a, T: Clone> {
     default: T,
 }
 
+// TODO: Docstrings
+
 impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     pub fn new(border_size: usize, border_element: T, grid: &'a mut Grid2D<T>) -> Self {
         Self {

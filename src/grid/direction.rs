@@ -8,6 +8,9 @@ pub enum Direction {
     Left,
 }
 
+// TODO: From u8/usize
+// TODO: Into u8/usize
+
 impl Direction {
     /// Returns an iterator over all four directions
     pub fn all() -> impl Iterator<Item = Self> {
