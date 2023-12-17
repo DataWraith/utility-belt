@@ -20,7 +20,7 @@ impl Direction {
     }
 
     /// Returns the direction one would be facing after a turning left
-    pub fn turn_left(&self) -> Self {
+    pub fn turn_left(self) -> Self {
         match self {
             Self::Up => Self::Left,
             Self::Right => Self::Up,
@@ -30,12 +30,22 @@ impl Direction {
     }
 
     /// Returns the direction one would be facing after a turning right
-    pub fn turn_right(&self) -> Self {
+    pub fn turn_right(self) -> Self {
         match self {
             Self::Up => Self::Right,
             Self::Right => Self::Down,
             Self::Down => Self::Left,
             Self::Left => Self::Up,
+        }
+    }
+
+    /// Returns the opposite direction
+    pub fn opposite(self) -> Self {
+        match self {
+            Self::Up => Self::Down,
+            Self::Right => Self::Left,
+            Self::Down => Self::Up,
+            Self::Left => Self::Right,
         }
     }
 }
