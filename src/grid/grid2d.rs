@@ -48,6 +48,9 @@ impl<T: Clone + From<char>> Grid2D<T> {
             }
         }
 
+        assert!(width > 0, "Grid width must be greater than 0");
+        assert!(height > 0, "Grid height must be greater than 0");
+
         let data = Array2::from_shape_vec((height, width), elems).unwrap();
 
         Self {
