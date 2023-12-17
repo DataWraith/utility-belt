@@ -10,7 +10,7 @@ Add `utility_belt` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-utility_belt = { git = "https://github.com/DataWraith/utility-belt.git" }
+utility-belt = { git = "https://github.com/DataWraith/utility-belt.git" }
 ```
 
 In your Advent of Code projects, simply `use utility_belt::prelude::*;`.
