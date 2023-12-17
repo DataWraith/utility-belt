@@ -50,14 +50,14 @@ impl<T: Clone> Grid2D<T> {
         for (coord, value) in self.indexed_iter() {
             let template = templater(value);
 
-            for y in 0..Y {
-                for x in 0..X {
+            for (y, row) in template.iter().enumerate() {
+                for (x, col) in row.iter().enumerate() {
                     new_grid.set(
                         Coordinate::new(
                             coord.x() * X as i32 + x as i32,
                             coord.y() * Y as i32 + y as i32,
                         ),
-                        template[y][x].clone(),
+                        col.clone(),
                     );
                 }
             }
@@ -176,7 +176,7 @@ mod tests {
             ],
         );
 
-        let zoomed = grid.template_zoom(|v| [[v.clone(); 1]; 3]);
+        let zoomed = grid.template_zoom(|&v| [[v; 1]; 3]);
         assert_eq!(zoomed, expected);
     }
 }
