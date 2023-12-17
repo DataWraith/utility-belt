@@ -88,7 +88,6 @@ have yet to add.
 #### Pathfinding
 
 - TODO: Seidel's Algorithm
-- TODO: Anytime Focal Search (use a Radix heap)
 
 ### Math
 
