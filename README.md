@@ -103,3 +103,5 @@ have yet to add.
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
 - TODO: Ranges (Union, Intersection, One-sided intersection)
+- TODO: Point-in-Polygon algorithm
+- TODO: Shoelace formular (polygon area calculation)
