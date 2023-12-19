@@ -53,9 +53,9 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
   These allow you to quickly look up the sum of values in a given 1D range or 2D
   rectangle.
 
-- **`nom` parsers** for `usize` and `isize` values.
+- **`nom` parsers**
 
-  I plan to add more parsers over time.
+  A few additional nom parsers that may be useful.
 
 - **search** functions, namely binary search and exponential search. The latter
   is also known as galopping search.

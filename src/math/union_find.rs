@@ -52,7 +52,6 @@ impl<T: Hash + Eq> UnionFind<T> {
         let y_root = self.find(y);
 
         if x_root.is_none() || y_root.is_none() {
-            // TODO: Make an error enum or something. Miette maybe?
             panic!("Cannot union elements that are not in the set");
         }
 
