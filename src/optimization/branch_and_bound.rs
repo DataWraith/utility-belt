@@ -1,3 +1,7 @@
+use std::hash::Hash;
+
+use ahash::HashSet;
+
 /// Branch and bound
 ///
 /// This is a generic implementation of the Branch and bound-algorithm. It is
@@ -27,7 +31,7 @@ pub fn branch_and_bound<N, FN, FC, FB, IN, C>(
     mut bound: FB,
 ) -> N
 where
-    N: Eq + Clone,
+    N: Eq + Clone + Hash,
     FN: FnMut(&N) -> IN,
     FC: FnMut(&N) -> Option<C>,
     FB: FnMut(&N) -> C,
@@ -37,6 +41,9 @@ where
     let mut stack = vec![start.clone()];
     let mut best = None;
     let mut best_n = start.clone();
+
+    let mut seen = HashSet::default();
+    seen.insert(start.clone());
 
     while let Some(cur) = stack.pop() {
         if let Some(cost) = cost(&cur) {
@@ -49,7 +56,7 @@ where
         }
 
         for next in successors(&cur) {
-            if best.is_none() || bound(&next) <= best.unwrap() {
+            if seen.insert(next.clone()) && (best.is_none() || bound(&next) <= best.unwrap()) {
                 stack.push(next);
             }
         }
