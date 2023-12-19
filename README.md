@@ -59,6 +59,8 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - **search** functions, namely binary search and exponential search. The latter
   is also known as galopping search.
 
+- **union-find datastructure** for easy connected components analysis
+
 - **path contraction** for iterating a function millions of times, provided that
   there are cycles in the state-space path the function induces.
 
