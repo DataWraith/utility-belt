@@ -33,6 +33,9 @@ pub use crate::optimization::*;
 // pathfinding
 pub use pathfinding::prelude::*;
 
+// ranges
+pub use ranges::*;
+
 // rayon
 pub use rayon::prelude::*;
 

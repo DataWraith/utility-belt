@@ -19,6 +19,7 @@ nom_locate = "4.2.0"
 num = "0.4.1"
 pathfinding = "4.6.0"
 rand = "0.8.5"
+ranges = "0.3"
 rayon = "1.8.0"
 rstest = "0.18.2"
 tinyvec = { version = "1.6.0", features = ["alloc", "std"] }

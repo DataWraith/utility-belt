@@ -28,6 +28,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements
 - [nom](https://docs.rs/nom) and [nom_locate](https://docs.rs/nom_locate/latest/nom_locate/) - ergonomic parser combinators
 - [pathfinding](https://docs.rs/pathfinding) - BFS, A*, Brent's algorithm for cycle finding, connected components, etc.
+- [ranges](https://docs.rs/ranges) - range union/intersection, etc.
 - [rayon](https://docs.rs/rayon) - parallel iterators
 - [rstest](https://docs.rs/rstest) - table-driven testing (very useful for AoC!) and fixtures
 - [tinyvec](https://docs.rs/tinyvec) - stack-allocated (small) vectors
@@ -107,6 +108,5 @@ have yet to add.
 
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
-- TODO: Ranges (Union, Intersection, One-sided intersection)
 - TODO: Point-in-Polygon algorithm
 - TODO: Shoelace formula (polygon area calculation)
