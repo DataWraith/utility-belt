@@ -20,9 +20,9 @@ pub struct BorderedGrid2D<'a, T: Clone> {
     default: T,
 }
 
-// TODO: Docstrings
 
 impl<'a, T: Clone> BorderedGrid2D<'a, T> {
+    /// Create a new bordered grid
     pub fn new(border_size: usize, border_element: T, grid: &'a mut Grid2D<T>) -> Self {
         Self {
             grid,
@@ -31,14 +31,17 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         }
     }
 
+    /// Returns the width of the grid, including the border
     pub fn width(&self) -> usize {
         self.grid.width() + self.border_size as usize * 2
     }
 
+    /// Returns the height of the grid, including the border
     pub fn height(&self) -> usize {
         self.grid.height() + self.border_size as usize * 2
     }
 
+    /// Accesses the element at the given coordinate
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
         let x = coord.x();
         let y = coord.y();
@@ -66,6 +69,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         self.grid.get(coord)
     }
 
+    /// Sets the element at the given coordinate
     pub fn set(&mut self, coord: Coordinate, value: T) {
         let x = coord.x() + 1 - self.border_size;
         let y = coord.y() + 1 - self.border_size;
@@ -74,6 +78,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         self.grid.set(c, value)
     }
 
+    /// Returns an iterator over all elements in the grid, including the border
     pub fn indexed_iter(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         (0..self.height()).flat_map(move |y| {
             (0..self.width()).map(move |x| {
@@ -87,6 +92,8 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         })
     }
 
+    /// Returns an iterator over all elements in the grid (including the border)
+    /// in row-major order
     pub fn row_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.height()).flat_map(move |y| {
             (0..self.width()).map(move |x| {
@@ -99,6 +106,8 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         })
     }
 
+    /// Returns an iterator over all elements in the grid (including the border)
+    /// in column-major order
     pub fn col_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.width()).flat_map(move |x| {
             (0..self.height()).map(move |y| {
