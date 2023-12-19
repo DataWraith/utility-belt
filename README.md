@@ -48,6 +48,9 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - A few useful **math functions** (`gcd` and `lcm` for now)
 
+- Functions for calculating **are** of a simple polygon and determining wheter
+  or not a **point is inside polygon**.
+
 - **Cumulative sum** helpers in 1D (`PrefixSum`) and 2D (`SummedAreaTable`).
 
   These allow you to quickly look up the sum of values in a given 1D range or 2D
