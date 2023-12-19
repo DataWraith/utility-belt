@@ -107,5 +107,3 @@ have yet to add.
 
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
-- TODO: Point-in-Polygon algorithm
-- TODO: Shoelace formula (polygon area calculation)
