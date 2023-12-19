@@ -7,9 +7,6 @@ pub use ahash::AHashSet as HashSet;
 pub use glam::I64Vec2;
 pub use glam::IVec2;
 
-// graph
-pub use petgraph::prelude as graph;
-
 // grid
 pub use crate::grid::*;
 
