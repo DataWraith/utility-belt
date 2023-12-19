@@ -1,6 +1,7 @@
 mod bordered_grid;
 mod coordinate;
 mod direction;
+mod direction_set;
 mod grid2d;
 mod save_to_image;
 mod transformations;

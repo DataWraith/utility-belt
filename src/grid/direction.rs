@@ -1,15 +1,14 @@
+use super::Coordinate;
+
 /// An enum representing the four cardinal directions.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Direction {
     #[default]
-    Up,
-    Right,
-    Down,
-    Left,
+    Up = 0,
+    Right = 1,
+    Down = 2,
+    Left = 3,
 }
-
-// TODO: From u8/usize
-// TODO: Into u8/usize
 
 impl Direction {
     /// Returns an iterator over all four directions
@@ -50,23 +49,66 @@ impl Direction {
     }
 }
 
-/// A set of directions
-pub struct DirectionSet(u8);
+impl TryFrom<char> for Direction {
+    type Error = ();
 
-impl DirectionSet {
-    pub fn empty() -> Self {
-        Self(0)
+    fn try_from(c: char) -> Result<Self, Self::Error> {
+        match c {
+            'U' | 'u' | 'N' | 'n' => Ok(Self::Up),
+            'R' | 'r' | 'E' | 'e' => Ok(Self::Right),
+            'D' | 'd' | 'S' | 's' => Ok(Self::Down),
+            'L' | 'l' | 'W' | 'w' => Ok(Self::Left),
+            _ => Err(()),
+        }
     }
+}
 
-    pub fn insert(&mut self, dir: Direction) {
-        self.0 |= 1 << dir as u8;
+impl TryFrom<u8> for Direction {
+    type Error = ();
+
+    fn try_from(c: u8) -> Result<Self, Self::Error> {
+        match c {
+            0 | b'U' | b'u' | b'N' | b'n' => Ok(Self::Up),
+            1 | b'R' | b'r' | b'E' | b'e' => Ok(Self::Right),
+            2 | b'D' | b'd' | b'S' | b's' => Ok(Self::Down),
+            3 | b'L' | b'l' | b'W' | b'w' => Ok(Self::Left),
+            _ => Err(()),
+        }
     }
+}
 
-    pub fn contains(&self, dir: Direction) -> bool {
-        self.0 & (1 << dir as u8) != 0
+impl TryFrom<usize> for Direction {
+    type Error = ();
+
+    fn try_from(c: usize) -> Result<Self, Self::Error> {
+        TryFrom::try_from(c as u8)
     }
+}
 
-    pub fn iter(&self) -> impl Iterator<Item = Direction> + '_ {
-        Direction::all().filter(move |dir| self.contains(*dir))
+impl From<Direction> for char {
+    fn from(dir: Direction) -> Self {
+        match dir {
+            Direction::Up => 'U',
+            Direction::Right => 'R',
+            Direction::Down => 'D',
+            Direction::Left => 'L',
+        }
+    }
+}
+
+impl From<Direction> for u8 {
+    fn from(dir: Direction) -> Self {
+        match dir {
+            Direction::Up => 0,
+            Direction::Right => 1,
+            Direction::Down => 2,
+            Direction::Left => 3,
+        }
+    }
+}
+
+impl From<Direction> for usize {
+    fn from(dir: Direction) -> Self {
+        dir as usize
     }
 }
