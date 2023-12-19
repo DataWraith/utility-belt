@@ -1,6 +1,36 @@
 /// Calculates the area of a simple polygon given its vertices.
 ///
 /// See https://en.wikipedia.org/wiki/Shoelace_formula for more information.
+///
+/// NOTE: If you use this on a discrete grid, you may need to add one plus half
+/// the perimeter of the polygon to the result. Imagine your grid as being made
+/// up of small squares, with the vertices (marked '@') being anchored to the
+/// center of the squares.
+///
+/// +-----+-----+-----+
+/// |ooooo|ooooo|ooooo|
+/// |oo@--+-----+--@oo|
+/// |oo|**|*****|**|oo|
+/// +--+--+-----+--+--+
+/// |oo|**|*****|**|oo|
+/// |oo|**|*****|**|oo|
+/// |oo|**|*****|**|oo|
+/// +--+--+-----+--+--+
+/// |oo|**|*****|**|oo|
+/// |oo@--+-----+--@oo|
+/// |ooooo|ooooo|ooooo|
+/// +-----+-----+-----+
+///
+/// You'd think a 3x3 rectangle (marked '*') would have an area of 9, but
+/// because the vertices are anchored to the center of the squares, the
+/// actual area is (1 + 4 * 0.5 + 4 * 0.25) = 4.
+///
+/// To get an area of 9, you add  one plus half the perimeter of the polygon:
+/// (8 / 2) = 4. Then 4 + 4 + 1 = 9. Note that perimeter refers to the perimeter
+/// of the smaller box inside, not the perimeter of the larger box outside.
+///
+/// The other solution to this problem involves moving the vertices to the
+/// corners of the squares, but that's a lot more work.
 pub fn polygon_area(vertices: &[(isize, isize)]) -> usize {
     let mut area = 0isize;
 
