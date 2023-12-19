@@ -4,7 +4,7 @@ impl<T: Clone> Grid2D<T> {
     /// Rotates the grid 90 degrees clockwise and returns it as a new grid.
     pub fn rotate_right(&self) -> Self {
         let mut new = self.clone();
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             new.set(
                 Coordinate::new(self.height() as i32 - 1 - coord.y(), coord.x()),
                 value.clone(),
@@ -18,7 +18,7 @@ impl<T: Clone> Grid2D<T> {
     pub fn rotate_left(&self) -> Self {
         let mut new = self.clone();
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             new.set(
                 Coordinate::new(coord.y(), self.width() as i32 - 1 - coord.x()),
                 value.clone(),
@@ -32,7 +32,7 @@ impl<T: Clone> Grid2D<T> {
     pub fn rotate_180(&self) -> Self {
         let mut new = self.clone();
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             new.set(
                 Coordinate::new(
                     self.width() as i32 - 1 - coord.x(),

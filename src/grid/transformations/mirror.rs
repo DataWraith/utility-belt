@@ -5,7 +5,7 @@ impl<T: Clone> Grid2D<T> {
     pub fn mirror_x(&self) -> Self {
         let mut new = self.clone();
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             new.set(coord.mirror_x_wrap(self.width), value.clone());
         }
 
@@ -16,7 +16,7 @@ impl<T: Clone> Grid2D<T> {
     pub fn mirror_y(&self) -> Self {
         let mut new = self.clone();
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             new.set(coord.mirror_y_wrap(self.height), value.clone());
         }
 

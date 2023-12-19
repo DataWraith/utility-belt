@@ -161,7 +161,7 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns an iterator over the grid's elements and their coordinates.
-    pub fn indexed_iter(&self) -> impl Iterator<Item = (Coordinate, &T)> + '_ {
+    pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> + '_ {
         self.data
             .indexed_iter()
             .map(|((y, x), value)| (Coordinate::new(x as i32, y as i32), value))
@@ -195,11 +195,11 @@ impl<T: Clone> Grid2D<T> {
             self.data[[0, 0]].clone(),
         );
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             result.set(coord, value.clone());
         }
 
-        for (coord, value) in other.indexed_iter() {
+        for (coord, value) in other.iter() {
             result.set(
                 coord + Coordinate::new(self.width() as i32, 0),
                 value.clone(),
@@ -217,11 +217,11 @@ impl<T: Clone> Grid2D<T> {
             self.data[[0, 0]].clone(),
         );
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             result.set(coord, value.clone());
         }
 
-        for (coord, value) in other.indexed_iter() {
+        for (coord, value) in other.iter() {
             result.set(
                 coord + Coordinate::new(0, self.height() as i32),
                 value.clone(),
@@ -409,10 +409,10 @@ mod tests {
     }
 
     #[test]
-    fn test_indexed_iter() {
+    fn test_iter() {
         let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
-        let mut iter = grid.indexed_iter();
+        let mut iter = grid.iter();
 
         assert_eq!(iter.next(), Some((Coordinate::new(0, 0), &1)));
         assert_eq!(iter.next(), Some((Coordinate::new(1, 0), &2)));

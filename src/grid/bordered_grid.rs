@@ -79,7 +79,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     }
 
     /// Returns an iterator over all elements in the grid, including the border
-    pub fn indexed_iter(&self) -> impl Iterator<Item = (Coordinate, &T)> {
+    pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         (0..self.height()).flat_map(move |y| {
             (0..self.width()).map(move |x| {
                 let x = x as i32;
@@ -161,11 +161,11 @@ mod tests {
     }
 
     #[test]
-    fn test_indexed_iter() {
+    fn test_iter() {
         let mut grid = Grid2D::new(3, 3, 1);
         let bordered = BorderedGrid2D::new(1, 0, &mut grid);
 
-        let mut iter = bordered.indexed_iter();
+        let mut iter = bordered.iter();
 
         assert_eq!(iter.next(), Some((Coordinate::new(0, 0), &0)));
         assert_eq!(iter.next(), Some((Coordinate::new(1, 0), &0)));

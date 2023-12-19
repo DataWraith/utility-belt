@@ -10,7 +10,7 @@ impl<T: Clone> Grid2D<T> {
 
         let mut new_grid = Grid2D::new(new_w, new_h, self[Coordinate::new(0, 0)].clone());
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             for x in 0..factor {
                 for y in 0..factor {
                     new_grid.set(
@@ -47,7 +47,7 @@ impl<T: Clone> Grid2D<T> {
 
         let mut new_grid = Grid2D::new(new_w, new_h, default);
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             let template = templater(value);
 
             for (y, row) in template.iter().enumerate() {

@@ -12,7 +12,7 @@ impl<T: Clone + Into<Rgb<u8>>> Grid2D<T> {
     pub fn save_png(&self, path: &Path) -> Result<(), image::ImageError> {
         let mut image = image::ImageBuffer::new(self.width() as u32, self.height() as u32);
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             image.put_pixel(coord.x() as u32, coord.y() as u32, value.clone().into());
         }
 
@@ -32,7 +32,7 @@ impl<T: Clone + Eq + Hash> Grid2D<T> {
         let golden_ratio_conjugate = 0.618033988749895;
         let mut h = rand::random::<f64>();
 
-        for (coord, value) in self.indexed_iter() {
+        for (coord, value) in self.iter() {
             let color: Rgb<u8> = *colors.entry(value.clone()).or_insert_with(|| {
                 h += golden_ratio_conjugate;
                 h %= 1.0;
