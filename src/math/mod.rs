@@ -2,6 +2,7 @@ use num::Num;
 
 pub mod cumsum;
 pub mod union_find;
+pub mod polygons;
 
 /// Greatest Common Divisor.
 ///
