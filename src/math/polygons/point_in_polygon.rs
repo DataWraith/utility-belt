@@ -1,3 +1,5 @@
+use num::Num;
+
 /// Point in polygon algorithm
 ///
 /// This algorithm determines whether a point is inside a polygon. It works by
@@ -9,8 +11,7 @@
 /// NOTE: This is a bit wonky with integer math. You may want to either increase
 ///       your number's resolution or resort to using floating point numbers.
 ///
-// TODO: Make this generic using Num
-pub fn point_in_polygon(vertices: &[(isize, isize)], query: (isize, isize)) -> bool {
+pub fn point_in_polygon<T: Num + Ord + Copy>(vertices: &[(T, T)], query: (T, T)) -> bool {
     let mut result = false;
 
     let n = vertices.len();
@@ -42,7 +43,7 @@ pub fn point_in_polygon(vertices: &[(isize, isize)], query: (isize, isize)) -> b
             let horizontal_distance_ab = b.0 - a.0;
             let vertical_distance_ab = b.1 - a.1;
 
-            if vertical_distance_ab == 0 {
+            if vertical_distance_ab == T::zero() {
                 a.0
             } else {
                 horizontal_distance_ab * (query.1 - a.1) / (vertical_distance_ab) + a.0

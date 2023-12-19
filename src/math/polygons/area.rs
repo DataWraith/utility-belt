@@ -1,3 +1,5 @@
+use num::{Num, Signed};
+
 /// Calculates the area of a simple polygon given its vertices.
 ///
 /// See https://en.wikipedia.org/wiki/Shoelace_formula for more information.
@@ -33,11 +35,12 @@
 /// corners of the squares, but that's a lot more work.
 ///
 // TODO: Make this generic using Num
-pub fn polygon_area(vertices: &[(isize, isize)]) -> usize {
-    let mut area = 0isize;
+pub fn polygon_area<T: Num + Copy + Signed>(vertices: &[(T, T)]) -> T {
+    let mut area = T::zero();
 
     let num_vertices = vertices.len();
 
+    // Allow the polygon to be open or closed
     let last_index = if vertices[0] == vertices[vertices.len() - 1] {
         vertices.len() - 1
     } else {
@@ -45,11 +48,11 @@ pub fn polygon_area(vertices: &[(isize, isize)]) -> usize {
     };
 
     for i in 0..(last_index) {
-        area += vertices[i].0 * vertices[(i + 1) % num_vertices].1;
-        area -= vertices[(i + 1) % num_vertices].0 * vertices[i].1;
+        area = area + vertices[i].0 * vertices[(i + 1) % num_vertices].1;
+        area = area - vertices[(i + 1) % num_vertices].0 * vertices[i].1;
     }
 
-    (area.abs() / 2) as usize
+    area.abs() / (T::one() + T::one())
 }
 
 #[cfg(test)]
@@ -63,7 +66,7 @@ mod tests {
     #[case([(0, 0), (0, 2), (2, 2), (2, 0)], 4)]
     #[case([(0, 0), (0, 6), (6, 6), (6, 0)], 36)]
     #[case([(0, 0), (5, 0), (5, 5), (0, 0)], 5 * 5 / 2)]
-    fn polygon_area_works(#[case] vertices: [(isize, isize); 4], #[case] expected: usize) {
+    fn polygon_area_works(#[case] vertices: [(isize, isize); 4], #[case] expected: isize) {
         assert_eq!(polygon_area(&vertices), expected);
     }
 
@@ -75,7 +78,7 @@ mod tests {
 
     #[test]
     fn polygon_area_wikipedia_example() {
-        let vertices = [(1, 6), (3, 1), (7, 2), (4, 4), (8, 5)];
-        assert_eq!(polygon_area(&vertices), 16); // Technically 16.5
+        let vertices = [(1.0, 6.0), (3.0, 1.0), (7.0, 2.0), (4.0, 4.0), (8.0, 5.0)];
+        assert_eq!(polygon_area(&vertices), 16.5);
     }
 }

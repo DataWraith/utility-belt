@@ -1,4 +1,4 @@
-use super::Coordinate;
+
 
 /// An enum representing the four cardinal directions.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
