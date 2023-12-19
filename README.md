@@ -99,10 +99,6 @@ have yet to add.
 - TODO: Anytime Beam Search
 - TODO: Nested Search
 
-#### Parsers
-
-- Add a nom parser for Hex colors
-
 #### Pathfinding
 
 - TODO: Seidel's Algorithm
