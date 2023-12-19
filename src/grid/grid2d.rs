@@ -61,8 +61,6 @@ impl<T: Clone + From<char>> Grid2D<T> {
     }
 }
 
-// TODO: map function Grid2D<T> -> Grid2D<T2>
-
 impl<T: Clone> Grid2D<T> {
     // Creates a new grid of the given size, with all elements initialized to
     // the given value.
@@ -152,6 +150,14 @@ impl<T: Clone> Grid2D<T> {
         }
 
         self.data[(coord.y() as usize, coord.x() as usize)] = value;
+    }
+
+    pub fn map<T2: Clone>(&self, f: impl Fn(&T) -> T2) -> Grid2D<T2> {
+        Grid2D {
+            width: self.width,
+            height: self.height,
+            data: self.data.map(f),
+        }
     }
 
     /// Returns an iterator over the grid's elements and their coordinates.
