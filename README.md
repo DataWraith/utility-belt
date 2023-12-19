@@ -95,6 +95,10 @@ have yet to add.
 - TODO: Anytime Beam Search
 - TODO: Nested Search
 
+#### Parsers
+
+- Add a nom parser for Hex colors
+
 #### Pathfinding
 
 - TODO: Seidel's Algorithm
@@ -105,4 +109,4 @@ have yet to add.
 - TODO: Root finding (Newton?)
 - TODO: Ranges (Union, Intersection, One-sided intersection)
 - TODO: Point-in-Polygon algorithm
-- TODO: Shoelace formular (polygon area calculation)
+- TODO: Shoelace formula (polygon area calculation)
