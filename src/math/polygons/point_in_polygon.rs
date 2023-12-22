@@ -16,7 +16,6 @@ pub fn point_in_polygon<T: Num + Ord + Copy>(vertices: &[(T, T)], query: (T, T))
 
     let n = vertices.len();
 
-    // Loop through every pair of vertices
     for i in 0..n {
         let j = (i + 1) % n;
 
