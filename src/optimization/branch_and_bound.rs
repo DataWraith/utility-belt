@@ -35,7 +35,7 @@ where
     FN: FnMut(&N) -> IN,
     FC: FnMut(&N) -> Option<C>,
     FB: FnMut(&N) -> C,
-    IN: Iterator<Item = N>,
+    IN: IntoIterator<Item = N>,
     C: Ord + Copy,
 {
     let mut stack = vec![start.clone()];
@@ -63,4 +63,34 @@ where
     }
 
     best_n
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_branch_and_bound() {
+        let start = 0;
+
+        let successors = |n: &i32| {
+            if *n < 5 {
+                vec![n + 1, n + 2]
+            } else {
+                vec![]
+            }
+        };
+
+        let cost = |n: &i32| {
+            if *n == 5 {
+                Some(5)
+            } else {
+                None
+            }
+        };
+
+        let bound = |n: &i32| 5 - n;
+
+        assert_eq!(branch_and_bound(&start, successors, cost, bound), 5);
+    }
 }
