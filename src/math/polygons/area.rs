@@ -34,7 +34,6 @@ use num::{Num, Signed};
 /// The other solution to this problem involves moving the vertices to the
 /// corners of the squares, but that's a lot more work.
 ///
-// TODO: Make this generic using Num
 pub fn polygon_area<T: Num + Copy + Signed>(vertices: &[(T, T)]) -> T {
     let mut area = T::zero();
 
