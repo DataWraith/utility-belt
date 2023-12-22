@@ -8,6 +8,10 @@ impl DirectionSet {
         Self(0)
     }
 
+    pub fn all() -> Self {
+        Self(0b1111)
+    }
+
     pub fn insert(&mut self, dir: Direction) {
         self.0 |= 1 << dir as u8;
     }
@@ -37,6 +41,16 @@ mod tests {
         assert!(!set.contains(Direction::Right));
         assert!(!set.contains(Direction::Down));
         assert!(!set.contains(Direction::Left));
+    }
+
+    #[test]
+    fn test_all() {
+        let set = DirectionSet::all();
+
+        assert!(set.contains(Direction::Up));
+        assert!(set.contains(Direction::Right));
+        assert!(set.contains(Direction::Down));
+        assert!(set.contains(Direction::Left));
     }
 
     #[test]
