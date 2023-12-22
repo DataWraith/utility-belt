@@ -26,8 +26,7 @@ impl UnionFind {
     }
 
     pub fn size_of_set(&mut self, x: usize) -> Option<usize> {
-        let r = self.find(x)?;
-        Some(self.sizes[r])
+        self.find(x).map(|r| self.sizes[r])
     }
 
     pub fn find(&mut self, x: usize) -> Option<usize> {
