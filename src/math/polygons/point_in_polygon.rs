@@ -23,7 +23,7 @@ pub fn point_in_polygon<T: Num + Ord + Copy>(vertices: &[(T, T)], query: (T, T))
         let a = vertices[i];
         let b = vertices[j];
 
-        // Is  a above the query point?
+        // Is a above the query point?
         let first_is_above = a.1 > query.1;
 
         // Is b below the query point?
