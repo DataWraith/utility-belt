@@ -6,7 +6,7 @@ use num::Num;
 /// A SummedAreaTable is the 2D-equivalent of a PrefixSum.
 ///
 /// It allows you to query the sum of the values inside of a rectangular region
-/// in O(1) time.
+/// in O(1) time after some preprocessing.
 ///
 pub struct SummedAreaTable<T>
 where
