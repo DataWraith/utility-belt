@@ -9,4 +9,5 @@ mod transformations;
 pub use bordered_grid::*;
 pub use coordinate::*;
 pub use direction::*;
+pub use direction_set::*;
 pub use grid2d::*;
