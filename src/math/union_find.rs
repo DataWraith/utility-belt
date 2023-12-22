@@ -16,6 +16,8 @@ pub struct UnionFind {
 }
 
 impl UnionFind {
+    /// Adds a singleton set to the data structure and returns the index of the
+    /// set.
     pub fn make_set(&mut self) -> usize {
         let index = self.parents.len();
 
@@ -25,10 +27,12 @@ impl UnionFind {
         index
     }
 
+    /// Returns the size of the set that `x` belongs to.
     pub fn size_of_set(&mut self, x: usize) -> Option<usize> {
         self.find(x).map(|r| self.sizes[r])
     }
 
+    /// Returns the index of the set that `x` belongs to.
     pub fn find(&mut self, x: usize) -> Option<usize> {
         if x >= self.parents.len() {
             return None;
@@ -50,6 +54,7 @@ impl UnionFind {
         Some(x)
     }
 
+    /// Unions the sets that `x` and `y` belong to.
     pub fn union(&mut self, x: usize, y: usize) -> Result<(), &str> {
         let x_root = self.find(x);
         let y_root = self.find(y);
