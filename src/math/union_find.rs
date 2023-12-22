@@ -12,6 +12,9 @@ use ahash::AHashMap as HashMap;
 /// graph.
 ///
 /// See [Wikipedia](https://en.wikipedia.org/wiki/Disjoint-set_data_structure) for more information.
+/// 
+// TODO: While Union-by-rank is easier to write, we may want to use union-by-size instead,
+//       so that we can efficiently determine the cardinality of the connected component.
 #[derive(Default)]
 pub struct UnionFind<T: Hash + Eq> {
     indices: HashMap<T, usize>,
