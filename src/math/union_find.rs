@@ -1,7 +1,3 @@
-use std::hash::Hash;
-
-use ahash::AHashMap as HashMap;
-
 /// Union-find data structure, also known as a disjoint-set data structure.
 ///
 /// This data structure allows you to keep track of disjoint sets of elements,
