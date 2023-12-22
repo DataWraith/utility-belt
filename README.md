@@ -93,7 +93,6 @@ have yet to add.
 
 - Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
-  - TODO: "Replicate" function that repeats a grid n-by-m times
 
 ### Search for combinatorial optimization
 
