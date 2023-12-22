@@ -1,5 +1,4 @@
 // ahash
-pub use crate::hashing::hash_one;
 pub use ahash::AHashMap as HashMap;
 pub use ahash::AHashSet as HashSet;
 
