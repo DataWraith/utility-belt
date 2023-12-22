@@ -113,8 +113,8 @@ impl<T: Clone> Grid2D<T> {
     /// Returns the value at the given coordinate. Out-of-bound accesses wrap
     /// around back into the grid.
     pub fn get_wrap(&self, coord: Coordinate) -> &T {
-        let x = coord.x() % self.width;
-        let y = coord.y() % self.height;
+        let x = coord.x().rem_euclid(self.width);
+        let y = coord.y().rem_euclid(self.height);
 
         self.data.get((y as usize, x as usize)).unwrap()
     }
@@ -132,8 +132,8 @@ impl<T: Clone> Grid2D<T> {
     /// Wraps the coordinate around the grid and returns a mutable reference to
     /// the value at the given coordinate.
     pub fn get_wrap_mut(&mut self, coord: Coordinate) -> &mut T {
-        let x = coord.x() % self.width;
-        let y = coord.y() % self.height;
+        let x = coord.x().rem_euclid(self.width);
+        let y = coord.y().rem_euclid(self.height);
 
         self.data.get_mut((y as usize, x as usize)).unwrap()
     }
