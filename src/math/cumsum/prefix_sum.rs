@@ -64,6 +64,7 @@ mod tests {
     fn prefix_sum() {
         let cumsum = PrefixSum::new(&[1, 2, 3]);
 
+        assert_eq!(cumsum.query(0..0), 0);
         assert_eq!(cumsum.query(0..1), 1);
         assert_eq!(cumsum.query(1..2), 2);
         assert_eq!(cumsum.query(2..3), 3);
