@@ -50,7 +50,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - Functions for calculating **area** of a simple polygon and determining whether
   or not a **point is inside of a polygon**.
-  
+
 - **Cumulative sum** helpers in 1D (`PrefixSum`) and 2D (`SummedAreaTable`).
 
   These allow you to quickly look up the sum of values in a given 1D range or 2D
@@ -107,5 +107,4 @@ have yet to add.
 
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
-- TODO: SummedAreaTable needs to implement Debug
 - TODO: Polynomial Regression

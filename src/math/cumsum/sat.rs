@@ -1,3 +1,5 @@
+use std::fmt::Debug;
+
 use ndarray::Array2;
 use num::Num;
 
@@ -69,8 +71,27 @@ impl<T: Num + Clone> SummedAreaTable<T> {
     }
 }
 
+impl<T: Num + Clone + Debug> Debug for SummedAreaTable<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f)?;
+
+        for y in 0..self.height() {
+            for x in 0..(self.width() - 1) {
+                write!(f, "{:?} ", self.query(x, y, 1, 1))?;
+            }
+
+            write!(f, "{:?}", self.query(self.width() - 1, y, 1, 1))?;
+            writeln!(f)?;
+        }
+
+        Ok(())
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use indoc::indoc;
+
     use super::*;
 
     #[test]
@@ -113,5 +134,27 @@ mod tests {
         assert_eq!(sat.query(0, 0, 1, 3), 2);
         assert_eq!(sat.query(1, 0, 1, 3), 1);
         assert_eq!(sat.query(2, 0, 1, 3), 1);
+    }
+
+    #[test]
+    fn test_debug() {
+        let mut grid: Array2<usize> = Array2::default((3, 3));
+
+        grid[[0, 0]] = 1;
+        grid[[0, 2]] = 1;
+        grid[[1, 1]] = 1;
+        grid[[2, 0]] = 1;
+
+        let sat = SummedAreaTable::new(grid);
+
+        assert_eq!(
+            format!("{:?}", sat),
+            indoc! {"
+
+            1 0 1
+            0 1 0
+            1 0 0
+        "},
+        );
     }
 }
