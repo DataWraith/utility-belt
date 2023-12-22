@@ -60,8 +60,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
   A few additional nom parsers that may be useful.
 
-- **search** functions, namely binary search and exponential search. The latter
-  is also known as galopping search.
+- **bisection search** function
 
 - **union-find datastructure** for easy connected components analysis
 
