@@ -313,4 +313,19 @@ mod tests {
             ]
         );
     }
+
+    #[test]
+    fn test_display() {
+        assert_eq!(format!("{}", Coordinate::new(1, 2)), "(1, 2)");
+    }
+
+    #[test]
+    fn test_adjacent() {
+        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(0, 1)));
+        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(1, 0)));
+        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(0, -1)));
+        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(-1, 0)));
+        assert!(!Coordinate::new(0, 0).adjacent(Coordinate::new(1, 1)));
+        assert!(!Coordinate::new(0, 0).adjacent(Coordinate::new(-1, -1)));
+    }
 }
