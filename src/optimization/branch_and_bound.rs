@@ -83,7 +83,7 @@ mod tests {
 
         let cost = |n: &i32| {
             if *n == 5 {
-                Some(5)
+                Some(0)
             } else {
                 None
             }
