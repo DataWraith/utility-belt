@@ -12,14 +12,13 @@ use ahash::AHashMap as HashMap;
 /// graph.
 ///
 /// See [Wikipedia](https://en.wikipedia.org/wiki/Disjoint-set_data_structure) for more information.
-/// 
-// TODO: While Union-by-rank is easier to write, we may want to use union-by-size instead,
-//       so that we can efficiently determine the cardinality of the connected component.
+///
+// TODO: Do we really want to use a HashMap here? Or should the caller remember the indices?
 #[derive(Default)]
 pub struct UnionFind<T: Hash + Eq> {
     indices: HashMap<T, usize>,
     parents: Vec<usize>,
-    ranks: Vec<usize>,
+    sizes: Vec<usize>,
 }
 
 impl<T: Hash + Eq> UnionFind<T> {
@@ -27,14 +26,19 @@ impl<T: Hash + Eq> UnionFind<T> {
         let index = self.parents.len();
 
         self.parents.push(index);
-        self.ranks.push(0);
+        self.sizes.push(1);
         self.indices.insert(x, index);
 
         index
     }
 
-    pub fn find(&mut self, x: T) -> Option<usize> {
-        let mut x = *self.indices.get(&x)?;
+    pub fn size_of_set(&mut self, x: &T) -> Option<usize> {
+        let r = self.find(x)?;
+        Some(self.sizes[r])
+    }
+
+    pub fn find(&mut self, x: &T) -> Option<usize> {
+        let mut x = *self.indices.get(x)?;
 
         while self.parents[x] != x {
             let new_x = self.parents[x];
@@ -50,30 +54,29 @@ impl<T: Hash + Eq> UnionFind<T> {
         Some(x)
     }
 
-    pub fn union(&mut self, x: T, y: T) {
+    pub fn union(&mut self, x: &T, y: &T) -> Result<(), &str> {
         let x_root = self.find(x);
         let y_root = self.find(y);
 
         if x_root.is_none() || y_root.is_none() {
-            panic!("Cannot union elements that are not in the set");
+            return Err("Cannot union elements that are not in the set");
         }
 
         if x_root == y_root {
-            return;
+            return Ok(());
         }
 
         let mut x_root = x_root.unwrap();
         let mut y_root = y_root.unwrap();
 
-        if self.ranks[x_root] < self.ranks[y_root] {
+        if self.sizes[x_root] < self.sizes[y_root] {
             std::mem::swap(&mut x_root, &mut y_root);
         }
 
         self.parents[y_root] = x_root;
+        self.sizes[x_root] += self.sizes[y_root];
 
-        if self.ranks[x_root] == self.ranks[y_root] {
-            self.ranks[x_root] += 1;
-        }
+        Ok(())
     }
 }
 
@@ -92,26 +95,30 @@ mod tests {
         let _e = uf.make_set('e');
         let _f = uf.make_set('f');
 
-        uf.union('a', 'b');
-        uf.union('b', 'c');
-        uf.union('d', 'e');
+        let _ = uf.union(&'a', &'b');
+        let _ = uf.union(&'b', &'c');
+        let _ = uf.union(&'d', &'e');
 
-        assert_eq!(uf.find('a'), uf.find('c'));
-        assert_eq!(uf.find('a'), uf.find('b'));
-        assert_eq!(uf.find('b'), uf.find('c'));
+        assert_eq!(uf.find(&'a'), uf.find(&'c'));
+        assert_eq!(uf.find(&'a'), uf.find(&'b'));
+        assert_eq!(uf.find(&'b'), uf.find(&'c'));
 
-        assert_eq!(uf.find('d'), uf.find('e'));
+        assert_eq!(uf.find(&'d'), uf.find(&'e'));
 
-        assert_ne!(uf.find('a'), uf.find('d'));
-        assert_ne!(uf.find('a'), uf.find('e'));
-        assert_ne!(uf.find('a'), uf.find('f'));
-        assert_ne!(uf.find('b'), uf.find('d'));
-        assert_ne!(uf.find('b'), uf.find('e'));
-        assert_ne!(uf.find('b'), uf.find('f'));
-        assert_ne!(uf.find('c'), uf.find('d'));
-        assert_ne!(uf.find('c'), uf.find('e'));
-        assert_ne!(uf.find('c'), uf.find('f'));
-        assert_ne!(uf.find('d'), uf.find('f'));
-        assert_ne!(uf.find('e'), uf.find('f'));
+        assert_ne!(uf.find(&'a'), uf.find(&'d'));
+        assert_ne!(uf.find(&'a'), uf.find(&'e'));
+        assert_ne!(uf.find(&'a'), uf.find(&'f'));
+        assert_ne!(uf.find(&'b'), uf.find(&'d'));
+        assert_ne!(uf.find(&'b'), uf.find(&'e'));
+        assert_ne!(uf.find(&'b'), uf.find(&'f'));
+        assert_ne!(uf.find(&'c'), uf.find(&'d'));
+        assert_ne!(uf.find(&'c'), uf.find(&'e'));
+        assert_ne!(uf.find(&'c'), uf.find(&'f'));
+        assert_ne!(uf.find(&'d'), uf.find(&'f'));
+        assert_ne!(uf.find(&'e'), uf.find(&'f'));
+
+        assert_eq!(uf.size_of_set(&'a'), Some(3));
+        let _ = uf.union(&'a', &'d');
+        assert_eq!(uf.size_of_set(&'e'), Some(5));
     }
 }
