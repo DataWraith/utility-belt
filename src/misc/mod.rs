@@ -115,3 +115,27 @@ where
 
     new_states
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_path_contraction() {
+        let start = 0;
+        let iterations = 101;
+
+        let result = path_contraction(&start, |n| (n + 1) % 10, iterations);
+        assert_eq!(result, 1);
+    }
+
+    #[test]
+    fn test_state_iteration() {
+        let mut states = HashMap::default();
+        states.insert(0, 1);
+
+        let result = state_iteration(&states, |n, _| vec![n + 1, n + 1, n + 2], 0);
+        assert_eq!(result.get(&1), Some(&2));
+        assert_eq!(result.get(&2), Some(&1));
+    }
+}
