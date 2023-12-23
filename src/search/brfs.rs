@@ -8,7 +8,7 @@ use ahash::HashSet;
 /// best-first.
 pub struct BrFS<N>
 where
-    N: Hash + Eq,
+    N: Hash + Eq + Clone,
 {
     pub queue: VecDeque<N>,
     pub seen: HashSet<N>,

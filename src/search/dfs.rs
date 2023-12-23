@@ -5,7 +5,7 @@ use ahash::HashSet;
 /// Depth-first search
 pub struct DFS<N>
 where
-    N: Hash + Eq,
+    N: Hash + Eq + Clone,
 {
     pub stack: Vec<N>,
     pub seen: HashSet<N>,
