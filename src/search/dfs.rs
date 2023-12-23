@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, hash::Hash};
+use std::hash::Hash;
 
 use ahash::HashSet;
 
@@ -14,12 +14,7 @@ where
 impl<N: Hash + Eq + Clone> DFS<N> {
     pub fn new(start: N) -> Self {
         let stack = vec![start.clone()];
-
-        let seen = {
-            let mut seen = HashSet::default();
-            seen.insert(start);
-            seen
-        };
+        let seen = HashSet::default();
 
         Self { stack, seen }
     }
@@ -29,11 +24,15 @@ impl<N: Hash + Eq + Clone> DFS<N> {
         S: FnMut(&N) -> IN,
         IN: IntoIterator<Item = N>,
     {
-        if let Some(cur) = self.stack.pop() {
-            for next in successors(&cur) {
-                if self.seen.insert(next.clone()) {
+        while let Some(cur) = self.stack.pop() {
+            if !self.seen.contains(&cur) {
+                self.seen.insert(cur.clone());
+
+                for next in successors(&cur) {
                     self.stack.push(next.clone());
                 }
+            } else {
+                continue;
             }
 
             return Some(cur);
