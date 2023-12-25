@@ -86,7 +86,8 @@ have yet to add.
 
 ### Re-exports for the prelude
 
-- TODO A memoization lib
+- TODO: A memoization lib
+- TODO: Reintroduce petgraph once I understand it better
 
 ### Grids
 
