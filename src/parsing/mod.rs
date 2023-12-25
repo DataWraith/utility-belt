@@ -1,6 +1,6 @@
 use nom::{
     bytes::complete::{tag, take_while_m_n},
-    combinator::map_res,
+    combinator::{map_res, opt},
     sequence::Tuple,
     IResult, Parser,
 };
@@ -15,10 +15,15 @@ pub fn parse_usize(input: &str) -> IResult<&str, usize> {
 
 /// nom parser for a isize
 pub fn parse_isize(input: &str) -> IResult<&str, isize> {
+    let (input, sign) = opt(tag("-"))(input)?;
     let (input, num) = nom::character::complete::digit1(input)?;
     let num = num.parse::<isize>().unwrap();
 
-    Ok((input, num))
+    if sign.is_some() {
+        Ok((input, -num))
+    } else {
+        Ok((input, num))
+    }
 }
 
 /// nom parser for an RGB color specified in the usual hexadecimal format (e.g. #ff00ff).
@@ -40,4 +45,34 @@ pub fn parse_hex_color(input: &str) -> IResult<&str, (u8, u8, u8)> {
     let (input, _) = tag("#")(input)?;
 
     (hex_primary, hex_primary, hex_primary).parse(input)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_parse_usize() {
+        assert_eq!(parse_usize("123"), Ok(("", 123)));
+        assert_eq!(parse_usize("123abc"), Ok(("abc", 123)));
+        assert!(parse_usize("abc").is_err());
+    }
+
+    #[test]
+    fn test_parse_isize() {
+        assert_eq!(parse_isize("123"), Ok(("", 123)));
+        assert_eq!(parse_isize("-123"), Ok(("", -123)));
+        assert_eq!(parse_isize("123abc"), Ok(("abc", 123)));
+        assert_eq!(parse_isize("-123abc"), Ok(("abc", -123)));
+        assert!(parse_isize("abc").is_err());
+    }
+
+    #[test]
+    fn test_parse_hex_color() {
+        assert_eq!(parse_hex_color("#ff00ff"), Ok(("", (255, 0, 255))));
+        assert_eq!(parse_hex_color("#ff00ffabc"), Ok(("abc", (255, 0, 255))));
+
+        // Missing octothorpe
+        assert!(parse_hex_color("ff00ff").is_err());
+    }
 }
