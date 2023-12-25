@@ -47,3 +47,6 @@ pub use crate::search::*;
 // tinyvec
 pub use tinyvec::ArrayVec;
 pub use tinyvec::TinyVec;
+
+// VecDeque
+pub use std::collections::VecDeque;
