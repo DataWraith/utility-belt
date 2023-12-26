@@ -20,7 +20,6 @@ pub struct BorderedGrid2D<'a, T: Clone> {
     default: T,
 }
 
-
 impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     /// Create a new bordered grid
     pub fn new(border_size: usize, border_element: T, grid: &'a mut Grid2D<T>) -> Self {
@@ -80,14 +79,13 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
 
     /// Returns an iterator over all elements in the grid, including the border
     pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> {
-        (0..self.height()).flat_map(move |y| {
-            (0..self.width()).map(move |x| {
+        ((-self.border_size)..(self.height() as i32 - self.border_size)).flat_map(move |y| {
+            ((-self.border_size)..(self.width() as i32 - self.border_size)).map(move |x| {
                 let x = x as i32;
                 let y = y as i32;
-
                 let c = Coordinate::new(x, y);
-                let c2 = Coordinate::new(x - self.border_size, y - self.border_size);
-                (c, self.get(c2).unwrap())
+
+                (c, self.get(c).unwrap())
             })
         })
     }
@@ -167,27 +165,27 @@ mod tests {
 
         let mut iter = bordered.iter();
 
-        assert_eq!(iter.next(), Some((Coordinate::new(0, 0), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(1, 0), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(2, 0), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(3, 0), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(4, 0), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(0, 1), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(1, 1), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(2, 1), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(3, 1), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(4, 1), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(0, 2), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(1, 2), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(2, 2), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(3, 2), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(4, 2), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(0, 3), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(1, 3), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(2, 3), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(3, 3), &1)));
-        assert_eq!(iter.next(), Some((Coordinate::new(4, 3), &0)));
-        assert_eq!(iter.next(), Some((Coordinate::new(0, 4), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(0 - 1, 0 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(1 - 1, 0 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(2 - 1, 0 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(3 - 1, 0 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(4 - 1, 0 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(0 - 1, 1 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(1 - 1, 1 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(2 - 1, 1 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(3 - 1, 1 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(4 - 1, 1 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(0 - 1, 2 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(1 - 1, 2 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(2 - 1, 2 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(3 - 1, 2 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(4 - 1, 2 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(0 - 1, 3 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(1 - 1, 3 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(2 - 1, 3 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(3 - 1, 3 - 1), &1)));
+        assert_eq!(iter.next(), Some((Coordinate::new(4 - 1, 3 - 1), &0)));
+        assert_eq!(iter.next(), Some((Coordinate::new(0 - 1, 4 - 1), &0)));
     }
 
     #[test]
