@@ -94,6 +94,7 @@ have yet to add.
 - Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
 - TODO: Neighbor-with-directions iterator that returns both the neighbors and the direction to reach them
+- TODO: DirectionSet does not implement Debug
 
 ### Search for combinatorial optimization
 
