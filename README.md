@@ -93,6 +93,7 @@ have yet to add.
 
 - Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
+- TODO: Neighbor-with-directions iterator that returns both the neighbors and the direction to reach them
 
 ### Search for combinatorial optimization
 

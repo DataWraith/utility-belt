@@ -15,6 +15,8 @@ pub struct UnionFind {
     sizes: Vec<usize>,
 }
 
+// TODO: add a method to get all distinct roots
+
 impl UnionFind {
     /// Adds a singleton set to the data structure and returns the index of the
     /// set.
