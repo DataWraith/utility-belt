@@ -109,4 +109,6 @@ have yet to add.
 - TODO: Root finding (Newton?)
 - TODO: Polynomial Regression
 
+### Misc
 
+- TODO: A way to turn arbitrary inputs into usize indices via a HashMap
