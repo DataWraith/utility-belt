@@ -26,7 +26,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - [indoc](https://docs.rs/indoc) - exposes macros for convenient inline String formatting
 - [itertools](https://docs.rs/itertools) - various tools for working with iterators
 - [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements
-- [nom](https://docs.rs/nom) and [nom_locate](https://docs.rs/nom_locate/latest/nom_locate/) - ergonomic parser combinators
+- [nom](https://docs.rs/nom) - ergonomic parser combinators
 - [pathfinding](https://docs.rs/pathfinding) - BFS, A*, Brent's algorithm for cycle finding, connected components, etc.
 - [ranges](https://docs.rs/ranges) - range union/intersection, etc.
 - [rayon](https://docs.rs/rayon) - parallel iterators

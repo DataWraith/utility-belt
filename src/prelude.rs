@@ -24,7 +24,6 @@ pub use ndarray::Array2;
 // nom
 pub use crate::parsing::*;
 pub use nom;
-pub use nom_locate::LocatedSpan;
 
 // optimization
 pub use crate::optimization::*;
@@ -39,7 +38,7 @@ pub use ranges::*;
 pub use rayon::prelude::*;
 
 // rstest
-pub use rstest::*;
+pub use rstest;
 
 // search
 pub use crate::search::*;
