@@ -230,6 +230,15 @@ impl<T: Clone> Grid2D<T> {
 
         result
     }
+
+    /// Transpose the grid
+    pub fn transpose(&self) -> Self {
+        Grid2D {
+            width: self.height,
+            height: self.width,
+            data: self.data.clone().reversed_axes(),
+        }
+    }
 }
 
 impl<T: Clone> Index<Coordinate> for Grid2D<T> {
@@ -346,6 +355,26 @@ mod tests {
         assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 1)), &mut 4);
         assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 2)), &mut 7);
         assert_eq!(grid.get_wrap_mut(Coordinate::new(0, 3)), &mut 1);
+    }
+
+    #[test]
+    fn test_transpose() {
+        let input = indoc! {"
+            12
+            34
+            56
+        "};
+
+        let input_transposed = indoc! {"
+            135
+            246
+        "};
+
+        let grid: Grid2D<char> = Grid2D::parse(input);
+        let grid_t: Grid2D<char>=  Grid2D::parse(input_transposed);
+
+        assert_eq!(grid.transpose(), grid_t);
+        assert_eq!(grid_t.transpose(), grid);
     }
 
     #[test]
