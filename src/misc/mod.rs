@@ -27,6 +27,7 @@ use crate::prelude::HashMap;
 /// shorter, shortcuts from the current position until we reach our target
 /// number of iterations.
 ///
+// TODO: Maybe make this take a closure instead of a fixed number of iterations
 pub fn path_contraction<N, FN>(start: &N, mut successor: FN, iterations: usize) -> N
 where
     N: Eq + Hash + Clone,
