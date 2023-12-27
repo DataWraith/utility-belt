@@ -33,6 +33,18 @@ impl Display for Coordinate {
     }
 }
 
+impl Ord for Coordinate {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.0.y.cmp(&other.0.y).then(self.0.x.cmp(&other.0.x))
+    }
+}
+
+impl PartialOrd for Coordinate {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
 impl Coordinate {
     pub fn new(x: i32, y: i32) -> Self {
         Self(IVec2::new(x, y))
