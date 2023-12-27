@@ -1,8 +1,14 @@
 use num::Num;
 
-pub mod cumsum;
-pub mod union_find;
-pub mod polygons;
+mod cumsum;
+mod line_line_intersection;
+mod polygons;
+mod union_find;
+
+pub use cumsum::*;
+pub use line_line_intersection::*;
+pub use polygons::*;
+pub use union_find::*;
 
 /// Greatest Common Divisor.
 ///
