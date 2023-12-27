@@ -31,9 +31,6 @@ pub use nom;
 // optimization
 pub use crate::optimization::*;
 
-// ranges
-pub use ranges::*;
-
 // rayon
 pub use rayon::prelude::*;
 
