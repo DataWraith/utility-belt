@@ -78,6 +78,10 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - an implementation of **branch and bound**
 
+## Further crates that may be useful
+
+- [gomez](https://docs.rs/gomez/) - curve fitting, mathematical optimization
+
 ## TODO
 
 The utility-belt is still under development. The following is a list of things I
@@ -106,4 +110,3 @@ have yet to add.
 - TODO: Chinese Remainder Theorem
 - TODO: Root finding (Newton?)
 - TODO: Polynomial Regression
-
