@@ -29,6 +29,42 @@ impl DirectionSet {
     }
 }
 
+impl std::fmt::Debug for DirectionSet {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{{")?;
+
+        if self.0 == 0 {
+            return write!(f, "∅}}");
+        }
+
+        if self.contains(Direction::Up) {
+            write!(f, "^")?;
+        } else {
+            write!(f, " ")?;
+        }
+
+        if self.contains(Direction::Right) {
+            write!(f, ">")?;
+        } else {
+            write!(f, " ")?;
+        }
+
+        if self.contains(Direction::Down) {
+            write!(f, "v")?;
+        } else {
+            write!(f, " ")?;
+        }
+
+        if self.contains(Direction::Left) {
+            write!(f, "<")?;
+        } else {
+            write!(f, " ")?;
+        }
+
+        write!(f, "}}")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -86,5 +122,27 @@ mod tests {
         assert!(!set.contains(Direction::Right));
         assert!(!set.contains(Direction::Down));
         assert!(!set.contains(Direction::Left));
+    }
+
+    #[test]
+    fn test_debug() {
+        let mut set = DirectionSet::empty();
+
+        assert_eq!(format!("{:?}", set), "{∅}");
+
+        set.insert(Direction::Up);
+        assert_eq!(format!("{:?}", set), "{^   }");
+
+        set.insert(Direction::Right);
+        assert_eq!(format!("{:?}", set), "{^>  }");
+
+        set.insert(Direction::Down);
+        assert_eq!(format!("{:?}", set), "{^>v }");
+
+        set.insert(Direction::Left);
+        assert_eq!(format!("{:?}", set), "{^>v<}");
+
+        set.remove(Direction::Up);
+        assert_eq!(format!("{:?}", set), "{ >v<}");
     }
 }
