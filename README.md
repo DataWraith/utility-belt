@@ -108,6 +108,3 @@ have yet to add.
 - TODO: Polynomial Regression
 - TODO: Line intersection test
 
-### Misc
-
-- TODO: A way to turn arbitrary inputs into usize indices via a HashMap
