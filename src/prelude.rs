@@ -36,6 +36,7 @@ pub use rayon::prelude::*;
 
 // rstest
 pub use rstest::*;
+pub use rstest;
 
 // search
 pub use crate::search::*;
