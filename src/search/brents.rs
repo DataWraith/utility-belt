@@ -1,5 +1,5 @@
 /// Brent's cycle detection algorithm
-fn brents_algorithm<S, F>(mut successor: F, start: S) -> (usize, usize)
+pub fn brents_algorithm<S, F>(mut successor: F, start: S) -> (usize, usize)
 where
     F: FnMut(&S) -> S,
     S: PartialEq + Clone,
@@ -43,3 +43,23 @@ where
     (cycle_start, cycle_length)
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_brents_algorithm() {
+        let successors = |n: &i32| {
+            if *n == 25 {
+                10
+            } else {
+                n + 1
+            }
+        };
+
+        let (cycle_start, cycle_length) = brents_algorithm(successors, 0);
+
+        assert_eq!(cycle_start, 10);
+        assert_eq!(cycle_length, (10..=25).count());
+    }
+}
