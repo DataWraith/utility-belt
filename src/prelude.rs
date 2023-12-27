@@ -26,12 +26,10 @@ pub use ndarray::Array2;
 // nom
 pub use crate::parsing::*;
 pub use nom;
+// TODO: Expose some of the more common combinators
 
 // optimization
 pub use crate::optimization::*;
-
-// pathfinding
-pub use pathfinding::prelude::*;
 
 // ranges
 pub use ranges::*;
