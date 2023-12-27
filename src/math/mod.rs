@@ -1,9 +1,9 @@
 use num::Num;
 
-mod cumsum;
-mod line_line_intersection;
-mod polygons;
-mod union_find;
+pub mod cumsum;
+pub mod line_line_intersection;
+pub mod polygons;
+pub mod union_find;
 
 pub use cumsum::*;
 pub use line_line_intersection::*;
