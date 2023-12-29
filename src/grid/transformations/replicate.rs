@@ -6,7 +6,7 @@ impl<T: Clone> Grid2D<T> {
         assert!(x_factor > 0, "Replication factor must be greater than 0");
         assert!(y_factor > 0, "Replication factor must be greater than 0");
 
-        let new_w = self.height as usize * x_factor as usize;
+        let new_w = self.width as usize * x_factor as usize;
         let new_h = self.height as usize * y_factor as usize;
 
         let mut new_grid = Grid2D::new(new_w, new_h, self[Coordinate::new(0, 0)].clone());

@@ -6,7 +6,7 @@ impl<T: Clone> Grid2D<T> {
         let mut new = self.clone();
 
         for (coord, value) in self.iter() {
-            new.set(coord.mirror_x_wrap(self.height), value.clone());
+            new.set(coord.mirror_x_wrap(self.width), value.clone());
         }
 
         new
