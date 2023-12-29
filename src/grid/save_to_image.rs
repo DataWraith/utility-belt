@@ -30,7 +30,7 @@ impl<T: Clone + Eq + Hash> Grid2D<T> {
 
         let mut colors = HashMap::default();
         let golden_ratio_conjugate = 0.618033988749895;
-        let mut h = 1.0 / 3.1415926535;
+        let mut h = 1.0 / std::f64::consts::PI;
 
         for (coord, value) in self.iter() {
             let color: Rgb<u8> = *colors.entry(value.clone()).or_insert_with(|| {
