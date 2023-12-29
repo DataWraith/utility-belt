@@ -45,7 +45,8 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
   around the grid. This is sometimes useful, for example if you need to find
   all tiles connected to the outside of the grid.
 
-- A few useful **math functions** (`gcd` and `lcm` for now)
+- A few useful **math functions** (`gcd` and `lcm` for now), a few helpers for
+  working with polynomials.
 
 - Functions for calculating **area** of a simple polygon and determining whether
   or not a **point is inside of a polygon**.
