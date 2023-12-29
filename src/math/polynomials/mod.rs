@@ -152,8 +152,12 @@ mod tests {
         assert_eq!(d, 4);
 
         let ys = quadratic_sequence().take(10).collect::<Vec<_>>();
-        let (a, b, c, d) = fit_cubic(&ys).unwrap();
+        let (a, b1, c1, d1) = fit_cubic(&ys).unwrap();
+        let (b2, c2, d2) = fit_quadratic(&ys).unwrap();
 
         assert_eq!(a, 0);
+        assert_eq!(b1, b2);
+        assert_eq!(c1, c2);
+        assert_eq!(d1, d2);
     }
 }
