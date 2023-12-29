@@ -23,14 +23,14 @@ impl<T: Clone + Into<Rgb<u8>>> Grid2D<T> {
 }
 
 impl<T: Clone + Eq + Hash> Grid2D<T> {
-    /// Saves the grid as a PNG image, where each unique value is assigned a random color.
+    /// Saves the grid as a PNG image, where each unique value is assigned a random (but fixed) color.
     pub fn save_png_random(&self, path: &Path) -> Result<(), image::ImageError> {
         let mut image: ImageBuffer<Rgb<u8>, _> =
             image::ImageBuffer::new(self.width() as u32, self.height() as u32);
 
         let mut colors = HashMap::default();
         let golden_ratio_conjugate = 0.618033988749895;
-        let mut h = rand::random::<f64>();
+        let mut h = 1.0 / 3.1415926535;
 
         for (coord, value) in self.iter() {
             let color: Rgb<u8> = *colors.entry(value.clone()).or_insert_with(|| {
