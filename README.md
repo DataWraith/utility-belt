@@ -79,6 +79,8 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - an implementation of **branch and bound**
 
+- Breadth-First and Depth-First search helpers
+
 ## Further crates that may be useful
 
 - [gomez](https://docs.rs/gomez/) - curve fitting, mathematical optimization
@@ -105,6 +107,7 @@ have yet to add.
 #### Pathfinding
 
 - TODO: Seidel's Algorithm
+- TODO: A*
 
 ### Math
 
