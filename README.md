@@ -107,7 +107,6 @@ have yet to add.
 #### Pathfinding
 
 - TODO: Seidel's Algorithm
-- TODO: A*
 
 ### Math
 
