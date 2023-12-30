@@ -38,8 +38,8 @@ impl UnionFind {
     pub fn roots(&mut self) -> HashSet<usize> {
         let mut result = HashSet::default();
 
-        for p in self.parents.iter() {
-            result.insert(*p);
+        for p in self.parents.clone().into_iter() {
+            result.insert(self.find(p).unwrap());
         }
 
         result
