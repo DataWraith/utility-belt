@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 /// Union-find data structure, also known as a disjoint-set data structure.
 ///
 /// This data structure allows you to keep track of disjoint sets of elements,
@@ -15,8 +17,6 @@ pub struct UnionFind {
     sizes: Vec<usize>,
 }
 
-// TODO: add a method to get all distinct roots
-
 impl UnionFind {
     /// Adds a singleton set to the data structure and returns the index of the
     /// set.
@@ -32,6 +32,17 @@ impl UnionFind {
     /// Returns the size of the set that `x` belongs to.
     pub fn size_of_set(&mut self, x: usize) -> Option<usize> {
         self.find(x).map(|r| self.sizes[r])
+    }
+
+    /// Returns the indices of all distinct sets.
+    pub fn roots(&mut self) -> HashSet<usize> {
+        let mut result = HashSet::default();
+
+        for p in self.parents.iter() {
+            result.insert(*p);
+        }
+
+        result
     }
 
     /// Returns the index of the set that `x` belongs to.
