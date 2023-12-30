@@ -21,7 +21,7 @@ In your Advent of Code projects, simply `use utility_belt::prelude::*;`.
 
 Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
-- [ahash](https://docs.rs/ahash) - fast HashMap and HashSet implementation, hashing of single values
+- [ahash](https://docs.rs/ahash) - fast HashMap and HashSet implementation
 - [glam](https://docs.rs/glam) - convenient 2D vector types
 - [indoc](https://docs.rs/indoc) - exposes macros for convenient inline String formatting
 - [itertools](https://docs.rs/itertools) - various tools for working with iterators
