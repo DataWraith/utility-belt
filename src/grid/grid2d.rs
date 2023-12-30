@@ -371,7 +371,7 @@ mod tests {
         "};
 
         let grid: Grid2D<char> = Grid2D::parse(input);
-        let grid_t: Grid2D<char>=  Grid2D::parse(input_transposed);
+        let grid_t: Grid2D<char> = Grid2D::parse(input_transposed);
 
         assert_eq!(grid.transpose(), grid_t);
         assert_eq!(grid_t.transpose(), grid);
