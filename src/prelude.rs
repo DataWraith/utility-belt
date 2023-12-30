@@ -26,7 +26,11 @@ pub use ndarray::Array2;
 // nom
 pub use crate::parsing::*;
 pub use nom;
-// TODO: Expose some of the more common combinators
+pub use nom::bytes::complete::tag;
+pub use nom::character::complete::*;
+pub use nom::combinator::eof;
+pub use nom::multi::*;
+pub use nom::IResult;
 
 // optimization
 pub use crate::optimization::*;
