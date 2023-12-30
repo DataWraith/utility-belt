@@ -1,48 +1,19 @@
-use crate::grid::{Coordinate, Grid2D};
+use crate::grid::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
     /// Rotates the grid 90 degrees clockwise and returns it as a new grid.
     pub fn rotate_right(&self) -> Self {
-        let mut new = self.clone();
-        for (coord, value) in self.iter() {
-            new.set(
-                Coordinate::new(self.height() as i32 - 1 - coord.y(), coord.x()),
-                value.clone(),
-            )
-        }
-
-        new
+        self.transpose().mirror_x()
     }
 
     /// Rotates the grid 90 degrees counter-clockwise and returns it as a new grid.
     pub fn rotate_left(&self) -> Self {
-        let mut new = self.clone();
-
-        for (coord, value) in self.iter() {
-            new.set(
-                Coordinate::new(coord.y(), self.width() as i32 - 1 - coord.x()),
-                value.clone(),
-            );
-        }
-
-        new
+        self.transpose().mirror_y()
     }
 
     /// Rotates the grid 180 degrees and returns it as a new grid.
     pub fn rotate_180(&self) -> Self {
-        let mut new = self.clone();
-
-        for (coord, value) in self.iter() {
-            new.set(
-                Coordinate::new(
-                    self.width() as i32 - 1 - coord.x(),
-                    self.height() as i32 - 1 - coord.y(),
-                ),
-                value.clone(),
-            );
-        }
-
-        new
+        self.mirror_x().mirror_y()
     }
 }
 
