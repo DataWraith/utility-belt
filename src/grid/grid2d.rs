@@ -3,7 +3,7 @@ use std::{
     ops::{Index, IndexMut},
 };
 
-use ndarray::{Array2, ArrayView1};
+use ndarray::{concatenate, Array2, ArrayView1, Axis};
 
 use super::Coordinate;
 
@@ -179,46 +179,24 @@ impl<T: Clone> Grid2D<T> {
 
     /// Returns a the result of concatening `other` to the right of `self`.
     pub fn concat_x(&self, other: &Self) -> Self {
-        let mut result = Grid2D::new(
-            self.width() + other.width(),
-            self.height(),
-            self.data[[0, 0]].clone(),
-        );
+        let combined = concatenate![Axis(1), self.data.view(), other.data.view()];
 
-        for (coord, value) in self.iter() {
-            result.set(coord, value.clone());
+        Grid2D {
+            width: self.width + other.width,
+            height: self.height,
+            data: combined,
         }
-
-        for (coord, value) in other.iter() {
-            result.set(
-                coord + Coordinate::new(self.width() as i32, 0),
-                value.clone(),
-            );
-        }
-
-        result
     }
 
     /// Returns a the result of concatening `other` below `self`.
     pub fn concat_y(&self, other: &Self) -> Self {
-        let mut result = Grid2D::new(
-            self.width(),
-            self.height() + other.height(),
-            self.data[[0, 0]].clone(),
-        );
+        let combined = concatenate![Axis(0), self.data.view(), other.data.view()];
 
-        for (coord, value) in self.iter() {
-            result.set(coord, value.clone());
+        Grid2D {
+            width: self.width,
+            height: self.height + other.height,
+            data: combined,
         }
-
-        for (coord, value) in other.iter() {
-            result.set(
-                coord + Coordinate::new(0, self.height() as i32),
-                value.clone(),
-            );
-        }
-
-        result
     }
 
     /// Transpose the grid
@@ -358,7 +336,7 @@ mod tests {
         "};
 
         let mut grid: Grid2D<char> = Grid2D::parse(input);
-        let mut grid_t: Grid2D<char> = Grid2D::parse(input_transposed);
+        let grid_t: Grid2D<char> = Grid2D::parse(input_transposed);
 
         grid.transpose();
 

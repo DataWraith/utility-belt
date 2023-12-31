@@ -5,6 +5,8 @@ impl<T: Clone> Grid2D<T> {
     ///
     /// The given closure determines what happens to overlapping elements and
     /// elements that are not overlapping are deleted.
+    ///
+    /// TODO: Maybe this can be done with ArrayViews
     pub fn fold_left_along_column(&self, column: usize, f: impl Fn(&T, &T) -> T) -> Self {
         assert!(column < self.width as usize, "Column index out of bounds");
 

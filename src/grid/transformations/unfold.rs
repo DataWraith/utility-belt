@@ -2,6 +2,8 @@ use crate::grid::{Coordinate, Grid2D};
 
 impl<T: Clone> Grid2D<T> {
     /// "Unfolds" the grid by mirroring it along the x-axis and concatenating the two halves.
+    ///
+    // TOOD: Maybe this can be done more efficiently?
     pub fn unfold_x(&self) -> Self {
         let mut mirror = self.clone();
         mirror.mirror_x();
