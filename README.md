@@ -80,6 +80,8 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - Pathfinding algorithms (Breadth-First Search, Depth-First Search and A*)
 
+- Stochastic Gradient Descent with MADGRAD. Because I could.
+
 ## Further crates that may be useful
 
 - [gomez](https://docs.rs/gomez/) - curve fitting, mathematical optimization
