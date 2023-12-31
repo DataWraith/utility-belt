@@ -2,18 +2,21 @@ use crate::grid::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
     /// Rotates the grid 90 degrees clockwise and returns it as a new grid.
-    pub fn rotate_right(&self) -> Self {
-        self.transpose().mirror_x()
+    pub fn rotate_right(&mut self) {
+        self.transpose();
+        self.mirror_x();
     }
 
     /// Rotates the grid 90 degrees counter-clockwise and returns it as a new grid.
-    pub fn rotate_left(&self) -> Self {
-        self.transpose().mirror_y()
+    pub fn rotate_left(&mut self) {
+        self.transpose();
+        self.mirror_y();
     }
 
     /// Rotates the grid 180 degrees and returns it as a new grid.
-    pub fn rotate_180(&self) -> Self {
-        self.mirror_x().mirror_y()
+    pub fn rotate_180(&mut self) {
+        self.mirror_x();
+        self.mirror_y();
     }
 }
 
@@ -23,7 +26,7 @@ mod tests {
 
     #[test]
     fn test_rotate_right() {
-        let grid = Grid2D::from_shape_vec(
+        let mut grid = Grid2D::from_shape_vec(
             3,
             3,
             vec![
@@ -43,13 +46,14 @@ mod tests {
             ],
         );
 
-        let rotated = grid.rotate_right();
-        assert_eq!(rotated, expected);
+        grid.rotate_right();
+
+        assert_eq!(grid, expected);
     }
 
     #[test]
     fn test_rotate_left() {
-        let grid = Grid2D::from_shape_vec(
+        let mut grid = Grid2D::from_shape_vec(
             3,
             3,
             vec![
@@ -69,13 +73,14 @@ mod tests {
             ],
         );
 
-        let rotated = grid.rotate_left();
-        assert_eq!(rotated, expected);
+        grid.rotate_left();
+
+        assert_eq!(grid, expected);
     }
 
     #[test]
     fn test_rotate_180() {
-        let grid = Grid2D::from_shape_vec(
+        let mut grid = Grid2D::from_shape_vec(
             3,
             3,
             vec![
@@ -95,7 +100,8 @@ mod tests {
             ],
         );
 
-        let rotated = grid.rotate_180();
-        assert_eq!(rotated, expected);
+        grid.rotate_180();
+
+        assert_eq!(grid, expected);
     }
 }

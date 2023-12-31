@@ -4,29 +4,13 @@ use crate::grid::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
     /// Mirrors the grid along the x-axis and returns it as a new grid.
-    pub fn mirror_x(&self) -> Self {
-        let mut data = self.data.clone();
-
-        data.invert_axis(Axis(1));
-
-        Self {
-            width: self.width,
-            height: self.height,
-            data,
-        }
+    pub fn mirror_x(&mut self) {
+        self.data.invert_axis(Axis(1));
     }
 
     /// Mirrors the grid along the y-axis and returns it as a new grid.
-    pub fn mirror_y(&self) -> Self {
-        let mut data = self.data.clone();
-
-        data.invert_axis(Axis(0));
-
-        Self {
-            width: self.width,
-            height: self.height,
-            data,
-        }
+    pub fn mirror_y(&mut self) {
+        self.data.invert_axis(Axis(0));
     }
 }
 
@@ -36,7 +20,7 @@ mod tests {
 
     #[test]
     fn test_mirror_x() {
-        let grid = Grid2D::from_shape_vec(
+        let mut grid = Grid2D::from_shape_vec(
             3,
             3,
             vec![
@@ -56,13 +40,14 @@ mod tests {
             ],
         );
 
-        let mirrored = grid.mirror_x();
-        assert_eq!(mirrored, expected);
+        grid.mirror_x();
+
+        assert_eq!(grid, expected);
     }
 
     #[test]
     fn test_mirror_y() {
-        let grid = Grid2D::from_shape_vec(
+        let mut grid = Grid2D::from_shape_vec(
             3,
             3,
             vec![
@@ -82,7 +67,7 @@ mod tests {
             ],
         );
 
-        let mirrored = grid.mirror_y();
-        assert_eq!(mirrored, expected);
+        grid.mirror_y();
+        assert_eq!(grid, expected);
     }
 }

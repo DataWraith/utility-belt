@@ -3,7 +3,10 @@ use crate::grid::{Coordinate, Grid2D};
 impl<T: Clone> Grid2D<T> {
     /// "Unfolds" the grid by mirroring it along the x-axis and concatenating the two halves.
     pub fn unfold_x(&self) -> Self {
-        self.concat_x(&self.mirror_x())
+        let mut mirror = self.clone();
+        mirror.mirror_x();
+
+        self.concat_x(&mirror)
     }
 
     /// "Unfolds" the grid by mirroring it along a given column.
@@ -28,7 +31,9 @@ impl<T: Clone> Grid2D<T> {
 
     /// "Unfolds" the grid by mirroring it along the y-axis and concatenating the two halves.
     pub fn unfold_y(&self) -> Self {
-        self.concat_y(&self.mirror_y())
+        let mut mirror = self.clone();
+        mirror.mirror_y();
+        self.concat_y(&mirror)
     }
 
     /// "Unfolds" the grid by mirroring it along a given row.

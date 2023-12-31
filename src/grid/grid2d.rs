@@ -222,12 +222,9 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Transpose the grid
-    pub fn transpose(&self) -> Self {
-        Grid2D {
-            width: self.height,
-            height: self.width,
-            data: self.data.clone().reversed_axes(),
-        }
+    pub fn transpose(&mut self) {
+        std::mem::swap(&mut self.width, &mut self.height);
+        self.data.swap_axes(0, 1);
     }
 }
 
@@ -360,11 +357,29 @@ mod tests {
             246
         "};
 
-        let grid: Grid2D<char> = Grid2D::parse(input);
-        let grid_t: Grid2D<char> = Grid2D::parse(input_transposed);
+        let mut grid: Grid2D<char> = Grid2D::parse(input);
+        let mut grid_t: Grid2D<char> = Grid2D::parse(input_transposed);
 
-        assert_eq!(grid.transpose(), grid_t);
-        assert_eq!(grid_t.transpose(), grid);
+        grid.transpose();
+
+        assert_eq!(grid, grid_t);
+    }
+
+    #[test]
+    fn test_transpose_inverts_itself() {
+        let input = indoc! {"
+            123.
+            456.
+            789.
+        "};
+
+        let mut grid = Grid2D::<char>::parse(input);
+        let grid2 = grid.clone();
+
+        grid.transpose();
+        grid.transpose();
+
+        assert_eq!(grid, grid2);
     }
 
     #[test]
