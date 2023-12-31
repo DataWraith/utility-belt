@@ -35,9 +35,6 @@ pub use nom::IResult;
 // optimization
 pub use crate::optimization::*;
 
-// rayon
-pub use rayon::prelude::*;
-
 // rstest
 pub use rstest;
 pub use rstest::*;
