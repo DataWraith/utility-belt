@@ -81,8 +81,6 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         ((-self.border_size)..(self.height() as i32 - self.border_size)).flat_map(move |y| {
             ((-self.border_size)..(self.width() as i32 - self.border_size)).map(move |x| {
-                let x = x as i32;
-                let y = y as i32;
                 let c = Coordinate::new(x, y);
 
                 (c, self.get(c).unwrap())

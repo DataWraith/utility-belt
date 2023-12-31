@@ -1,14 +1,16 @@
 use crate::grid::{Coordinate, Grid2D};
 
-// TODO: Docstrings
-
 impl<T: Clone> Grid2D<T> {
     /// "Unfolds" the grid by mirroring it along the x-axis and concatenating the two halves.
     pub fn unfold_x(&self) -> Self {
         self.concat_x(&self.mirror_x())
     }
 
-    // TODO: Figure out a better name for this
+    /// "Unfolds" the grid by mirroring it along a given column.
+    ///
+    /// The grid unfolds from left to right, and any columns that are covered by
+    /// folded columns (including non-existant ones) are replaced (if
+    /// overlapping) or removed (if source column is off the grid)
     pub fn unfold_at_x(&self, column: usize) -> Self {
         let mut result = Grid2D::new(column * 2 + 1, self.height(), self.data[[0, 0]].clone());
 
@@ -24,11 +26,16 @@ impl<T: Clone> Grid2D<T> {
         result
     }
 
+    /// "Unfolds" the grid by mirroring it along the y-axis and concatenating the two halves.
     pub fn unfold_y(&self) -> Self {
         self.concat_y(&self.mirror_y())
     }
 
-    // TODO: Figure out a better name for this
+    /// "Unfolds" the grid by mirroring it along a given row.
+    ///
+    /// The top half is folded down, and any rows that are covered by folded
+    /// columns (including non-existant ones) are replaced (if overlapping) or
+    /// removed (if the source row is off the grid )
     pub fn unfold_at_y(&self, row: usize) -> Self {
         let mut result = Grid2D::new(self.width(), row * 2 + 1, self.data[[0, 0]].clone());
 
@@ -104,16 +111,6 @@ mod tests {
         let unfolded = grid.unfold_at_x(2);
         assert_eq!(unfolded, expected);
 
-        let grid = Grid2D::from_shape_vec(
-            3,
-            3,
-            vec![
-                1, 2, 3, //
-                4, 5, 6, //
-                7, 8, 9, //
-            ],
-        );
-
         let expected = Grid2D::from_shape_vec(
             3,
             3,
@@ -126,6 +123,39 @@ mod tests {
 
         let unfolded = grid.unfold_at_x(1);
         assert_eq!(unfolded, expected);
+
+        let grid = Grid2D::from_shape_vec(
+            4,
+            2,
+            vec![
+                1, 2, 3, 4, //
+                5, 6, 7, 8, //
+            ],
+        );
+
+        let expected = Grid2D::from_shape_vec(
+            3,
+            2,
+            vec![
+                1, 2, 1, //
+                5, 6, 5, //
+            ],
+        );
+
+        let expected2 = Grid2D::from_shape_vec(
+            5,
+            2,
+            vec![
+                1, 2, 3, 2, 1, //
+                5, 6, 7, 6, 5, //
+            ],
+        );
+
+        let unfolded = grid.unfold_at_x(1);
+        assert_eq!(unfolded, expected);
+
+        let unfolded = grid.unfold_at_x(2);
+        assert_eq!(unfolded, expected2);
     }
 
     #[test]
@@ -179,5 +209,44 @@ mod tests {
 
         let unfolded = grid.unfold_at_y(0);
         assert_eq!(unfolded, expected);
+
+        let grid = Grid2D::from_shape_vec(
+            2,
+            4,
+            vec![
+                1, 5, //
+                2, 6, //
+                3, 7, //
+                4, 8, //
+            ],
+        );
+
+        let expected = Grid2D::from_shape_vec(
+            2,
+            3,
+            vec![
+                1, 5, //
+                2, 6, //
+                1, 5,
+            ],
+        );
+
+        let unfolded = grid.unfold_at_y(1);
+        assert_eq!(unfolded, expected);
+
+        let expected2 = Grid2D::from_shape_vec(
+            2,
+            5,
+            vec![
+                1, 5, //
+                2, 6, //
+                3, 7, //
+                2, 6, //
+                1, 5, //
+            ],
+        );
+
+        let unfolded = grid.unfold_at_y(2);
+        assert_eq!(unfolded, expected2);
     }
 }
