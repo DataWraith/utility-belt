@@ -79,7 +79,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - an implementation of **branch and bound**
 
-- Breadth-First and Depth-First search helpers
+- Pathfinding algorithms (Breadth-First Search, Depth-First Search and A*)
 
 ## Further crates that may be useful
 
