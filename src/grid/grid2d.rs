@@ -3,7 +3,7 @@ use std::{
     ops::{Index, IndexMut},
 };
 
-use ndarray::Array2;
+use ndarray::{Array2, ArrayView1};
 
 use super::Coordinate;
 
@@ -167,24 +167,14 @@ impl<T: Clone> Grid2D<T> {
             .map(|((y, x), value)| (Coordinate::new(x as i32, y as i32), value))
     }
 
-    /// Returns an iterator over the grid's elements in row-major order.
-    pub fn row_iter(&self) -> impl Iterator<Item = &T> {
-        (0..self.height).flat_map(move |y| {
-            (0..self.width).map(move |x| {
-                let c = Coordinate::new(x, y);
-                self.get(c).unwrap()
-            })
-        })
+    /// Returns an iterator over the grid's rows
+    pub fn row_iter(&self) -> impl Iterator<Item = ArrayView1<T>> + '_ {
+        self.data.axis_iter(ndarray::Axis(0))
     }
 
-    /// Returns an iterator over the grid's elements in column-major order.
-    pub fn col_iter(&self) -> impl Iterator<Item = &T> {
-        (0..self.width).flat_map(move |x| {
-            (0..self.height).map(move |y| {
-                let c = Coordinate::new(x, y);
-                self.get(c).unwrap()
-            })
-        })
+    /// Returns an iterator over the grid's columns
+    pub fn col_iter(&self) -> impl Iterator<Item = ArrayView1<T>> + '_ {
+        self.data.axis_iter(ndarray::Axis(1))
     }
 
     /// Returns a the result of concatening `other` to the right of `self`.
@@ -461,15 +451,20 @@ mod tests {
 
         let mut iter = grid.row_iter();
 
-        assert_eq!(iter.next(), Some(&1));
-        assert_eq!(iter.next(), Some(&2));
-        assert_eq!(iter.next(), Some(&3));
-        assert_eq!(iter.next(), Some(&4));
-        assert_eq!(iter.next(), Some(&5));
-        assert_eq!(iter.next(), Some(&6));
-        assert_eq!(iter.next(), Some(&7));
-        assert_eq!(iter.next(), Some(&8));
-        assert_eq!(iter.next(), Some(&9));
+        let row1 = iter.next().unwrap();
+        let row2 = iter.next().unwrap();
+        let row3 = iter.next().unwrap();
+
+        assert_eq!(row1[0], 1);
+        assert_eq!(row1[1], 2);
+        assert_eq!(row1[2], 3);
+        assert_eq!(row2[0], 4);
+        assert_eq!(row2[1], 5);
+        assert_eq!(row2[2], 6);
+        assert_eq!(row3[0], 7);
+        assert_eq!(row3[1], 8);
+        assert_eq!(row3[2], 9);
+
         assert_eq!(iter.next(), None);
     }
 
@@ -479,15 +474,22 @@ mod tests {
 
         let mut iter = grid.col_iter();
 
-        assert_eq!(iter.next(), Some(&1));
-        assert_eq!(iter.next(), Some(&4));
-        assert_eq!(iter.next(), Some(&7));
-        assert_eq!(iter.next(), Some(&2));
-        assert_eq!(iter.next(), Some(&5));
-        assert_eq!(iter.next(), Some(&8));
-        assert_eq!(iter.next(), Some(&3));
-        assert_eq!(iter.next(), Some(&6));
-        assert_eq!(iter.next(), Some(&9));
+        let col1 = iter.next().unwrap();
+        let col2 = iter.next().unwrap();
+        let col3 = iter.next().unwrap();
+
+        assert_eq!(col1[0], 1);
+        assert_eq!(col1[1], 4);
+        assert_eq!(col1[2], 7);
+
+        assert_eq!(col2[0], 2);
+        assert_eq!(col2[1], 5);
+        assert_eq!(col2[2], 8);
+
+        assert_eq!(col3[0], 3);
+        assert_eq!(col3[1], 6);
+        assert_eq!(col3[2], 9);
+
         assert_eq!(iter.next(), None);
     }
 
