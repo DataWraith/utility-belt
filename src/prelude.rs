@@ -19,6 +19,7 @@ pub use itertools::*;
 
 // math
 pub use crate::math::*;
+pub use num::integer::{gcd, lcm};
 
 // ndarray
 pub use ndarray::Array2;
