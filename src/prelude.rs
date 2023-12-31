@@ -35,6 +35,9 @@ pub use nom::IResult;
 // optimization
 pub use crate::optimization::*;
 
+// rand
+pub use rand::prelude::*;
+
 // rstest
 pub use rstest;
 pub use rstest::*;
