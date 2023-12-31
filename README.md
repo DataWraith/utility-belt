@@ -29,6 +29,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements
 - [nom](https://docs.rs/nom) - ergonomic parser combinators
 - [petgraph](https://docs.rs/petgraph/) - A versatile graph data structure library
+- [rangetools](https://docs.rs/rangetools) - Useful extension to ranges
 - [rstest](https://docs.rs/rstest) - table-driven testing (very useful for AoC!) and fixtures
 - [tinyvec](https://docs.rs/tinyvec) - stack-allocated (small) vectors
 

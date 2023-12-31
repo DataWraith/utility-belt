@@ -554,6 +554,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "rangetools"
+version = "0.1.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e6e97ca3dbabd81e6033cfe09f0cef37c89f34f2a9223cab7cf99305d46a9633"
+
+[[package]]
 name = "rawpointer"
 version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -719,6 +725,7 @@ dependencies = [
  "num",
  "petgraph",
  "rand",
+ "rangetools",
  "rstest",
  "tinyvec",
 ]
