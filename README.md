@@ -92,11 +92,6 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 The utility-belt is still under development. The following is a list of things I
 have yet to add.
 
-### Grids
-
-- Grid2D class
-  - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
-
 ### Math
 
 - TODO: Chinese Remainder Theorem
