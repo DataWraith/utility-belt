@@ -1,26 +1,32 @@
+use ndarray::Axis;
+
 use crate::grid::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
     /// Mirrors the grid along the x-axis and returns it as a new grid.
     pub fn mirror_x(&self) -> Self {
-        let mut new = self.clone();
+        let mut data = self.data.clone();
 
-        for (coord, value) in self.iter() {
-            new.set(coord.mirror_x_wrap(self.width), value.clone());
+        data.invert_axis(Axis(1));
+
+        Self {
+            width: self.width,
+            height: self.height,
+            data,
         }
-
-        new
     }
 
     /// Mirrors the grid along the y-axis and returns it as a new grid.
     pub fn mirror_y(&self) -> Self {
-        let mut new = self.clone();
+        let mut data = self.data.clone();
 
-        for (coord, value) in self.iter() {
-            new.set(coord.mirror_y_wrap(self.height), value.clone());
+        data.invert_axis(Axis(0));
+
+        Self {
+            width: self.width,
+            height: self.height,
+            data,
         }
-
-        new
     }
 }
 
