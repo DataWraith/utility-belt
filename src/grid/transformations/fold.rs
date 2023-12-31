@@ -1,11 +1,11 @@
 use crate::grid::{Coordinate, Grid2D};
 
-// TODO: Docstrings
-
 impl<T: Clone> Grid2D<T> {
-    /// Fold left along a given column. The given closure determines what happens to overlapping elements
-    /// and elements that are not overlapping are deleted.
-    fn fold_left_along_column(&self, column: usize, f: impl Fn(&T, &T) -> T) -> Self {
+    /// Fold left along a given column.
+    ///
+    /// The given closure determines what happens to overlapping elements and
+    /// elements that are not overlapping are deleted.
+    pub fn fold_left_along_column(&self, column: usize, f: impl Fn(&T, &T) -> T) -> Self {
         assert!(column < self.width as usize, "Column index out of bounds");
 
         let w = (self.width as usize - column).min(column + 1);
@@ -34,7 +34,7 @@ impl<T: Clone> Grid2D<T> {
 
     /// Fold upwards along a given row. The given closure determines what happens to overlapping elements
     /// and elements that are not overlapping are deleted.
-    fn fold_up_along_row(&self, row: usize, f: impl Fn(&T, &T) -> T) -> Self {
+    pub fn fold_up_along_row(&self, row: usize, f: impl Fn(&T, &T) -> T) -> Self {
         assert!(row < self.height as usize, "Row index out of bounds");
 
         let h = (self.height as usize - row).min(row + 1);
