@@ -84,16 +84,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - Stochastic Gradient Descent with MADGRAD. Because I could.
 
-## Further crates that may be useful
+## Other crates that may be useful
 
 - [gomez](https://docs.rs/gomez/) - curve fitting, mathematical optimization
 
-## TODO
-
-The utility-belt is still under development. The following is a list of things I
-have yet to add.
-
-### Math
-
-- TODO: Chinese Remainder Theorem
-- TODO: Root finding (Newton?)
