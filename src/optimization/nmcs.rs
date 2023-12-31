@@ -1,72 +1,77 @@
 use std::hash::Hash;
 
-/// Nested search algorithm
-///
-/// This is a generic implementation of the Nested Search algorithm. It takes a
-/// level parameter that determines how deeply the search should nest, as well
-/// as a start state and functions for generating successors, the heuristic move,
-/// and for scoring states.
+use rand::prelude::*;
+
+/// Nested Monte-Carlo Search algorithm
 ///
 /// NOTE: Larger nesting levels take exponentially more time, so levels beyond 2
-/// or 3 are usually not recommended)
-pub fn nested_search<N, IN, C>(
+/// or 3 are usually not recommended.
+pub fn nmcs<N, IN, C>(
     level: u8,
     start: &N,
     successors: &impl Fn(&N) -> IN,
-    heuristic: &impl Fn(&N) -> Option<N>,
     score: &impl Fn(&N) -> C,
+    goal: &impl Fn(&N) -> bool,
 ) -> N
 where
     N: Eq + Clone + Hash,
     IN: IntoIterator<Item = N>,
     C: Ord + Clone,
 {
-    if level == 0 {
-        return playout(start, heuristic);
-    }
-
     let mut state = start.clone();
     let mut terminal = false;
+    let mut overall_best = None;
+    let mut overall_score = None;
 
     while !terminal {
         terminal = true;
 
-        let mut best = None;
-        let mut best_score = None;
+        let mut cur_best = None;
+        let mut cur_score = None;
 
-        for s in successors(&state).into_iter() {
+        for next in successors(&state) {
             terminal = false;
 
-            let end_state = nested_search(level - 1, &s, successors, heuristic, score);
-            let state_score = score(&end_state);
+            let sampled = if level <= 1 {
+                playout(&next, successors)
+            } else {
+                nmcs(level - 1, &next, successors, score, goal)
+            };
 
-            if best.is_none() || state_score > best_score.clone().unwrap() {
-                best = Some(s);
-                best_score = Some(state_score);
+            let score = score(&sampled);
+
+            if cur_best.is_none() || score > cur_score.clone().unwrap() {
+                cur_best = Some(next.clone());
+                cur_score = Some(score.clone());
+            }
+
+            if overall_best.is_none() || score > overall_score.clone().unwrap() {
+                overall_best = Some(sampled.clone());
+                overall_score = Some(score);
+
+                if goal(&sampled) {
+                    return sampled;
+                }
             }
         }
 
         if !terminal {
-            state = best.clone().unwrap();
+            state = cur_best.clone().unwrap();
         }
     }
 
-    state
+    overall_best.unwrap_or(start.clone())
 }
 
-/// Playout function for nested search.
-///
-/// It chooses the first successor at each step. Since the successors are
-/// ordered from best to worst, this is equivalent to choosing the best
-/// successor.
-fn playout<N, FN>(start: &N, heuristic: &FN) -> N
+fn playout<N, FN, IN>(start: &N, successors: &FN) -> N
 where
     N: Eq + Clone + Hash,
-    FN: Fn(&N) -> Option<N>,
+    FN: Fn(&N) -> IN,
+    IN: IntoIterator<Item = N>,
 {
     let mut cur = start.clone();
 
-    while let Some(next) = heuristic(&cur) {
+    while let Some(next) = successors(&cur).into_iter().choose(&mut rand::thread_rng()) {
         cur = next;
     }
 
@@ -119,7 +124,7 @@ mod tests {
 
     #[test]
     fn test_latin_squares() {
-        let dimensionality = 6;
+        let dimensionality = 7;
 
         let successors = |state: &State| {
             let mut coordinates = Vec::new();
@@ -138,35 +143,8 @@ mod tests {
 
             coordinates
                 .into_iter()
-                .flat_map(|(x, y)| {
-                    state.possibilities[[y, x]]
-                        .iter()
-                        .map(move |v| state.assign(x, y, *v))
-                })
-                .collect()
-        };
-
-        let heuristic = |state: &State| {
-            let mut coordinates = Vec::new();
-
-            for (y, row) in state.possibilities.outer_iter().enumerate() {
-                for (x, square) in row.iter().enumerate() {
-                    if square.is_empty() {
-                        return None;
-                    }
-
-                    if square.len() > 1 {
-                        coordinates.push((x, y));
-                    }
-                }
-            }
-
-            coordinates
-                .into_iter()
-                .map(|(x, y)| (x, y, state.possibilities[[y, x]].len()))
-                .min_by_key(|(_, _, len)| *len)
-                .map(|(x, y, _)| (x, y))
                 .map(|(x, y)| state.assign(x, y, state.possibilities[[y, x]][0]))
+                .collect()
         };
 
         let score = |state: &State| {
@@ -216,7 +194,7 @@ mod tests {
         };
 
         let start = State::new(dimensionality);
-        let square = nested_search(1, &start, &successors, &heuristic, &score);
+        let square = nmcs(2, &start, &successors, &score, &|s: &State| score(s) == 0);
 
         assert_eq!(score(&square), 0);
     }
