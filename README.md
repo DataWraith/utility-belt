@@ -98,15 +98,6 @@ have yet to add.
 - Grid2D class
   - TODO Ability to 'fold' grids like pieces of paper (along or, between two columns)
 
-### Search for combinatorial optimization
-
-- TODO: Anytime Beam Search
-- TODO: Nested Search
-
-#### Pathfinding
-
-- TODO: Seidel's Algorithm
-
 ### Math
 
 - TODO: Chinese Remainder Theorem
