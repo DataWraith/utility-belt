@@ -87,4 +87,3 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 ## Other crates that may be useful
 
 - [gomez](https://docs.rs/gomez/) - curve fitting, mathematical optimization
-
