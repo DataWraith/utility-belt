@@ -11,9 +11,7 @@ pub enum Direction {
 impl Direction {
     /// Returns an iterator over all four directions
     pub fn all() -> impl Iterator<Item = Self> {
-        [Self::Up, Self::Right, Self::Down, Self::Left]
-            .iter()
-            .copied()
+        [Self::Up, Self::Right, Self::Down, Self::Left].into_iter()
     }
 
     /// Returns the direction one would be facing after a turning left
