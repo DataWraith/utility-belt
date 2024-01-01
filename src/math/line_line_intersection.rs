@@ -1,42 +1,40 @@
 use num::{Num, Signed};
 
-// This computes the intersection point of two lines (if any), given as pairs of points.
-//
-// https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection
-//
-// NOTE: This returns `None` for coincidental lines, you'll have to check for
-//       that separately.
-//
-// NOTE: If you don't use sufficiently large numeric types, this may overflow
-//       during multiplication and panic.
-pub fn line_intersection_point<T: Num + Clone + Signed>(
+/// This computes the intersection point of two lines (if any), given as pairs of points.
+///
+/// NOTE: This returns `None` if the lines are coincidental, so you may need to check for
+///       that case separately.
+///
+/// Reference:
+///   https://www.topcoder.com/thrive/articles/Geometry%20Concepts%20part%202:%20%20Line%20Intersection%20and%20its%20Applications#LineLineIntersection
+///
+pub fn line_intersection_point<T: Num + Clone + Signed + std::ops::Sub>(
     a: ((T, T), (T, T)),
     b: ((T, T), (T, T)),
 ) -> Option<(T, T)> {
-    let x1 = &(a.0).0;
-    let y1 = &(a.0).1;
-    let x2 = &(a.1).0;
-    let y2 = &(a.1).1;
+    let x1 = (a.0).0.clone();
+    let y1 = (a.0).1.clone();
 
-    let x3 = &(b.0).0;
-    let y3 = &(b.0).1;
-    let x4 = &(b.1).0;
-    let y4 = &(b.1).1;
+    let a1 = (a.1).1.clone() - y1.clone();
+    let b1 = x1.clone() - (a.1).0.clone();
+    let c1 = (a1.clone() * x1.clone()) + (b1.clone() * y1.clone());
 
-    let denominator = (x1.clone() - x2.clone()) * (y3.clone() - y4.clone())
-        - (y1.clone() - y2.clone()) * (x3.clone() - x4.clone());
+    let x2 = (b.0).0.clone();
+    let y2 = (b.0).1.clone();
 
-    if denominator.is_zero() {
+    let a2 = (b.1).1.clone() - y2.clone();
+    let b2 = x2.clone() - (b.1).0.clone();
+    let c2 = (a2.clone() * x2.clone()) + (b2.clone() * y2.clone());
+
+    let det = a1.clone() * b2.clone() - a2.clone() * b1.clone();
+
+    if det == T::zero() {
+        // Lines are parallel or coincidental
         return None;
     }
 
-    let x = (x1.clone() * y2.clone() - y1.clone() * x2.clone()) * (x3.clone() - x4.clone())
-        - (x1.clone() - x2.clone()) * (x3.clone() * y4.clone() - y3.clone() * x4.clone())
-            / denominator.clone();
-
-    let y = (x1.clone() * y2.clone() - y1.clone() * x2.clone()) * (y3.clone() - y4.clone())
-        - (y1.clone() - y2.clone()) * (x3.clone() * y4.clone() - y3.clone() * x4.clone())
-            / denominator.clone();
+    let x = (b2.clone() * c1.clone() - b1.clone() * c2.clone()) / det.clone();
+    let y = (a1.clone() * c2.clone() - a2.clone() * c1.clone()) / det.clone();
 
     Some((x, y))
 }
@@ -66,6 +64,32 @@ mod tests {
     }
 
     #[test]
+    fn test_coincidental_lines() {
+        assert_eq!(
+            line_intersection_point(((0, 0), (1, 1)), ((0, 0), (1, 1))),
+            None,
+        );
+
+        assert_eq!(
+            line_intersection_point(((0, 0), (1, 1)), ((1, 1), (15, 15))),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_parallel_lines() {
+        assert_eq!(
+            line_intersection_point(((0, 0), (1, 1)), ((0, 1), (1, 2))),
+            None,
+        );
+
+        assert_eq!(
+            line_intersection_point(((0, 0), (1, 1)), ((1, 0), (2, 1))),
+            None,
+        );
+    }
+
+    #[test]
     fn test_with_rationals() {
         let x1 = Ratio::new(0xfbbb8c2bc3ed57i128, 1);
         let y1 = Ratio::new(0xb120ca41205a7ci128, 1);
@@ -79,10 +103,10 @@ mod tests {
         let dx2 = Ratio::new(1i128, 1i128);
         let dy2 = Ratio::new(-1i128, 1i128);
 
-        assert!(dbg!(line_intersection_point(
+        assert!(line_intersection_point(
             ((x1, y1), (x1 + dx1, y1 + dy1)),
             ((x2, y2), (x2 + dx2, y2 + dy2))
-        ))
+        )
         .is_some());
     }
 }
