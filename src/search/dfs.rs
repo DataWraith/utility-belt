@@ -25,9 +25,7 @@ impl<N: Hash + Eq + Clone> DFS<N> {
         IN: IntoIterator<Item = N>,
     {
         while let Some(cur) = self.stack.pop() {
-            if !self.seen.contains(&cur) {
-                self.seen.insert(cur.clone());
-
+            if self.seen.insert(cur.clone()) {
                 for next in successors(&cur) {
                     self.stack.push(next.clone());
                 }
