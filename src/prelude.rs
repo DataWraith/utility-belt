@@ -24,6 +24,9 @@ pub use itertools::*;
 pub use crate::math::*;
 pub use num::integer::{gcd, lcm};
 
+// misc
+pub use crate::misc::*;
+
 // ndarray
 pub use ndarray::Array2;
 
