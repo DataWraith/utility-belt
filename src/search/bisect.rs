@@ -26,6 +26,7 @@ mod tests {
     fn bisect_test() {
         let v = [1, 2, 3, 4, 5];
 
+        assert_eq!(bisect(0, v.len(), |i| v[i] >= 0), 0);
         assert_eq!(bisect(0, v.len(), |i| v[i] >= 1), 0);
         assert_eq!(bisect(0, v.len(), |i| v[i] >= 2), 1);
         assert_eq!(bisect(0, v.len(), |i| v[i] >= 3), 2);
