@@ -56,7 +56,7 @@ where
         }
 
         for next in successors(&cur) {
-            if seen.insert(next.clone()) && (best.is_none() || bound(&next) <= best.unwrap()) {
+            if seen.insert(next.clone()) && (best.is_none() || bound(&next) < best.unwrap()) {
                 stack.push(next);
             }
         }
