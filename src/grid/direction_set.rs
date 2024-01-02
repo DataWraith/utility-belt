@@ -1,6 +1,7 @@
 use super::Direction;
 
 /// A set of directions
+#[derive(Clone)]
 pub struct DirectionSet(u8);
 
 impl DirectionSet {
