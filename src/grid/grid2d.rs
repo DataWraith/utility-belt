@@ -62,8 +62,8 @@ impl<T: Clone + From<char>> Grid2D<T> {
 }
 
 impl<T: Clone> Grid2D<T> {
-    // Creates a new grid of the given size, with all elements initialized to
-    // the given value.
+    /// Creates a new grid of the given size, with all elements initialized to
+    /// the given value.
     pub fn new(width: usize, height: usize, default: T) -> Self {
         assert!(width > 0, "Grid width must be greater than 0");
         assert!(height > 0, "Grid height must be greater than 0");
@@ -75,10 +75,10 @@ impl<T: Clone> Grid2D<T> {
         }
     }
 
-    // Reshapes the given Vec<T> into a grid of the given size.
-    //
-    // Panics if the given width or height is 0 or if the given data does not
-    // have the same number of elements as a grid of the given width and height.
+    /// Reshapes the given Vec<T> into a grid of the given size.
+    ///
+    /// Panics if the given width or height is 0 or if the given data does not
+    /// have the same number of elements as a grid of the given width and height.
     pub fn from_shape_vec(width: usize, height: usize, data: Vec<T>) -> Self {
         assert!(width > 0, "Grid width must be greater than 0");
         assert!(height > 0, "Grid height must be greater than 0");
@@ -152,6 +152,8 @@ impl<T: Clone> Grid2D<T> {
         self.data[(coord.y() as usize, coord.x() as usize)] = value;
     }
 
+    /// Maps the grid to a new grid with the same dimensions, applying the given
+    /// function to each element.
     pub fn map<T2: Clone>(&self, f: impl Fn(&T) -> T2) -> Grid2D<T2> {
         Grid2D {
             width: self.width,
