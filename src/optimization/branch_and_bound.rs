@@ -50,9 +50,9 @@ where
             if best.is_none() || cost < best.unwrap() {
                 best = Some(cost);
                 best_n = cur.clone();
-            } else {
-                continue;
             }
+
+            continue;
         }
 
         for next in successors(&cur) {
