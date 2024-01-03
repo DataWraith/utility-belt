@@ -3,7 +3,8 @@ pub use ahash::AHashMap as HashMap;
 pub use ahash::AHashSet as HashSet;
 
 // comemo
-pub use comemo::memoize;
+pub use comemo;
+pub use comemo::*;
 
 // glam
 pub use glam::I64Vec2;
