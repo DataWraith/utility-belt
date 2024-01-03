@@ -39,6 +39,9 @@ pub use nom::IResult;
 // optimization
 pub use crate::optimization::*;
 
+// petgraph
+pub use petgraph::prelude as petgraph;
+
 // rand
 pub use rand::prelude::*;
 
