@@ -79,6 +79,8 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - an implementation of **branch and bound**
 
+- Small bitsets for 32, 64 and 128 values
+
 - Pathfinding algorithms (Breadth-First Search, Depth-First Search and A*)
 
 - Stochastic Gradient Descent with MADGRAD. Because I could.

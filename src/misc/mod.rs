@@ -1,6 +1,9 @@
 pub mod union_find;
 pub use union_find::*;
 
+pub mod bitset;
+pub use bitset::*;
+
 use std::hash::Hash;
 
 use crate::prelude::HashMap;
