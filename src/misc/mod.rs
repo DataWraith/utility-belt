@@ -4,6 +4,9 @@ pub use union_find::*;
 pub mod bitset;
 pub use bitset::*;
 
+pub mod cmp_eq;
+pub use cmp_eq::CmpEq;
+
 use std::hash::Hash;
 
 use crate::prelude::HashMap;
