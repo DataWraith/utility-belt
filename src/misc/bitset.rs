@@ -1,3 +1,5 @@
+// TODO: Maybe implement Deref, so that we can, e.g. count_ones()
+
 /// A set of integers in the range [0, 32).
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Copy, Default)]
 pub struct Set32(u32);
@@ -28,7 +30,6 @@ impl Set32 {
         self.0 &= !(1 << i)
     }
 }
-
 
 /// A set of integers in the range [0, 64).
 #[derive(Clone, Debug, PartialEq, Eq, Hash, Copy, Default)]
