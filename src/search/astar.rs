@@ -27,6 +27,10 @@ where
         result.push(cur.clone());
 
         while let Some(next) = parents.get(&cur) {
+            if next == &cur {
+                break;
+            }
+
             result.push(next.clone());
             cur = next.clone();
         }
@@ -37,6 +41,10 @@ where
 
     let mut open_set = BinaryHeap::new();
     let mut parents = HashMap::default();
+    let mut costs = HashMap::default();
+
+    parents.insert(start.clone(), start.clone());
+    costs.insert(start.clone(), C::zero());
 
     open_set.push((Reverse(C::zero()), Reverse(C::zero()), CmpEq(start.clone())));
 
@@ -46,12 +54,12 @@ where
         }
 
         for (neighbor, cost) in successors(&current) {
-            if parents.contains_key(&neighbor) {
-                // We already have a path to the neighbor, so we don't need to
-                // consider this path -- cheaper paths are checked before more
-                // expensive paths, at least if the heuristic is admissable and
-                // consistent.
-                continue;
+            if let Some(prev_cost) = costs.clone().get(&neighbor) {
+                if prev_cost <= &(g.clone() + cost.clone()) {
+                    // We already have a cheaper path to the neighbor, so we
+                    // don't need to consider this path.
+                    continue;
+                }
             }
 
             let new_g = g.clone() + cost;
@@ -60,6 +68,8 @@ where
             let f = new_g.clone() + h;
 
             parents.insert(neighbor.clone(), current.clone());
+            costs.insert(neighbor.clone(), new_g.clone());
+
             open_set.push((Reverse(f), Reverse(new_g), CmpEq(neighbor)));
         }
     }
