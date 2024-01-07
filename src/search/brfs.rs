@@ -6,6 +6,10 @@ use ahash::HashSet;
 ///
 /// It's spelled with an 'r' because it is breadth-first, as opposed to
 /// best-first.
+//
+// TODO: Make this take an Vec of starting states
+// TODO: May want to pass the current path length and a parent pointer to the
+//       successor function.
 pub struct BrFS<N>
 where
     N: Hash + Eq + Clone,
