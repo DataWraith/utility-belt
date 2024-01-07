@@ -3,7 +3,6 @@ use std::hash::Hash;
 use ahash::HashSet;
 
 /// Depth-first search
-// TODO: Make this take a vec of starting states
 pub struct DFS<N>
 where
     N: Hash + Eq + Clone,

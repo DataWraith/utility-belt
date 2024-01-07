@@ -6,10 +6,6 @@ use ahash::HashSet;
 ///
 /// It's spelled with an 'r' because it is breadth-first, as opposed to
 /// best-first.
-//
-// TODO: Make this take an Vec of starting states
-// TODO: May want to pass the current path length and a parent pointer to the
-//       successor function.
 pub struct BrFS<N>
 where
     N: Hash + Eq + Clone,
@@ -18,15 +14,21 @@ where
     pub seen: HashSet<N>,
 }
 
-impl<N: Hash + Eq + Clone> BrFS<N> {
-    pub fn new(start: N) -> Self {
-        let queue = VecDeque::from([start.clone()]);
+impl<N> BrFS<N>
+where
+    N: Hash + Eq + Clone,
+{
+    pub fn new<IN>(start: IN) -> Self
+    where
+        IN: IntoIterator<Item = N>,
+    {
+        let mut queue = VecDeque::new();
+        let mut seen = HashSet::default();
 
-        let seen = {
-            let mut seen = HashSet::default();
-            seen.insert(start);
-            seen
-        };
+        for s in start.into_iter() {
+            queue.push_back(s.clone());
+            seen.insert(s);
+        }
 
         Self { queue, seen }
     }
@@ -64,7 +66,7 @@ mod tests {
             }
         };
 
-        let mut brfs = BrFS::new(0);
+        let mut brfs = BrFS::new(vec![0]);
         let mut seen = Vec::new();
 
         while let Some(cur) = brfs.next(&successors) {
