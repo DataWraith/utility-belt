@@ -3,7 +3,7 @@
 /// Finds the first index `i` in the range `[lo, hi)` such that `pred(i)` is `true`.
 ///
 pub fn bisect(mut lo: usize, mut hi: usize, mut pred: impl FnMut(usize) -> bool) -> usize {
-    let mut mid = (lo + hi) / 2;
+    let mut mid = lo + (hi - lo) / 2;
 
     while lo < hi {
         if pred(mid) {
@@ -12,7 +12,7 @@ pub fn bisect(mut lo: usize, mut hi: usize, mut pred: impl FnMut(usize) -> bool)
             lo = mid + 1;
         }
 
-        mid = (lo + hi) / 2;
+        mid = lo + (hi - lo) / 2;
     }
 
     mid
