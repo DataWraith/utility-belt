@@ -37,7 +37,7 @@ impl std::fmt::Debug for DirectionSet {
         write!(f, "{{")?;
 
         if *self.0 == 0 {
-            return write!(f, "∅}}");
+            return write!(f, "    }}");
         }
 
         if self.contains(Direction::Up) {
@@ -131,7 +131,7 @@ mod tests {
     fn test_debug() {
         let mut set = DirectionSet::empty();
 
-        assert_eq!(format!("{:?}", set), "{∅}");
+        assert_eq!(format!("{:?}", set), "{    }");
 
         set.insert(Direction::Up);
         assert_eq!(format!("{:?}", set), "{^   }");
