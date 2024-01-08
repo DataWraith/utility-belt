@@ -50,10 +50,10 @@ impl TryFrom<char> for Direction {
 
     fn try_from(c: char) -> Result<Self, Self::Error> {
         match c {
-            'U' | 'u' | 'N' | 'n' => Ok(Self::Up),
-            'R' | 'r' | 'E' | 'e' => Ok(Self::Right),
-            'D' | 'd' | 'S' | 's' => Ok(Self::Down),
-            'L' | 'l' | 'W' | 'w' => Ok(Self::Left),
+            'U' | 'u' | 'N' | 'n' | '^' => Ok(Self::Up),
+            'R' | 'r' | 'E' | 'e' | '>' => Ok(Self::Right),
+            'D' | 'd' | 'S' | 's' | 'v' => Ok(Self::Down),
+            'L' | 'l' | 'W' | 'w' | '<' => Ok(Self::Left),
             _ => Err(()),
         }
     }
@@ -64,10 +64,10 @@ impl TryFrom<u8> for Direction {
 
     fn try_from(c: u8) -> Result<Self, Self::Error> {
         match c {
-            0 | b'U' | b'u' | b'N' | b'n' => Ok(Self::Up),
-            1 | b'R' | b'r' | b'E' | b'e' => Ok(Self::Right),
-            2 | b'D' | b'd' | b'S' | b's' => Ok(Self::Down),
-            3 | b'L' | b'l' | b'W' | b'w' => Ok(Self::Left),
+            0 | b'U' | b'u' | b'N' | b'n' | b'^' => Ok(Self::Up),
+            1 | b'R' | b'r' | b'E' | b'e' | b'>' => Ok(Self::Right),
+            2 | b'D' | b'd' | b'S' | b's' | b'v' => Ok(Self::Down),
+            3 | b'L' | b'l' | b'W' | b'w' | b'<' => Ok(Self::Left),
             _ => Err(()),
         }
     }
