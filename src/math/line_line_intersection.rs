@@ -1,6 +1,6 @@
 use num::{Num, Signed};
 
-/// This computes the intersection point of two lines (if any), given as pairs of points.
+/// This computes the intersection point (if one exists) of two lines given as pairs of points.
 ///
 /// NOTE: This returns `None` if the lines are coincidental, so you may need to check for
 ///       that case separately.
