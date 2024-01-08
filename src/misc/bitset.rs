@@ -1,8 +1,8 @@
-use std::ops::{BitAndAssign, BitOrAssign, Deref};
+use std::ops::{BitAndAssign, BitOrAssign, Deref, ShrAssign};
 
 use num::{Bounded, PrimInt, Unsigned};
 
-pub trait Bitsettable = PrimInt + Unsigned + Bounded + BitOrAssign + BitAndAssign;
+pub trait Bitsettable = PrimInt + Unsigned + Bounded + BitOrAssign + BitAndAssign + ShrAssign;
 
 /// A simple bitset implementation generic over the primitive intege.
 #[derive(Clone, PartialEq, Eq, Hash, Copy, Default)]
@@ -39,6 +39,27 @@ impl<T: Bitsettable> MiniBitset<T> {
     /// Remove the given index from the bitset.
     pub fn remove(&mut self, i: usize) {
         self.data &= !(T::one() << i)
+    }
+
+    /// Iterate over the members of the bitset
+    pub fn ones(&self) -> impl Iterator<Item = usize> {
+        let mut i = 0;
+        let mut data = self.data;
+
+        std::iter::from_fn(move || {
+            while data != T::zero() {
+                let bit_is_set = data & T::one() == T::one();
+
+                data >>= T::one();
+                i += 1;
+
+                if bit_is_set {
+                    return Some(i - 1);
+                }
+            }
+
+            None
+        })
     }
 }
 
@@ -104,10 +125,23 @@ mod tests {
 
     #[test]
     fn test_debug() {
-        let bs = MiniBitset::new(0b1010u8);
+        let bs = MiniBitset::new(0b1010_u8);
         assert_eq!(format!("{:?}", bs), "{00001010}");
 
-        let bs = MiniBitset::new(0xcafeu16);
+        let bs = MiniBitset::new(0xcafe_u16);
         assert_eq!(format!("{:?}", bs), "{1100101011111110}");
+    }
+
+    #[test]
+    fn test_iter() {
+        let bs = MiniBitset::new(0b1010_u8);
+        assert_eq!(bs.ones().collect::<Vec<_>>(), vec![1, 3]);
+
+        let bs = MiniBitset::new(0xcafe_u16);
+
+        assert_eq!(
+            bs.ones().collect::<Vec<_>>(),
+            vec![1, 2, 3, 4, 5, 6, 7, 9, 11, 14, 15]
+        );
     }
 }
