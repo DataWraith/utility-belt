@@ -1,32 +1,34 @@
+use crate::misc::MiniBitset;
+
 use super::Direction;
 
 /// A set of directions
-#[derive(Clone)]
-pub struct DirectionSet(u8);
+#[derive(Clone, Copy)]
+pub struct DirectionSet(MiniBitset<u8>);
 
 impl DirectionSet {
     pub fn empty() -> Self {
-        Self(0)
+        Self(MiniBitset::default())
     }
 
     pub fn all() -> Self {
-        Self(0b1111)
+        Self(MiniBitset::new(0b1111))
     }
 
     pub fn insert(&mut self, dir: Direction) {
-        self.0 |= 1 << dir as u8;
+        self.0.insert(dir.into())
     }
 
     pub fn remove(&mut self, dir: Direction) {
-        self.0 &= !(1 << dir as u8);
+        self.0.remove(dir.into())
     }
 
     pub fn contains(&self, dir: Direction) -> bool {
-        self.0 & (1 << dir as u8) != 0
+        self.0.contains(dir.into())
     }
 
-    pub fn iter(&self) -> impl Iterator<Item = Direction> + '_ {
-        Direction::all().filter(move |dir| self.contains(*dir))
+    pub fn iter(&self) -> impl Iterator<Item = Direction> {
+        self.0.ones().map(|i| (i as u8).try_into().unwrap())
     }
 }
 
@@ -34,7 +36,7 @@ impl std::fmt::Debug for DirectionSet {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{{")?;
 
-        if self.0 == 0 {
+        if *self.0 == 0 {
             return write!(f, "∅}}");
         }
 
