@@ -42,7 +42,7 @@ impl<T: Bitsettable> MiniBitset<T> {
     }
 
     /// Iterate over the members of the bitset
-    pub fn ones(&self) -> impl Iterator<Item = usize> {
+    pub fn iter(&self) -> impl Iterator<Item = usize> {
         let mut data = self.data;
 
         std::iter::from_fn(move || {
@@ -132,12 +132,12 @@ mod tests {
     #[test]
     fn test_iter() {
         let bs = MiniBitset::new(0b1010_u8);
-        assert_eq!(bs.ones().collect::<Vec<_>>(), vec![1, 3]);
+        assert_eq!(bs.iter().collect::<Vec<_>>(), vec![1, 3]);
 
         let bs = MiniBitset::new(0xcafe_u16);
 
         assert_eq!(
-            bs.ones().collect::<Vec<_>>(),
+            bs.iter().collect::<Vec<_>>(),
             vec![1, 2, 3, 4, 5, 6, 7, 9, 11, 14, 15]
         );
     }

@@ -28,7 +28,7 @@ impl DirectionSet {
     }
 
     pub fn iter(&self) -> impl Iterator<Item = Direction> {
-        self.0.ones().map(|i| (i as u8).try_into().unwrap())
+        self.0.iter().map(|i| (i as u8).try_into().unwrap())
     }
 }
 
