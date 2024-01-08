@@ -16,6 +16,11 @@ impl<T: Bitsettable> MiniBitset<T> {
         Self { data }
     }
 
+    /// Return the cardinality of the stored set
+    pub fn len(&self) -> u32 {
+        self.data.count_ones()
+    }
+
     /// Checks if the bitset is empty.
     pub fn is_empty(&self) -> bool {
         self.data == T::zero()
@@ -69,6 +74,9 @@ mod tests {
     #[test]
     fn test_bitset() {
         let mut bs = MiniBitset::new(0b1010u8);
+
+        assert!(!bs.is_empty());
+        assert_eq!(bs.len(), 2);
 
         assert!(!bs.contains(0));
         assert!(bs.contains(1));
