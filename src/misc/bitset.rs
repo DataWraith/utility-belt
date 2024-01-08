@@ -2,15 +2,13 @@ use std::ops::Deref;
 
 use num::{PrimInt, Unsigned};
 
-pub trait Bitsettable = PrimInt + Unsigned;
-
 /// A simple bitset implementation generic over the primitive integer used for storage.
 #[derive(Clone, PartialEq, Eq, Hash, Copy, Default, PartialOrd, Ord)]
-pub struct MiniBitset<T: Bitsettable> {
+pub struct MiniBitset<T: PrimInt + Unsigned> {
     data: T,
 }
 
-impl<T: Bitsettable> MiniBitset<T> {
+impl<T: PrimInt + Unsigned> MiniBitset<T> {
     /// Create a new empty bitset.
     pub fn new(data: T) -> Self {
         Self { data }
@@ -60,7 +58,7 @@ impl<T: Bitsettable> MiniBitset<T> {
     }
 }
 
-impl<T: Bitsettable> Deref for MiniBitset<T> {
+impl<T: PrimInt + Unsigned> Deref for MiniBitset<T> {
     type Target = T;
 
     fn deref(&self) -> &Self::Target {
@@ -68,7 +66,7 @@ impl<T: Bitsettable> Deref for MiniBitset<T> {
     }
 }
 
-impl<T: Bitsettable> std::fmt::Debug for MiniBitset<T> {
+impl<T: PrimInt + Unsigned> std::fmt::Debug for MiniBitset<T> {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         write!(f, "{{")?;
 
