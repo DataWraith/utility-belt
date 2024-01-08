@@ -9,3 +9,5 @@ pub use line_line_intersection::*;
 pub use madgrad::*;
 pub use polygons::*;
 pub use polynomials::*;
+
+// TODO: Modular arithmetic (exponentiation, inverse, etc.)
