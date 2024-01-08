@@ -5,7 +5,7 @@ use num::{PrimInt, Unsigned};
 pub trait Bitsettable = PrimInt + Unsigned + BitOrAssign + BitAndAssign;
 
 /// A simple bitset implementation generic over the primitive intege.
-#[derive(Clone, PartialEq, Eq, Hash, Copy, Default)]
+#[derive(Clone, PartialEq, Eq, Hash, Copy, Default, PartialOrd, Ord)]
 pub struct MiniBitset<T: Bitsettable> {
     data: T,
 }
