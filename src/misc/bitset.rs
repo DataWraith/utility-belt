@@ -1,8 +1,8 @@
-use std::ops::{BitAndAssign, BitOrAssign, Deref, ShrAssign};
+use std::ops::{BitAndAssign, BitOrAssign, Deref};
 
-use num::{Bounded, PrimInt, Unsigned};
+use num::{PrimInt, Unsigned};
 
-pub trait Bitsettable = PrimInt + Unsigned + Bounded + BitOrAssign + BitAndAssign + ShrAssign;
+pub trait Bitsettable = PrimInt + Unsigned + BitOrAssign + BitAndAssign;
 
 /// A simple bitset implementation generic over the primitive intege.
 #[derive(Clone, PartialEq, Eq, Hash, Copy, Default)]
@@ -43,19 +43,16 @@ impl<T: Bitsettable> MiniBitset<T> {
 
     /// Iterate over the members of the bitset
     pub fn ones(&self) -> impl Iterator<Item = usize> {
-        let mut i = 0;
         let mut data = self.data;
 
         std::iter::from_fn(move || {
-            while data != T::zero() {
-                let bit_is_set = data & T::one() == T::one();
+            if data != T::zero() {
+                let index = data.trailing_zeros();
 
-                data >>= T::one();
-                i += 1;
+                // Clear least significant one bit
+                data &= data - T::one();
 
-                if bit_is_set {
-                    return Some(i - 1);
-                }
+                return Some(index as usize);
             }
 
             None
