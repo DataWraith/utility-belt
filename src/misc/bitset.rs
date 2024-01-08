@@ -1,90 +1,105 @@
-// TODO: Maybe implement Deref, so that we can, e.g. count_ones()
+use std::ops::{BitAndAssign, BitOrAssign, Deref};
 
-/// A set of integers in the range [0, 32).
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Copy, Default)]
-pub struct Set32(u32);
+use num::{Bounded, PrimInt, Unsigned};
 
-impl Set32 {
-    pub fn new(val: u32) -> Self {
-        Self(val)
+pub trait Bitsettable = PrimInt + Unsigned + Bounded + BitOrAssign + BitAndAssign;
+
+/// A simple bitset implementation generic over the primitive intege.
+#[derive(Clone, PartialEq, Eq, Hash, Copy, Default)]
+pub struct MiniBitset<T: Bitsettable> {
+    data: T,
+}
+
+impl<T: Bitsettable> MiniBitset<T> {
+    /// Create a new empty bitset.
+    pub fn new(data: T) -> Self {
+        Self { data }
     }
 
-    pub fn value(&self) -> u32 {
-        self.0
+    /// Checks if the bitset is empty.
+    pub fn is_empty(&self) -> bool {
+        self.data == T::zero()
     }
 
+    /// Check if the bitset contains the given index.
     pub fn contains(&self, i: usize) -> bool {
-        assert!(i < 32);
-
-        self.0 & (1 << i) != 0
+        self.data & (T::one() << i) != T::zero()
     }
 
+    /// Insert the given index into the bitset.
     pub fn insert(&mut self, i: usize) {
-        assert!(i < 32);
-
-        self.0 |= 1 << i
+        self.data |= T::one() << i;
     }
 
+    /// Remove the given index from the bitset.
     pub fn remove(&mut self, i: usize) {
-        assert!(i < 32);
-        self.0 &= !(1 << i)
+        self.data &= !(T::one() << i)
     }
 }
 
-/// A set of integers in the range [0, 64).
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Copy, Default)]
-pub struct Set64(u64);
+impl<T: Bitsettable> Deref for MiniBitset<T> {
+    type Target = T;
 
-impl Set64 {
-    pub fn new(val: u64) -> Self {
-        Self(val)
-    }
-
-    pub fn value(&self) -> u64 {
-        self.0
-    }
-
-    pub fn contains(&self, i: usize) -> bool {
-        assert!(i < 64);
-
-        self.0 & (1 << i) != 0
-    }
-
-    pub fn insert(&mut self, i: usize) {
-        assert!(i < 64);
-
-        self.0 |= 1 << i
-    }
-
-    pub fn remove(&mut self, i: usize) {
-        assert!(i < 64);
-        self.0 &= !(1 << i)
+    fn deref(&self) -> &Self::Target {
+        &self.data
     }
 }
 
-/// A set of integers in the range [0, 128).
-#[derive(Clone, Debug, PartialEq, Eq, Hash, Copy, Default)]
-pub struct Set128(u128);
+impl<T: Bitsettable> std::fmt::Debug for MiniBitset<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{{")?;
 
-impl Set128 {
-    pub fn new(val: u128) -> Self {
-        Self(val)
+        let num_bits = T::zero().count_zeros() as usize;
+
+        for i in (0..num_bits).rev() {
+            if self.contains(i) {
+                write!(f, "1")?;
+            } else {
+                write!(f, "0")?;
+            }
+        }
+        write!(f, "}}")
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_bitset() {
+        let mut bs = MiniBitset::new(0b1010u8);
+
+        assert!(!bs.contains(0));
+        assert!(bs.contains(1));
+        assert!(!bs.contains(2));
+        assert!(bs.contains(3));
+
+        bs.remove(1);
+
+        assert!(!bs.contains(1));
+        assert!(bs.contains(3));
+        assert!(!bs.contains(0));
+        assert!(!bs.contains(2));
+
+        bs.insert(0);
+
+        assert!(bs.contains(0));
+        assert!(!bs.contains(1));
+        assert!(!bs.contains(2));
+        assert!(bs.contains(3));
+
+        // Deref
+        assert!(bs.count_ones() == 2);
+        assert!(bs.count_zeros() == 6);
     }
 
-    pub fn contains(&self, i: usize) -> bool {
-        assert!(i < 128);
+    #[test]
+    fn test_debug() {
+        let bs = MiniBitset::new(0b1010u8);
+        assert_eq!(format!("{:?}", bs), "{00001010}");
 
-        self.0 & (1 << i) != 0
-    }
-
-    pub fn insert(&mut self, i: usize) {
-        assert!(i < 128);
-
-        self.0 |= 1 << i
-    }
-
-    pub fn remove(&mut self, i: usize) {
-        assert!(i < 128);
-        self.0 &= !(1 << i)
+        let bs = MiniBitset::new(0xcafeu16);
+        assert_eq!(format!("{:?}", bs), "{1100101011111110}");
     }
 }
