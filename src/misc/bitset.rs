@@ -9,7 +9,7 @@ pub struct MiniBitset<T: PrimInt + Unsigned> {
 }
 
 impl<T: PrimInt + Unsigned> MiniBitset<T> {
-    /// Create a new empty bitset.
+    /// Create a new bitset from the given bit value.
     pub fn new(data: T) -> Self {
         Self { data }
     }
