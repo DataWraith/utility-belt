@@ -103,18 +103,18 @@ impl<T: Clone> Grid2D<T> {
     /// Returns the value at the given coordinate. Out-of-bounds accesses return
     /// `None`.
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
-        if coord.x() < 0 || coord.y() < 0 {
+        if coord.x < 0 || coord.y < 0 {
             return None;
         }
 
-        self.data.get((coord.y() as usize, coord.x() as usize))
+        self.data.get((coord.y as usize, coord.x as usize))
     }
 
     /// Returns the value at the given coordinate. Out-of-bound accesses wrap
     /// around back into the grid.
     pub fn get_wrap(&self, coord: Coordinate) -> &T {
-        let x = coord.x().rem_euclid(self.width);
-        let y = coord.y().rem_euclid(self.height);
+        let x = coord.x.rem_euclid(self.width);
+        let y = coord.y.rem_euclid(self.height);
 
         self.data.get((y as usize, x as usize)).unwrap()
     }
@@ -122,18 +122,18 @@ impl<T: Clone> Grid2D<T> {
     /// Returns a mutable reference to the value at the given coordinate,
     /// or `None` if the coordinate is out-of-bounds.
     pub fn get_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
-        if coord.x() < 0 || coord.y() < 0 {
+        if coord.x < 0 || coord.y < 0 {
             return None;
         }
 
-        self.data.get_mut((coord.y() as usize, coord.x() as usize))
+        self.data.get_mut((coord.y as usize, coord.x as usize))
     }
 
     /// Wraps the coordinate around the grid and returns a mutable reference to
     /// the value at the given coordinate.
     pub fn get_wrap_mut(&mut self, coord: Coordinate) -> &mut T {
-        let x = coord.x().rem_euclid(self.width);
-        let y = coord.y().rem_euclid(self.height);
+        let x = coord.x.rem_euclid(self.width);
+        let y = coord.y.rem_euclid(self.height);
 
         self.data.get_mut((y as usize, x as usize)).unwrap()
     }
@@ -141,15 +141,15 @@ impl<T: Clone> Grid2D<T> {
     /// Sets the value at the given coordinate. Out-of-bounds accesses are
     /// ignored.
     pub fn set(&mut self, coord: Coordinate, value: T) {
-        if coord.x() < 0 || coord.y() < 0 {
+        if coord.x < 0 || coord.y < 0 {
             return;
         }
 
-        if coord.x() >= self.width || coord.y() >= self.height {
+        if coord.x >= self.width || coord.y >= self.height {
             return;
         }
 
-        self.data[(coord.y() as usize, coord.x() as usize)] = value;
+        self.data[(coord.y as usize, coord.x as usize)] = value;
     }
 
     /// Maps the grid to a new grid with the same dimensions, applying the given

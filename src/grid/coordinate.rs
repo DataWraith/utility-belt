@@ -1,4 +1,7 @@
-use std::fmt::{Display, Formatter};
+use std::{
+    fmt::{Display, Formatter},
+    ops::Deref,
+};
 
 use derive_more::{Add, AddAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
 use glam::IVec2;
@@ -45,52 +48,52 @@ impl PartialOrd for Coordinate {
     }
 }
 
+impl Deref for Coordinate {
+    type Target = IVec2;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
 impl Coordinate {
     pub fn new(x: i32, y: i32) -> Self {
         Self(IVec2::new(x, y))
     }
 
-    pub fn x(self) -> i32 {
-        self.0.x
-    }
-
-    pub fn y(self) -> i32 {
-        self.0.y
-    }
-
     /// Rotate the coordinate 90 degrees clockwise. The anchor point is at the bottom left.
     pub fn rotate_right(self) -> Self {
-        Self::new(self.y(), -self.x())
+        Self::new(self.y, -self.x)
     }
 
     /// Rotate the coordinate 90 degrees counter-clockwise. The anchor point is at the bottom left.
     pub fn rotate_left(self) -> Self {
-        Self::new(-self.y(), self.x())
+        Self::new(-self.y, self.x)
     }
 
     /// Rotate the coordinate 180 degrees. The anchor point is at the bottom left.
     pub fn rotate_180(self) -> Self {
-        Self::new(-self.x(), -self.y())
+        Self::new(-self.x, -self.y)
     }
 
     /// Mirror the coordinate along the X axis. The anchor point is at the bottom left.
     pub fn mirror_x(self) -> Self {
-        Self::new(-self.x(), self.y())
+        Self::new(-self.x, self.y)
     }
 
     /// Mirror the coordinate along the X axis, wrapping it so that it stays within the given width.
     pub fn mirror_x_wrap(self, width: i32) -> Self {
-        Self::new(width - 1 - self.x(), self.y())
+        Self::new(width - 1 - self.x, self.y)
     }
 
     /// Mirror the coordinate along the Y axis.
     pub fn mirror_y(self) -> Self {
-        Self::new(self.x(), -self.y())
+        Self::new(self.x, -self.y)
     }
 
     /// Mirror the coordinate along the Y axis, wrapping it so that it stays within the given height.
     pub fn mirror_y_wrap(self, height: i32) -> Self {
-        Self::new(self.x(), height - 1 - self.y())
+        Self::new(self.x, height - 1 - self.y)
     }
 
     /// Returns neighboring Coordinate in the given direction
@@ -145,16 +148,16 @@ impl Coordinate {
 
     /// Returns the Manhattan distance between the two coordinates
     pub fn manhattan_distance(self, other: Self) -> i32 {
-        (self.x().abs_diff(other.x()) + self.y().abs_diff(other.y())) as i32
+        (self.x.abs_diff(other.x) + self.y.abs_diff(other.y)) as i32
     }
 
     /// Returns the direction from self towards other
     pub fn towards(self, other: Self) -> Direction {
-        if other.x() < self.x() {
+        if other.x < self.x {
             Direction::Left
-        } else if other.x() > self.x() {
+        } else if other.x > self.x {
             Direction::Right
-        } else if other.y() < self.y() {
+        } else if other.y < self.y {
             Direction::Up
         } else {
             Direction::Down

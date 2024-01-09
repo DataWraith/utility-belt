@@ -16,8 +16,8 @@ impl<T: Clone> Grid2D<T> {
                 for y in 0..y_factor {
                     new_grid.set(
                         Coordinate::new(
-                            coord.x() + x as i32 * self.width() as i32,
-                            coord.y() + y as i32 * self.height() as i32,
+                            coord.x + x as i32 * self.width() as i32,
+                            coord.y + y as i32 * self.height() as i32,
                         ),
                         value.clone(),
                     );

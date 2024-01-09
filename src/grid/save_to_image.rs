@@ -13,7 +13,7 @@ impl<T: Clone + Into<Rgb<u8>>> Grid2D<T> {
         let mut image = image::ImageBuffer::new(self.width() as u32, self.height() as u32);
 
         for (coord, value) in self.iter() {
-            image.put_pixel(coord.x() as u32, coord.y() as u32, value.clone().into());
+            image.put_pixel(coord.x as u32, coord.y as u32, value.clone().into());
         }
 
         image.save(path)?;
@@ -41,7 +41,7 @@ impl<T: Clone + Eq + Hash> Grid2D<T> {
                 Rgb([r, g, b])
             });
 
-            image.put_pixel(coord.x() as u32, coord.y() as u32, color);
+            image.put_pixel(coord.x as u32, coord.y as u32, color);
         }
 
         image.save(path)?;

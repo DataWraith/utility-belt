@@ -15,8 +15,8 @@ impl<T: Clone> Grid2D<T> {
                 for y in 0..factor {
                     new_grid.set(
                         Coordinate::new(
-                            coord.x() * factor as i32 + x as i32,
-                            coord.y() * factor as i32 + y as i32,
+                            coord.x * factor as i32 + x as i32,
+                            coord.y * factor as i32 + y as i32,
                         ),
                         value.clone(),
                     );
@@ -54,8 +54,8 @@ impl<T: Clone> Grid2D<T> {
                 for (x, col) in row.iter().enumerate() {
                     new_grid.set(
                         Coordinate::new(
-                            coord.x() * X as i32 + x as i32,
-                            coord.y() * Y as i32 + y as i32,
+                            coord.x * X as i32 + x as i32,
+                            coord.y * Y as i32 + y as i32,
                         ),
                         col.clone(),
                     );

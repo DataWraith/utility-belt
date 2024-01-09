@@ -42,8 +42,8 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
 
     /// Accesses the element at the given coordinate
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
-        let x = coord.x();
-        let y = coord.y();
+        let x = coord.x;
+        let y = coord.y;
         let w = self.grid.width() as i32;
         let h = self.grid.height() as i32;
 
@@ -70,8 +70,8 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
 
     /// Sets the element at the given coordinate
     pub fn set(&mut self, coord: Coordinate, value: T) {
-        let x = coord.x() + 1 - self.border_size;
-        let y = coord.y() + 1 - self.border_size;
+        let x = coord.x + 1 - self.border_size;
+        let y = coord.y + 1 - self.border_size;
         let c = Coordinate::new(x, y);
 
         self.grid.set(c, value)
