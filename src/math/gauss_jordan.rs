@@ -1,24 +1,51 @@
 use ndarray::{Array1, Array2};
-
-pub const EPSILON: f64 = 1e-9;
+use num::{Num, Signed};
 
 #[derive(Debug, PartialEq)]
 pub enum Solution {
-    Unique(Array1<f64>),
-    Infinite(Array1<f64>),
+    Unique,
+    Infinite,
     None,
 }
 
 /// Perform Gauss-Jordan elimination on a matrix.
 ///
-/// The system of linear algebraic equations needs to be represented as a matrix;
-/// the last column of the matrix is taken to be the right-hand side of the equations
-/// (often denoted as the vector `b`)
+/// If you want to solve a system of linear algebraic equations, the system
+/// needs to be represented as a matrix; the last column of the matrix is taken
+/// to be the right-hand side of the equations (often denoted as the vector `b`).
 ///
 /// Reference: https://cp-algorithms.com/linear_algebra/linear-system-gauss.html
-pub fn gauss_jordan(mut matrix: Array2<f64>) -> Solution {
+///
+/// # Arguments
+///
+/// * `matrix` - The matrix representing the system of linear equations.
+/// * `ans` - The array to store the answer in.
+/// * `eps` - A small value (e.g. 1e-9) to help with floating point precision.
+///
+/// # Returns
+///
+/// * `Solution::Unique` if the system has a unique solution.
+/// * `Solution::Infinite` if the system has infinitely many solutions.
+/// * `Solution::None` if the system has no solutions.
+///
+/// # Panics
+///
+/// * If the number of unknown variables does not match the length of the answer array.
+pub fn gauss_jordan<T: Num + Signed + PartialOrd + Clone>(
+    mut matrix: Array2<T>,
+    ans: &mut Array1<T>,
+    eps: T,
+) -> Solution {
     let (n, m) = matrix.dim();
+
+    // Account for the last column being the right-hand side of the equations
     let m = m - 1;
+
+    assert_eq!(
+        m,
+        ans.len(),
+        "Number of unknown variables does not match length of answer array"
+    );
 
     let mut nonzero = vec![None; m];
 
@@ -35,7 +62,7 @@ pub fn gauss_jordan(mut matrix: Array2<f64>) -> Solution {
             }
         }
 
-        if matrix[[sel, col]].abs() < EPSILON {
+        if matrix[[sel, col]].abs() <= eps {
             // No pivot found in this column, try the next one
             col += 1;
             continue;
@@ -43,8 +70,8 @@ pub fn gauss_jordan(mut matrix: Array2<f64>) -> Solution {
 
         // Swap current row with pivot
         for i in col..=m {
-            let tmp = matrix[[sel, i]];
-            matrix[[sel, i]] = matrix[[row, i]];
+            let tmp = matrix[[sel, i]].clone();
+            matrix[[sel, i]] = matrix[[row, i]].clone();
             matrix[[row, i]] = tmp;
         }
 
@@ -55,10 +82,10 @@ pub fn gauss_jordan(mut matrix: Array2<f64>) -> Solution {
                 continue;
             }
 
-            let c = matrix[[i, col]] / matrix[[row, col]];
+            let c = matrix[[i, col]].clone() / matrix[[row, col]].clone();
 
             for j in col..=m {
-                matrix[[i, j]] -= matrix[[row, j]] * c;
+                matrix[[i, j]] = matrix[[i, j]].clone() - matrix[[row, j]].clone() * c.clone();
             }
         }
 
@@ -66,58 +93,57 @@ pub fn gauss_jordan(mut matrix: Array2<f64>) -> Solution {
         row += 1;
     }
 
-    let mut ans = Array1::zeros(m);
-
     for i in 0..m {
         if let Some(nz) = nonzero[i] {
-            ans[i] = matrix[[nz, m]] / matrix[[nz, i]];
+            ans[i] = matrix[[nz, m]].clone() / matrix[[nz, i]].clone();
         }
     }
 
     for i in 0..n {
-        let mut sum = 0f64;
+        let mut sum = T::zero();
 
         for j in 0..m {
-            sum += ans[j] * matrix[[i, j]];
+            sum = sum + ans[j].clone() * matrix[[i, j]].clone();
         }
 
-        if (sum - matrix[[i, m]]).abs() > EPSILON {
+        if (sum - matrix[[i, m]].clone()).abs() > eps {
             return Solution::None;
         }
     }
 
     if nonzero.iter().any(Option::is_none) {
-        return Solution::Infinite(ans);
+        return Solution::Infinite;
     }
 
-    Solution::Unique(ans)
+    Solution::Unique
 }
 
 #[cfg(test)]
 mod tests {
-    use ndarray::array;
-
     use super::*;
+
+    use ndarray::array;
 
     #[test]
     fn test_line_intersection_case1() {
         // http://homepages.math.uic.edu/~rmlowman/math160/160s10W1L2-gaussian.pdf
         let matrix = array![[2.0, 3.0, 8.0], [6.0, -2.0, 2.0]];
         let expected = array![1.0, 2.0];
+        let eps = 1e-9;
 
-        let ans = gauss_jordan(matrix);
+        let mut ans = array![0.0, 0.0];
 
-        if let Solution::Unique(ans) = ans {
-            for i in 0..2 {
-                assert!(
-                    (ans[i] - expected[i]).abs() < EPSILON,
-                    "Expected {} but got {}",
-                    expected[i],
-                    ans[i]
-                )
-            }
-        } else {
-            panic!("Expected unique solution");
+        let soln = gauss_jordan(matrix, &mut ans, eps);
+
+        assert_eq!(soln, Solution::Unique);
+
+        for i in 0..2 {
+            assert!(
+                (ans[i] - expected[i]).abs() < eps,
+                "Expected {} but got {}",
+                expected[i],
+                ans[i]
+            )
         }
     }
 
@@ -126,9 +152,12 @@ mod tests {
         // http://homepages.math.uic.edu/~rmlowman/math160/160s10W1L2-gaussian.pdf
 
         let matrix = array![[2.0, -1.0, -2.0], [-2.0, 1.0, 1.0]];
-        let ans = gauss_jordan(matrix);
+        let mut ans = array![0.0, 0.0];
 
-        assert_eq!(ans, Solution::None);
+        let eps = 1e-9;
+        let soln = gauss_jordan(matrix, &mut ans, eps);
+
+        assert_eq!(soln, Solution::None);
     }
 
     #[test]
@@ -136,13 +165,12 @@ mod tests {
         // http://homepages.math.uic.edu/~rmlowman/math160/160s10W1L2-gaussian.pdf
 
         let matrix = array![[2.0, -1.0, -1.0], [4.0, -2.0, -2.0]];
-        let ans = gauss_jordan(matrix);
+        let mut ans = array![0.0, 0.0];
 
-        if let Solution::Infinite(_) = ans {
-            // Infinite number of solutions found
-        } else {
-            panic!("Expected infinite solutions");
-        }
+        let eps = 1e-9;
+        let soln = gauss_jordan(matrix, &mut ans, eps);
+
+        assert_eq!(soln, Solution::Infinite);
     }
 
     #[test]
@@ -156,19 +184,49 @@ mod tests {
 
         let expected = array![2.0, 3.0, -1.0];
 
-        let ans = gauss_jordan(matrix);
+        let mut ans = array![0.0, 0.0, 0.0];
 
-        if let Solution::Unique(ans) = ans {
-            for i in 0..3 {
-                assert!(
-                    (ans[i] - expected[i]).abs() < EPSILON,
-                    "Expected {} but got {}",
-                    expected[i],
-                    ans[i]
-                )
-            }
-        } else {
-            panic!("Expected unique solution");
+        let eps = 1e-9;
+        let soln = gauss_jordan(matrix, &mut ans, eps);
+
+        assert_eq!(soln, Solution::Unique);
+
+        for i in 0..3 {
+            assert!(
+                (ans[i] - expected[i]).abs() < eps,
+                "Expected {} but got {}",
+                expected[i],
+                ans[i]
+            )
+        }
+    }
+
+    #[test]
+    fn test_big_rational() {
+        let zero = num::BigRational::from_integer(0.into());
+        let one = num::BigRational::from_integer(1.into());
+        let two = num::BigRational::from_integer(2.into());
+        let three = num::BigRational::from_integer(3.into());
+        let eight = num::BigRational::from_integer(8.into());
+        let eleven = num::BigRational::from_integer(11.into());
+
+        let matrix = array![
+            [two.clone(), one.clone(), -one.clone(), eight.clone()],
+            [-three.clone(), -one.clone(), two.clone(), -eleven.clone()],
+            [-two.clone(), one.clone(), two.clone(), -three.clone()]
+        ];
+
+        let expected = array![two.clone(), three.clone(), -one.clone()];
+
+        let mut ans = array![zero.clone(), zero.clone(), zero.clone()];
+
+        let eps = zero;
+        let soln = gauss_jordan(matrix, &mut ans, eps);
+
+        assert_eq!(soln, Solution::Unique);
+
+        for i in 0..3 {
+            assert_eq!(ans[i], expected[i]);
         }
     }
 }
