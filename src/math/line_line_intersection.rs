@@ -1,42 +1,89 @@
+use ndarray::array;
 use num::{Num, Signed};
+
+use super::gauss_jordan;
 
 /// This computes the intersection point (if one exists) of two lines given as pairs of points.
 ///
 /// NOTE: This returns `None` if the lines are coincidental, so you may need to check for
 ///       that case separately.
 ///
-/// Reference:
-///   https://www.topcoder.com/thrive/articles/Geometry%20Concepts%20part%202:%20%20Line%20Intersection%20and%20its%20Applications#LineLineIntersection
+/// # Arguments
 ///
-pub fn line_intersection_point<T: Num + Clone + Signed + std::ops::Sub>(
+/// * `a` - The first line, given as a pair of points.
+/// * `b` - The second line, given as a pair of points.
+/// * `eps` - A small value (e.g. 1e-9) to help with limited floating point precision.
+pub fn line_intersection_point<T: Num + Signed + PartialOrd + Clone + std::fmt::Debug>(
     a: ((T, T), (T, T)),
     b: ((T, T), (T, T)),
+    eps: T,
 ) -> Option<(T, T)> {
-    let x1 = (a.0).0.clone();
-    let y1 = (a.0).1.clone();
+    let ((x1, y1), (x2, y2)) = a;
+    let ((x3, y3), (x4, y4)) = b;
 
-    let a1 = (a.1).1.clone() - y1.clone();
-    let b1 = x1.clone() - (a.1).0.clone();
-    let c1 = (a1.clone() * x1.clone()) + (b1.clone() * y1.clone());
+    let line1_is_vertical = x1 == x2;
+    let line2_is_vertical = x3 == x4;
 
-    let x2 = (b.0).0.clone();
-    let y2 = (b.0).1.clone();
-
-    let a2 = (b.1).1.clone() - y2.clone();
-    let b2 = x2.clone() - (b.1).0.clone();
-    let c2 = (a2.clone() * x2.clone()) + (b2.clone() * y2.clone());
-
-    let det = a1.clone() * b2.clone() - a2.clone() * b1.clone();
-
-    if det == T::zero() {
-        // Lines are parallel or coincidental
+    if line1_is_vertical && line2_is_vertical {
+        // Both lines are vertical -> Parallel or coincidental
         return None;
     }
 
-    let x = (b2.clone() * c1.clone() - b1.clone() * c2.clone()) / det.clone();
-    let y = (a1.clone() * c2.clone() - a2.clone() * c1.clone()) / det.clone();
+    let slope1 = if line1_is_vertical {
+        T::zero()
+    } else {
+        (y2.clone() - y1.clone()) / (x2.clone() - x1.clone())
+    };
 
-    Some((x, y))
+    let slope2 = if line2_is_vertical {
+        T::zero()
+    } else {
+        (y4.clone() - y3.clone()) / (x4.clone() - x3.clone())
+    };
+
+    let intercept1 = y1.clone() - slope1.clone() * x1.clone();
+    let intercept2 = y3.clone() - slope2.clone() * x3.clone();
+
+    if line1_is_vertical {
+        return Some((T::zero(), intercept2.clone()));
+    }
+
+    if line2_is_vertical {
+        return Some((T::zero(), intercept1.clone()));
+    }
+
+    if slope1 == slope2 && intercept1 == intercept2 {
+        // Lines are coincidental
+        return None;
+    }
+
+    if slope1 == slope2 {
+        // Lines are parallel
+        return None;
+    }
+
+    // This simple system of equations follows directly from the line equation:
+    //
+    //             y = m * x + b
+    // =>          0 = m * x + b - y
+    // =>         -b = m * x - y
+    // =>          b = -m * x + y
+    // => -m * x + y = b
+    //
+    let matrix = array![
+        //   -m * x     +   1*y    =    b
+        [-slope1.clone(), T::one(), intercept1.clone()],
+        [-slope2.clone(), T::one(), intercept2.clone()],
+    ];
+
+    let mut ans = array![T::zero(), T::zero()];
+    let soln = gauss_jordan(matrix, &mut ans, eps);
+
+    if soln != super::Solution::Unique {
+        return None;
+    }
+
+    Some((ans[0].clone(), ans[1].clone()))
 }
 
 #[cfg(test)]
@@ -48,17 +95,17 @@ mod tests {
     #[test]
     fn test_line_intersection_point() {
         assert_eq!(
-            line_intersection_point(((0, 0), (1, 1)), ((0, 1), (1, 0))),
-            Some((0, 0))
+            line_intersection_point(((0., 0.), (1., 1.)), ((0., 1.), (1., 0.)), 1e-9),
+            Some((0.5, 0.5))
         );
 
         assert_eq!(
-            line_intersection_point(((0, 0), (1, 1)), ((0, 2), (2, 0))),
-            Some((1, 1))
+            line_intersection_point(((0.0, 0.0), (1.0, 1.0)), ((0.0, 2.0), (2.0, 0.0)), 1e-9),
+            Some((1.0, 1.0))
         );
 
         assert_eq!(
-            line_intersection_point(((0, 0), (1, 1)), ((2, 2), (3, 3))),
+            line_intersection_point(((0.0, 0.0), (1.0, 1.0)), ((2.0, 2.0), (3.0, 3.0)), 1e-9),
             None
         )
     }
@@ -66,12 +113,12 @@ mod tests {
     #[test]
     fn test_coincidental_lines() {
         assert_eq!(
-            line_intersection_point(((0, 0), (1, 1)), ((0, 0), (1, 1))),
+            line_intersection_point(((0.0, 0.0), (1.0, 1.0)), ((0.0, 0.0), (1.0, 1.0)), 1e-9),
             None,
         );
 
         assert_eq!(
-            line_intersection_point(((0, 0), (1, 1)), ((1, 1), (15, 15))),
+            line_intersection_point(((0.0, 0.0), (1.0, 1.0)), ((1.0, 1.0), (1.05, 1.05)), 1e-9),
             None,
         );
     }
@@ -79,12 +126,30 @@ mod tests {
     #[test]
     fn test_parallel_lines() {
         assert_eq!(
-            line_intersection_point(((0, 0), (1, 1)), ((0, 1), (1, 2))),
+            line_intersection_point(((0.0, 0.0), (1.0, 1.0)), ((0.0, 1.0), (1.0, 2.0)), 1e-9),
             None,
         );
 
         assert_eq!(
-            line_intersection_point(((0, 0), (1, 1)), ((1, 0), (2, 1))),
+            line_intersection_point(((0.0, 0.0), (1.0, 1.0)), ((1.0, 0.0), (2.0, 1.0)), 1e-9),
+            None,
+        );
+    }
+
+    #[test]
+    fn test_vertical_lines() {
+        assert_eq!(
+            line_intersection_point(((0.0, 0.0), (0.0, 1.0)), ((0.0, 1.0), (1.0, 1.0)), 1e-9),
+            Some((0.0, 1.0)),
+        );
+
+        assert_eq!(
+            line_intersection_point(((0.0, 0.0), (0.0, 1.0)), ((5.0, 4.0), (-5.0, -2.0)), 1e-9),
+            Some((0.0, 1.0)),
+        );
+
+        assert_eq!(
+            line_intersection_point(((0.0, 0.0), (0.0, 1.0)), ((1.0, 1.0), (1.0, 2.0)), 1e-9),
             None,
         );
     }
@@ -105,7 +170,8 @@ mod tests {
 
         assert!(line_intersection_point(
             ((x1, y1), (x1 + dx1, y1 + dy1)),
-            ((x2, y2), (x2 + dx2, y2 + dy2))
+            ((x2, y2), (x2 + dx2, y2 + dy2)),
+            Ratio::new(0i128, 1i128)
         )
         .is_some());
     }
