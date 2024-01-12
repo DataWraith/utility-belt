@@ -15,7 +15,7 @@ impl DirectionSet {
         Self(MiniBitset::new(0b1111))
     }
 
-    pub fn insert(&mut self, dir: Direction) {
+    pub fn insert(&mut self, dir: Direction) -> bool {
         self.0.insert(dir.into())
     }
 

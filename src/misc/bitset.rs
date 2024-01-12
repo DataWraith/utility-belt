@@ -30,8 +30,14 @@ impl<T: PrimInt + Unsigned> MiniBitset<T> {
     }
 
     /// Insert the given index into the bitset.
-    pub fn insert(&mut self, i: usize) {
+    pub fn insert(&mut self, i: usize) -> bool {
+        if self.contains(i) {
+            return false;
+        }
+
         self.data = self.data | (T::one() << i);
+
+        true
     }
 
     /// Remove the given index from the bitset.
