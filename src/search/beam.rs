@@ -34,18 +34,18 @@ where
         }
     }
 
-    pub fn next<S, IN>(&mut self, mut successors: S) -> Option<N>
+    pub fn next<S, IN>(&mut self, mut successors: S) -> Option<(N, C)>
     where
         S: FnMut(&N) -> IN,
         IN: IntoIterator<Item = (N, C)>,
     {
         loop {
-            if let Some((cur, _score)) = self.cur.pop() {
+            if let Some((cur, score)) = self.cur.pop() {
                 for next in successors(&cur) {
                     self.next.push(next.clone());
                 }
 
-                return Some(cur);
+                return Some((cur, score));
             }
 
             // Truncate the beam if it is too wide
@@ -91,7 +91,7 @@ mod tests {
         let mut bs = BeamSearch::new(1, vec![(0, 0)]);
         let mut visited_states = Vec::new();
 
-        while let Some(cur) = bs.next(&mut successors) {
+        while let Some((cur, _score)) = bs.next(&mut successors) {
             visited_states.push(cur);
         }
 
