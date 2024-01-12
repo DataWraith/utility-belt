@@ -6,9 +6,9 @@ where
     N: Hash + Eq + Clone,
     C: Ord + Clone,
 {
-    pub cur: Vec<(N, C)>,
-    pub next: Vec<(N, C)>,
-    pub beam_size: usize,
+    cur: Vec<(N, C)>,
+    next: Vec<(N, C)>,
+    beam_size: usize,
 }
 
 impl<N, C> BeamSearch<N, C>
