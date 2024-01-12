@@ -163,6 +163,24 @@ impl Coordinate {
             Direction::Down
         }
     }
+
+    /// Returns the Z-order curve value of the coordinate
+    pub fn z_index(self) -> u64 {
+        fn spread(x: u32) -> u64 {
+            let mut x = x as u64;
+            x = (x | (x << 16)) & 0x0000ffff0000ffff;
+            x = (x | (x << 8)) & 0x00ff00ff00ff00ff;
+            x = (x | (x << 4)) & 0x0f0f0f0f0f0f0f0f;
+            x = (x | (x << 2)) & 0x3333333333333333;
+            x = (x | (x << 1)) & 0x5555555555555555;
+            x
+        }
+
+        let unsigned_x = self.x as u32;
+        let unsigned_y = self.y as u32;
+
+        spread(unsigned_x) | (spread(unsigned_y) << 1)
+    }
 }
 
 impl From<IVec2> for Coordinate {
@@ -342,5 +360,19 @@ mod tests {
         assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(-1, 0)));
         assert!(!Coordinate::new(0, 0).adjacent(Coordinate::new(1, 1)));
         assert!(!Coordinate::new(0, 0).adjacent(Coordinate::new(-1, -1)));
+    }
+
+    #[test]
+    fn test_z_order() {
+        assert_eq!(Coordinate::new(0, 0).z_index(), 0);
+        assert_eq!(Coordinate::new(1, 0).z_index(), 1);
+        assert_eq!(Coordinate::new(0, 1).z_index(), 2);
+        assert_eq!(Coordinate::new(1, 1).z_index(), 3);
+        assert_eq!(Coordinate::new(2, 0).z_index(), 4);
+        assert_eq!(Coordinate::new(0, 2).z_index(), 8);
+        assert_eq!(Coordinate::new(7, 7).z_index(), 63);
+        assert_eq!(Coordinate::new(8, 0).z_index(), 64);
+        assert_eq!(Coordinate::new(0, 8).z_index(), 128);
+        assert_eq!(Coordinate::new(-1, -1).z_index(), 18446744073709551615);
     }
 }
