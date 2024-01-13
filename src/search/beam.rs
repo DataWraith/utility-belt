@@ -32,6 +32,10 @@ where
         }
     }
 
+    pub fn beam_size(&self) -> usize {
+        self.beam_size
+    }
+
     pub fn next<S, IN>(&mut self, mut successors: S) -> Option<(N, C)>
     where
         S: FnMut(&N) -> IN,
