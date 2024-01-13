@@ -1,22 +1,18 @@
-use std::hash::Hash;
-
-use ahash::HashSet;
+use std::ops::Deref;
 
 /// Depth-first search
 pub struct DFS<N>
 where
-    N: Hash + Eq + Clone,
+    N: Clone,
 {
-    pub stack: Vec<N>,
-    pub seen: HashSet<N>,
+    stack: Vec<N>,
 }
 
-impl<N: Hash + Eq + Clone> DFS<N> {
+impl<N: Clone> DFS<N> {
     pub fn new(start: N) -> Self {
         let stack = vec![start.clone()];
-        let seen = HashSet::default();
 
-        Self { stack, seen }
+        Self { stack }
     }
 
     pub fn next<S, IN>(&mut self, mut successors: S) -> Option<N>
@@ -24,13 +20,9 @@ impl<N: Hash + Eq + Clone> DFS<N> {
         S: FnMut(&N) -> IN,
         IN: IntoIterator<Item = N>,
     {
-        while let Some(cur) = self.stack.pop() {
-            if self.seen.insert(cur.clone()) {
-                for next in successors(&cur) {
-                    self.stack.push(next.clone());
-                }
-            } else {
-                continue;
+        if let Some(cur) = self.stack.pop() {
+            for next in successors(&cur) {
+                self.stack.push(next.clone());
             }
 
             return Some(cur);
@@ -40,27 +32,51 @@ impl<N: Hash + Eq + Clone> DFS<N> {
     }
 }
 
+impl<N> Deref for DFS<N>
+where
+    N: Clone,
+{
+    type Target = Vec<N>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.stack
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::misc::MiniBitset;
+
     use super::*;
 
     #[test]
     fn test_dfs() {
-        let successors = |n: &i32| {
+        let mut seen = MiniBitset::<u16>::default();
+        seen.insert(6);
+
+        let mut successors = |n: &i32| {
+            let mut result = Vec::new();
+
             if n.abs() < 5 {
-                vec![n + 1, n - 1]
-            } else {
-                vec![]
+                if seen.insert((6 + n + 1) as usize) {
+                    result.push(n + 1);
+                }
+
+                if seen.insert((6 + n - 1) as usize) {
+                    result.push(n - 1);
+                }
             }
+
+            result
         };
 
         let mut dfs = DFS::new(0);
-        let mut seen = Vec::new();
+        let mut visited = Vec::new();
 
-        while let Some(cur) = dfs.next(&successors) {
-            seen.push(cur);
+        while let Some(cur) = dfs.next(&mut successors) {
+            visited.push(cur);
         }
 
-        assert_eq!(seen, vec![0, -1, -2, -3, -4, -5, 1, 2, 3, 4, 5]);
+        assert_eq!(visited, vec![0, -1, -2, -3, -4, -5, 1, 2, 3, 4, 5]);
     }
 }
