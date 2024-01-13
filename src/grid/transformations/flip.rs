@@ -19,7 +19,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_mirror_x() {
+    fn test_flip_x() {
         let mut grid = Grid2D::from_shape_vec(
             3,
             3,
@@ -46,7 +46,7 @@ mod tests {
     }
 
     #[test]
-    fn test_mirror_y() {
+    fn test_flip_y() {
         let mut grid = Grid2D::from_shape_vec(
             3,
             3,
