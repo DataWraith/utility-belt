@@ -1,22 +1,22 @@
 use crate::grid::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
-    /// Rotates the grid 90 degrees clockwise and returns it as a new grid.
+    /// Rotates the grid 90 degrees clockwise
     pub fn rotate_right(&mut self) {
         self.transpose();
-        self.mirror_x();
+        self.flip_x();
     }
 
-    /// Rotates the grid 90 degrees counter-clockwise and returns it as a new grid.
+    /// Rotates the grid 90 degrees counter-clockwise
     pub fn rotate_left(&mut self) {
         self.transpose();
-        self.mirror_y();
+        self.flip_y();
     }
 
-    /// Rotates the grid 180 degrees and returns it as a new grid.
+    /// Rotates the grid 180 degrees
     pub fn rotate_180(&mut self) {
-        self.mirror_x();
-        self.mirror_y();
+        self.flip_x();
+        self.flip_y();
     }
 }
 

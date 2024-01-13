@@ -3,13 +3,13 @@ use ndarray::Axis;
 use crate::grid::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
-    /// Mirrors the grid along the x-axis and returns it as a new grid.
-    pub fn mirror_x(&mut self) {
+    /// Flips the grid horizontally
+    pub fn flip_x(&mut self) {
         self.data.invert_axis(Axis(1));
     }
 
-    /// Mirrors the grid along the y-axis and returns it as a new grid.
-    pub fn mirror_y(&mut self) {
+    /// Flips the grid vertically
+    pub fn flip_y(&mut self) {
         self.data.invert_axis(Axis(0));
     }
 }
@@ -40,7 +40,7 @@ mod tests {
             ],
         );
 
-        grid.mirror_x();
+        grid.flip_x();
 
         assert_eq!(grid, expected);
     }
@@ -67,7 +67,7 @@ mod tests {
             ],
         );
 
-        grid.mirror_y();
+        grid.flip_y();
         assert_eq!(grid, expected);
     }
 }

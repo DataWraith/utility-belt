@@ -1,4 +1,4 @@
-pub mod mirror;
+pub mod flip;
 pub mod replicate;
 pub mod rotate;
 pub mod unfold;

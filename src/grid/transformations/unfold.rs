@@ -4,7 +4,7 @@ impl<T: Clone> Grid2D<T> {
     /// "Unfolds" the grid by mirroring it along the x-axis and concatenating the two halves.
     pub fn unfold_x(&self) -> Self {
         let mut mirror = self.clone();
-        mirror.mirror_x();
+        mirror.flip_x();
 
         self.concat_x(&mirror)
     }
@@ -32,7 +32,7 @@ impl<T: Clone> Grid2D<T> {
     /// "Unfolds" the grid by mirroring it along the y-axis and concatenating the two halves.
     pub fn unfold_y(&self) -> Self {
         let mut mirror = self.clone();
-        mirror.mirror_y();
+        mirror.flip_y();
         self.concat_y(&mirror)
     }
 
