@@ -1,9 +1,7 @@
-use std::hash::Hash;
-
 /// Beam search
 pub struct BeamSearch<N, C>
 where
-    N: Hash + Eq + Clone,
+    N: Clone,
     C: Ord + Clone,
 {
     cur: Vec<(N, C)>,
@@ -13,7 +11,7 @@ where
 
 impl<N, C> BeamSearch<N, C>
 where
-    N: Hash + Eq + Clone,
+    N: Clone,
     C: Ord + Clone,
 {
     pub fn new<IN>(beam_size: usize, start: IN) -> Self
