@@ -1,7 +1,3 @@
-use std::hash::Hash;
-
-use ahash::HashSet;
-
 /// Branch and bound
 ///
 /// This is a generic implementation of the Branch and bound-algorithm. It is
@@ -31,7 +27,7 @@ pub fn branch_and_bound<N, FN, FC, FB, IN, C>(
     mut bound: FB,
 ) -> N
 where
-    N: Eq + Clone + Hash,
+    N: Clone,
     FN: FnMut(&N) -> IN,
     FC: FnMut(&N) -> Option<C>,
     FB: FnMut(&N) -> C,
@@ -41,9 +37,6 @@ where
     let mut stack = vec![start.clone()];
     let mut best = None;
     let mut best_n = start.clone();
-
-    let mut seen = HashSet::default();
-    seen.insert(start.clone());
 
     while let Some(cur) = stack.pop() {
         if let Some(cost) = cost(&cur) {
@@ -56,7 +49,7 @@ where
         }
 
         for next in successors(&cur) {
-            if seen.insert(next.clone()) && (best.is_none() || bound(&next) < best.unwrap()) {
+            if best.is_none() || bound(&next) < best.unwrap() {
                 stack.push(next);
             }
         }
@@ -67,18 +60,31 @@ where
 
 #[cfg(test)]
 mod tests {
+    use crate::misc::MiniBitset;
+
     use super::*;
 
     #[test]
     fn test_branch_and_bound() {
         let start = 0;
+        let mut seen = MiniBitset::<u8>::new(1);
 
         let successors = |n: &i32| {
+            let mut result = Vec::new();
+
             if *n < 5 {
-                vec![n + 1, n + 2]
-            } else {
-                vec![]
+                if !seen.contains((n + 1) as usize) {
+                    seen.insert((n + 1) as usize);
+                    result.push(n + 1);
+                }
+
+                if *n != 0 && !seen.contains((n - 1) as usize) {
+                    seen.insert((n - 1) as usize);
+                    result.push(n - 1);
+                }
             }
+
+            result
         };
 
         let cost = |n: &i32| {
