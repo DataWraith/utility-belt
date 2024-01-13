@@ -1,6 +1,4 @@
-use std::{collections::VecDeque, hash::Hash};
-
-use ahash::HashSet;
+use std::{collections::VecDeque, ops::Deref};
 
 /// Breadth-first search
 ///
@@ -8,29 +6,26 @@ use ahash::HashSet;
 /// best-first.
 pub struct BrFS<N>
 where
-    N: Hash + Eq + Clone,
+    N: Clone,
 {
-    pub queue: VecDeque<N>,
-    pub seen: HashSet<N>,
+    queue: VecDeque<N>,
 }
 
 impl<N> BrFS<N>
 where
-    N: Hash + Eq + Clone,
+    N: Clone,
 {
     pub fn new<IN>(start: IN) -> Self
     where
         IN: IntoIterator<Item = N>,
     {
         let mut queue = VecDeque::new();
-        let mut seen = HashSet::default();
 
         for s in start.into_iter() {
             queue.push_back(s.clone());
-            seen.insert(s);
         }
 
-        Self { queue, seen }
+        Self { queue }
     }
 
     pub fn next<S, IN>(&mut self, mut successors: S) -> Option<N>
@@ -40,9 +35,7 @@ where
     {
         if let Some(cur) = self.queue.pop_front() {
             for next in successors(&cur) {
-                if self.seen.insert(next.clone()) {
-                    self.queue.push_back(next.clone());
-                }
+                self.queue.push_back(next.clone());
             }
 
             return Some(cur);
@@ -52,27 +45,51 @@ where
     }
 }
 
+impl<N> Deref for BrFS<N>
+where
+    N: Clone,
+{
+    type Target = VecDeque<N>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.queue
+    }
+}
+
 #[cfg(test)]
 mod tests {
+    use crate::misc::MiniBitset;
+
     use super::*;
 
     #[test]
     fn test_brfs() {
-        let successors = |n: &i32| {
+        let mut seen = MiniBitset::<u16>::default();
+        seen.insert(6);
+
+        let mut successors = |n: &i32| {
+            let mut result = Vec::new();
+
             if n.abs() < 5 {
-                vec![n + 1, n - 1]
-            } else {
-                vec![]
+                if seen.insert((6 + n + 1) as usize) {
+                    result.push(n + 1);
+                }
+
+                if seen.insert((6 + n - 1) as usize) {
+                    result.push(n - 1);
+                }
             }
+
+            result
         };
 
         let mut brfs = BrFS::new(vec![0]);
-        let mut seen = Vec::new();
+        let mut visited = Vec::new();
 
-        while let Some(cur) = brfs.next(&successors) {
-            seen.push(cur);
+        while let Some(cur) = brfs.next(&mut successors) {
+            visited.push(cur);
         }
 
-        assert_eq!(seen, vec![0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5]);
+        assert_eq!(visited, vec![0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5]);
     }
 }
