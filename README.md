@@ -26,11 +26,11 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - [indoc](https://docs.rs/indoc) - exposes macros for convenient inline String formatting
 - [itertools](https://docs.rs/itertools) - various tools for working with iterators
 - [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements
-- [nom](https://docs.rs/nom) - ergonomic parser combinators
 - [petgraph](https://docs.rs/petgraph/) - A versatile graph data structure library
 - [rangetools](https://docs.rs/rangetools) - Useful extension to ranges
 - [rstest](https://docs.rs/rstest) - table-driven testing (very useful for AoC!) and fixtures
 - [tinyvec](https://docs.rs/tinyvec) - stack-allocated (small) vectors
+- [winnow](https://docs.rs/winnow) - ergonomic parser combinators
 
 ### Advent of Code-specific tools
 
@@ -56,9 +56,9 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
   These allow you to quickly look up the sum of values in a given 1D range or 2D
   rectangle.
 
-- **`nom` parsers**
+- **`winnow` parsers**
 
-  A few additional nom parsers that may be useful.
+  Additional winnow parsers that may be useful.
 
 - **bisection search** function
 

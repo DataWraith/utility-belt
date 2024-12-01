@@ -27,17 +27,11 @@ pub use crate::misc::*;
 // ndarray
 pub use ndarray::Array2;
 
-// nom
-pub use crate::parsing::*;
-pub use nom;
-pub use nom::bytes::complete::tag;
-pub use nom::character::complete::*;
-pub use nom::combinator::eof;
-pub use nom::multi::*;
-pub use nom::IResult;
-
 // optimization
 pub use crate::optimization::*;
+
+// parsing
+pub use crate::parsing::*;
 
 // petgraph
 pub use petgraph::prelude as petgraph;
