@@ -7,6 +7,9 @@ pub use bitset::*;
 pub mod cmp_eq;
 pub use cmp_eq::CmpEq;
 
+pub mod counter;
+pub use counter::*;
+
 use std::hash::Hash;
 
 use crate::prelude::HashMap;
