@@ -181,6 +181,24 @@ impl Coordinate {
 
         spread(unsigned_x) | (spread(unsigned_y) << 1)
     }
+
+    /// Converts a Z-order curve index into to x and y coordinates
+    pub fn from_z_index(z_index: u64) -> Self {
+        fn compact(x: u64) -> u32 {
+            let mut x = x & 0x5555555555555555;
+            x = (x | (x >> 1)) & 0x3333333333333333;
+            x = (x | (x >> 2)) & 0x0f0f0f0f0f0f0f0f;
+            x = (x | (x >> 4)) & 0x00ff00ff00ff00ff;
+            x = (x | (x >> 8)) & 0x0000ffff0000ffff;
+            x = (x | (x >> 16)) & 0x00000000ffffffff;
+            x as u32
+        }
+
+        let x = compact(z_index);
+        let y = compact(z_index >> 1);
+
+        Self::new(x as i32, y as i32)
+    }
 }
 
 impl From<IVec2> for Coordinate {
@@ -362,17 +380,41 @@ mod tests {
         assert!(!Coordinate::new(0, 0).adjacent(Coordinate::new(-1, -1)));
     }
 
+    #[rstest]
+    #[case((0, 0), (11, 11))]
+    #[case((0, 0), (0, 2))]
+    #[case((0, 0), (2, 0))]
+    #[case((0, 0), (0, -2))]
+    #[case((0, 0), (-2, 0))]
+    fn test_not_adjacent(#[case] a: (i32, i32), #[case] b: (i32, i32)) {
+        assert!(!Coordinate::from(a).adjacent(Coordinate::from(b)));
+    }
+
+    #[rstest]
+    #[case((0, 0), 0)]
+    #[case((1, 0), 1)]
+    #[case((0, 1), 2)]
+    #[case((1, 1), 3)]
+    #[case((2, 0), 4)]
+    #[case((0, 2), 8)]
+    #[case((7, 7), 63)]
+    #[case((8, 0), 64)]
+    #[case((0, 8), 128)]
+    #[case((-1, -1), 18446744073709551615)]
+    fn test_z_order(#[case] input: (i32, i32), #[case] expected: u64) {
+        assert_eq!(Coordinate::from(input).z_index(), expected);
+    }
+
     #[test]
-    fn test_z_order() {
-        assert_eq!(Coordinate::new(0, 0).z_index(), 0);
-        assert_eq!(Coordinate::new(1, 0).z_index(), 1);
-        assert_eq!(Coordinate::new(0, 1).z_index(), 2);
-        assert_eq!(Coordinate::new(1, 1).z_index(), 3);
-        assert_eq!(Coordinate::new(2, 0).z_index(), 4);
-        assert_eq!(Coordinate::new(0, 2).z_index(), 8);
-        assert_eq!(Coordinate::new(7, 7).z_index(), 63);
-        assert_eq!(Coordinate::new(8, 0).z_index(), 64);
-        assert_eq!(Coordinate::new(0, 8).z_index(), 128);
-        assert_eq!(Coordinate::new(-1, -1).z_index(), 18446744073709551615);
+    fn test_from_z_index() {
+        assert_eq!(Coordinate::from_z_index(0), Coordinate::new(0, 0));
+        assert_eq!(Coordinate::from_z_index(1), Coordinate::new(1, 0));
+        assert_eq!(Coordinate::from_z_index(2), Coordinate::new(0, 1));
+
+        let x = 12345;
+        let y = 67890;
+        let z = Coordinate::new(x, y).z_index();
+
+        assert_eq!(Coordinate::from_z_index(z), Coordinate::new(x, y));
     }
 }
