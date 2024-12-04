@@ -103,7 +103,7 @@ impl Coordinate {
 
     /// Return a list of all neighboring coordinates (alias of `von_neumann_neighbors`)
     pub fn neighbors(self) -> impl Iterator<Item = Self> {
-        Direction::all().map(move |dir| self + dir.into())
+        Direction::cardinal().map(move |dir| self + dir.into())
     }
 
     /// Return a list of all neighboring coordinates (von Neumann Neighborhood)
@@ -113,17 +113,7 @@ impl Coordinate {
 
     /// Return a list of all neighboring coordinates (Moore Neighborhood)
     pub fn moore_neighbors(self) -> impl Iterator<Item = Self> {
-        [
-            self + Direction::Up.into(),
-            self + Direction::Up.into() + Direction::Right.into(),
-            self + Direction::Right.into(),
-            self + Direction::Down.into() + Direction::Right.into(),
-            self + Direction::Down.into(),
-            self + Direction::Down.into() + Direction::Left.into(),
-            self + Direction::Left.into(),
-            self + Direction::Up.into() + Direction::Left.into(),
-        ]
-        .into_iter()
+        Direction::all().map(move |dir| self + dir.into())
     }
 
     /// Return a list of all coordinates reachable from self by a knight's move
@@ -214,6 +204,10 @@ impl From<Direction> for Coordinate {
             Direction::Right => Self::new(1, 0),
             Direction::Down => Self::new(0, 1),
             Direction::Left => Self::new(-1, 0),
+            Direction::UpLeft => Self::new(-1, -1),
+            Direction::UpRight => Self::new(1, -1),
+            Direction::DownLeft => Self::new(-1, 1),
+            Direction::DownRight => Self::new(1, 1),
         }
     }
 }
@@ -281,23 +275,19 @@ mod tests {
         );
     }
 
-    #[test]
-    fn test_neighbor() {
+    #[rstest]
+    #[case(Direction::Up, (1, 1))]
+    #[case(Direction::Right, (2, 2))]
+    #[case(Direction::Down, (1, 3))]
+    #[case(Direction::Left, (0, 2))]
+    #[case(Direction::UpLeft, (0, 1))]
+    #[case(Direction::UpRight, (2, 1))]
+    #[case(Direction::DownLeft, (0, 3))]
+    #[case(Direction::DownRight, (2, 3))]
+    fn test_neighbor(#[case] dir: Direction, #[case] expected: (i32, i32)) {
         assert_eq!(
-            Coordinate::new(1, 2).neighbor(Direction::Up),
-            Coordinate::new(1, 1)
-        );
-        assert_eq!(
-            Coordinate::new(1, 2).neighbor(Direction::Right),
-            Coordinate::new(2, 2)
-        );
-        assert_eq!(
-            Coordinate::new(1, 2).neighbor(Direction::Down),
-            Coordinate::new(1, 3)
-        );
-        assert_eq!(
-            Coordinate::new(1, 2).neighbor(Direction::Left),
-            Coordinate::new(0, 2)
+            Coordinate::new(1, 2).neighbor(dir),
+            Coordinate::from(expected)
         );
     }
 
@@ -334,14 +324,14 @@ mod tests {
         assert_eq!(
             Coordinate::new(1, 1).moore_neighbors().collect::<Vec<_>>(),
             vec![
-                Coordinate::new(1, 0),
-                Coordinate::new(2, 0),
-                Coordinate::new(2, 1),
-                Coordinate::new(2, 2),
-                Coordinate::new(1, 2),
-                Coordinate::new(0, 2),
-                Coordinate::new(0, 1),
-                Coordinate::new(0, 0),
+                Coordinate::new(1, 1) + Direction::Up.into(),
+                Coordinate::new(1, 1) + Direction::Right.into(),
+                Coordinate::new(1, 1) + Direction::Down.into(),
+                Coordinate::new(1, 1) + Direction::Left.into(),
+                Coordinate::new(1, 1) + Direction::UpLeft.into(),
+                Coordinate::new(1, 1) + Direction::UpRight.into(),
+                Coordinate::new(1, 1) + Direction::DownLeft.into(),
+                Coordinate::new(1, 1) + Direction::DownRight.into(),
             ]
         );
     }
