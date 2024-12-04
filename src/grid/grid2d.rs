@@ -183,8 +183,9 @@ impl<T: Clone> Grid2D<T> {
         self.data.axis_iter(ndarray::Axis(1))
     }
 
-    /// Returns all diagonals of the grid as Vec<Vec<T>>.
-    pub fn diag(&self) -> Vec<Vec<T>> {
+    /// Returns all diagonals of the grid as Vec<Vec<T>> going from top-right to
+    /// bottom-left and starting with the top-left corner..
+    pub fn diagonals(&self) -> Vec<Vec<T>> {
         let w = self.width as isize;
         let h = self.height as isize;
 
@@ -555,7 +556,7 @@ mod tests {
         let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, (1..=9).collect());
 
         assert_eq!(
-            grid.diag(),
+            grid.diagonals(),
             vec![
                 vec![1],       //
                 vec![2, 4],    //
