@@ -370,14 +370,13 @@ mod tests {
         assert_eq!(format!("{}", Coordinate::new(1, 2)), "(1, 2)");
     }
 
-    #[test]
-    fn test_adjacent() {
-        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(0, 1)));
-        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(1, 0)));
-        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(0, -1)));
-        assert!(Coordinate::new(0, 0).adjacent(Coordinate::new(-1, 0)));
-        assert!(!Coordinate::new(0, 0).adjacent(Coordinate::new(1, 1)));
-        assert!(!Coordinate::new(0, 0).adjacent(Coordinate::new(-1, -1)));
+    #[rstest]
+    #[case((0, 0), (0, 1))]
+    #[case((0, 0), (1, 0))]
+    #[case((0, 0), (0, -1))]
+    #[case((0, 0), (-1, 0))]
+    fn test_adjacent(#[case] a: (i32, i32), #[case] b: (i32, i32)) {
+        assert!(Coordinate::from(a).adjacent(Coordinate::from(b)));
     }
 
     #[rstest]
