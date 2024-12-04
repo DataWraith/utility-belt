@@ -100,6 +100,10 @@ impl<T: Clone> Grid2D<T> {
         self.height as usize
     }
 
+    pub fn size(&self) -> usize {
+        self.width as usize * self.height as usize
+    }
+
     /// Returns the value at the given coordinate. Out-of-bounds accesses return
     /// `None`.
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
