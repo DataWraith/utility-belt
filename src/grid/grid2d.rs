@@ -183,6 +183,34 @@ impl<T: Clone> Grid2D<T> {
         self.data.axis_iter(ndarray::Axis(1))
     }
 
+    /// Returns all diagonals of the grid as Vec<Vec<T>>.
+    pub fn diag(&self) -> Vec<Vec<T>> {
+        let w = self.width as isize;
+        let h = self.height as isize;
+
+        let max_diag = (w + h - 2).max(0);
+        let mut diags = vec![];
+
+        for d in 0..=max_diag {
+            let mut diag = Vec::new();
+
+            let start_row = 0.max(d - w + 1);
+            let end_row = (d + 1).min(h);
+
+            for r in start_row..end_row {
+                let c = d - r;
+
+                if c >= 0 && c < w {
+                    diag.push(self.data[(r as usize, c as usize)].clone());
+                }
+            }
+
+            diags.push(diag);
+        }
+
+        diags
+    }
+
     /// Returns a the result of concatening `other` to the right of `self`.
     pub fn concat_x(&self, other: &Self) -> Self {
         let combined = concatenate![Axis(1), self.data.view(), other.data.view()];
@@ -519,6 +547,22 @@ mod tests {
                 [4][5][6]
                 [7][8][9]
             "}
+        );
+    }
+
+    #[test]
+    fn test_diag_3x3() {
+        let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, (1..=9).collect());
+
+        assert_eq!(
+            grid.diag(),
+            vec![
+                vec![1],       //
+                vec![2, 4],    //
+                vec![3, 5, 7], //
+                vec![6, 8],    //
+                vec![9],       //
+            ]
         );
     }
 }
