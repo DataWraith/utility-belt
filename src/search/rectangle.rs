@@ -11,7 +11,7 @@ where
     N: Clone + Eq + Hash,
     C: Ord + Clone,
 {
-    open_lists: VecDeque<BinaryHeap<(N, Reverse<C>)>>,
+    open_lists: VecDeque<BinaryHeap<(Reverse<C>, N)>>,
     closed: HashMap<N, C>,
     incumbent: Option<(N, C)>,
     depth: usize,
@@ -29,7 +29,7 @@ where
         let mut first_list = BinaryHeap::new();
 
         for (n, c) in start {
-            first_list.push((n, Reverse(c)));
+            first_list.push((Reverse(c), n));
         }
 
         let open_lists = VecDeque::from(vec![first_list]);
@@ -104,7 +104,7 @@ where
         let mut incumbent_changed = false;
 
         loop {
-            let Some((n, Reverse(c))) = self.open_lists[i].pop() else {
+            let Some((Reverse(c), n)) = self.open_lists[i].pop() else {
                 return incumbent_changed;
             };
 
@@ -133,7 +133,7 @@ where
                         }
                     }
 
-                    self.open_lists[i + 1].push((next_n, Reverse(next_c)));
+                    self.open_lists[i + 1].push((Reverse(next_c), next_n));
                 }
             }
 
@@ -150,8 +150,10 @@ mod tests {
 
     #[test]
     fn test_beam_search() {
+        let goal = 16;
+
         let mut successors = |n: &Vec<i32>, c: &i32| {
-            if n.last().unwrap().abs() < 26 {
+            if n.last().unwrap().abs() < goal {
                 let mut n1 = n.to_vec();
                 let mut n2 = n.to_vec();
                 let mut n3 = n.to_vec();
@@ -161,9 +163,9 @@ mod tests {
                 n3.push(n3.last().unwrap() - 2);
 
                 vec![
-                    (n1.clone(), c + 2, *n1.last().unwrap() == 26),
-                    (n2.clone(), c + 1, *n2.last().unwrap() == 26),
-                    (n3.clone(), c + 5, *n3.last().unwrap() == 26),
+                    (n1.clone(), c + 2, *n1.last().unwrap() == goal),
+                    (n2.clone(), c + 1, *n2.last().unwrap() == goal),
+                    (n3.clone(), c + 5, *n3.last().unwrap() == goal),
                 ]
             } else {
                 vec![]
@@ -174,18 +176,14 @@ mod tests {
         let mut visited_states = Vec::new();
 
         while let Ok(cur) = bs.next(&mut successors, |n, c| {
-            (26 - n.last().unwrap()).abs() / 5 + c
+            ((26 - n.last().unwrap()).abs() + 4) / 5 + c
         }) {
             visited_states.push(cur);
         }
 
         assert_eq!(
             visited_states,
-            vec![
-                (vec![0, 5, 10, 15, 20, 25, 23, 21, 26], 22),
-                (vec![0, 5, 10, 15, 20, 25, 24, 23, 21, 26], 19),
-                (vec![0, 5, 10, 15, 20, 25, 24, 23, 22, 21, 26], 16)
-            ]
+            vec![(vec![0, 5, 10, 15, 14, 13, 12, 11, 16], 12)]
         );
     }
 }
