@@ -53,15 +53,6 @@ where
     {
         let mut incumbent_changed = false;
 
-        dbg!(
-            self.depth,
-            &self
-                .open_lists
-                .iter()
-                .map(|list| list.len())
-                .collect::<Vec<_>>()
-        );
-
         loop {
             if self.open_lists.iter().all(|list| list.is_empty()) {
                 return Err(());
