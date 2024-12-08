@@ -3,6 +3,7 @@ use std::collections::{BinaryHeap, VecDeque};
 use std::hash::Hash;
 
 use crate::prelude::HashMap;
+use crate::prelude::CmpEq;
 
 /// Rectangle search
 /// https://arxiv.org/abs/2312.12554
@@ -11,7 +12,7 @@ where
     N: Clone + Eq + Hash,
     C: Ord + Clone,
 {
-    open_lists: VecDeque<BinaryHeap<(Reverse<C>, N)>>,
+    open_lists: VecDeque<BinaryHeap<(Reverse<C>, CmpEq<N>)>>,
     closed: HashMap<N, C>,
     incumbent: Option<(N, C)>,
     depth: usize,
@@ -19,7 +20,7 @@ where
 
 impl<N, C> RectangleSearch<N, C>
 where
-    N: Clone + Eq + Hash + Ord,
+    N: Clone + Eq + Hash,
     C: Ord + Clone,
 {
     pub fn new<IN>(start: IN) -> Self
@@ -29,7 +30,7 @@ where
         let mut first_list = BinaryHeap::new();
 
         for (n, c) in start {
-            first_list.push((Reverse(c), n));
+            first_list.push((Reverse(c), CmpEq(n)));
         }
 
         let open_lists = VecDeque::from(vec![first_list]);
@@ -104,7 +105,7 @@ where
         let mut incumbent_changed = false;
 
         loop {
-            let Some((Reverse(c), n)) = self.open_lists[i].pop() else {
+            let Some((Reverse(c), CmpEq(n))) = self.open_lists[i].pop() else {
                 return incumbent_changed;
             };
 
@@ -133,7 +134,7 @@ where
                         }
                     }
 
-                    self.open_lists[i + 1].push((Reverse(next_c), next_n));
+                    self.open_lists[i + 1].push((Reverse(next_c), CmpEq(next_n)));
                 }
             }
 
@@ -183,7 +184,7 @@ mod tests {
 
         assert_eq!(
             visited_states,
-            vec![(vec![0, 5, 10, 15, 14, 13, 12, 11, 16], 12)]
+            vec![(vec![0, -1, -2, -3, -4, 1, 6, 11, 16], 12)]
         );
     }
 }
