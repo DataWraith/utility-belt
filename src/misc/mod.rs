@@ -114,7 +114,7 @@ where
     FN: FnMut(&S, &IN) -> IS,
     IS: IntoIterator<Item = S>,
 {
-    let mut new_states = Counter::new();
+    let mut new_states = Counter::with_capacity(states.len());
 
     for (state, count) in states.iter() {
         for new_state in transition(state, &input) {

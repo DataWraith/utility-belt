@@ -17,6 +17,13 @@ impl<T: Hash + Eq> Counter<T> {
         }
     }
 
+    pub fn with_capacity(capacity: usize) -> Self {
+        Self {
+            counts: AHashMap::with_capacity(capacity),
+            count_sum: 0,
+        }
+    }
+
     pub fn add(&mut self, item: T) {
         self.add_many(item, 1)
     }
