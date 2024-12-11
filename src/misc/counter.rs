@@ -1,6 +1,6 @@
 //! A simple counter for counting the frequency of items in a collection by storing them in a hash map.
 
-use std::{hash::Hash, ops::Index};
+use std::{hash::Hash, ops::Deref, ops::Index};
 
 use ahash::AHashMap;
 
@@ -18,8 +18,12 @@ impl<T: Hash + Eq> Counter<T> {
     }
 
     pub fn add(&mut self, item: T) {
-        self.count_sum += 1;
-        *self.counts.entry(item).or_insert(0) += 1;
+        self.add_many(item, 1)
+    }
+
+    pub fn add_many(&mut self, item: T, count: usize) {
+        self.count_sum += count;
+        *self.counts.entry(item).or_insert(0) += count;
     }
 
     pub fn get(&self, item: &T) -> usize {
@@ -64,6 +68,17 @@ impl<T: Hash + Eq> Index<T> for Counter<T> {
 
     fn index(&self, index: T) -> &Self::Output {
         self.counts.get(&index).unwrap_or(&0)
+    }
+}
+
+impl<T> Deref for Counter<T>
+where
+    T: Hash + Eq,
+{
+    type Target = AHashMap<T, usize>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.counts
     }
 }
 

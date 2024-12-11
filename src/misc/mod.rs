@@ -105,23 +105,20 @@ where
 /// valid strings.
 ///
 pub fn state_iteration<S, FN, IS, IN>(
-    states: &HashMap<S, usize>,
+    states: &Counter<S>,
     mut transition: FN,
     input: IN,
-) -> HashMap<S, usize>
+) -> Counter<S>
 where
     S: Eq + Hash + Clone,
     FN: FnMut(&S, &IN) -> IS,
     IS: IntoIterator<Item = S>,
 {
-    let mut new_states = HashMap::default();
+    let mut new_states = Counter::new();
 
     for (state, count) in states.iter() {
         for new_state in transition(state, &input) {
-            new_states
-                .entry(new_state)
-                .and_modify(|c| *c += count)
-                .or_insert(*count);
+            new_states.add_many(new_state, *count);
         }
     }
 
@@ -143,11 +140,12 @@ mod tests {
 
     #[test]
     fn test_state_iteration() {
-        let mut states = HashMap::default();
-        states.insert(0, 1);
+        let states = Counter::from([0]);
 
         let result = state_iteration(&states, |n, _| vec![n + 1, n + 1, n + 2], 0);
-        assert_eq!(result.get(&1), Some(&2));
-        assert_eq!(result.get(&2), Some(&1));
+
+        assert_eq!(result[1138], 0);
+        assert_eq!(result[1], 2);
+        assert_eq!(result[2], 1);
     }
 }

@@ -2,8 +2,8 @@ use std::cmp::Reverse;
 use std::collections::{BinaryHeap, VecDeque};
 use std::hash::Hash;
 
-use crate::prelude::HashMap;
 use crate::prelude::CmpEq;
+use crate::prelude::HashMap;
 
 /// Rectangle search
 /// https://arxiv.org/abs/2312.12554
