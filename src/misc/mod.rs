@@ -110,7 +110,7 @@ pub fn state_iteration<S, FN, IS, IN>(
     input: IN,
 ) -> Counter<S>
 where
-    S: Eq + Hash + Clone,
+    S: Eq + Hash,
     FN: FnMut(&S, &IN) -> IS,
     IS: IntoIterator<Item = S>,
 {
