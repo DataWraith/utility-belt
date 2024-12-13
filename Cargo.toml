@@ -1,6 +1,6 @@
 [package]
 name = "utility-belt"
-version = "0.2024.0"
+version = "0.2024.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -20,4 +20,3 @@ rand = "0.8.5"
 rangetools = "0.1.4"
 rstest = "0.23.0"
 tinyvec = { version = "1.8.0", features = ["alloc", "std"] }
-winnow = "0.6.20"
