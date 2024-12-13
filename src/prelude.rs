@@ -33,9 +33,6 @@ pub use crate::optimization::*;
 // parsing
 pub use crate::parsing::*;
 
-// petgraph
-pub use petgraph::prelude as petgraph;
-
 // rand
 pub use rand::prelude::*;
 
