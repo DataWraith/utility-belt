@@ -26,7 +26,6 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 - [indoc](https://docs.rs/indoc) - exposes macros for convenient inline String formatting
 - [itertools](https://docs.rs/itertools) - various tools for working with iterators
 - [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements
-- [petgraph](https://docs.rs/petgraph/) - A versatile graph data structure library
 - [rangetools](https://docs.rs/rangetools) - Useful extension to ranges
 - [rstest](https://docs.rs/rstest) - table-driven testing (very useful for AoC!) and fixtures
 - [tinyvec](https://docs.rs/tinyvec) - stack-allocated (small) vectors
@@ -87,6 +86,3 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - Solving equation systems using **Gauss-Jordan elimination**
 
-## Other crates that may be useful
-
-- [gomez](https://docs.rs/gomez/) - curve fitting, mathematical optimization
