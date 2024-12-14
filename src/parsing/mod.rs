@@ -1,13 +1,28 @@
 use itertools::Itertools;
 
 pub fn parse_ints(input: &str) -> Vec<i64> {
-    input.split(|c: char| !c.is_ascii_digit() && c != '-').filter(|w| !w.is_empty()).map(|w| w.parse::<i64>().unwrap()).collect_vec()
+    input
+        .split(|c: char| !c.is_ascii_digit() && c != '-')
+        .filter(|w| !w.is_empty())
+        .map(|w| w.parse::<i64>().unwrap())
+        .collect_vec()
 }
 
 pub fn parse_uints(input: &str) -> Vec<u64> {
-    input.split(|c: char| !c.is_ascii_digit()).filter(|w| !w.is_empty()).map(|w| w.parse::<u64>().unwrap()).collect_vec()
+    input
+        .split(|c: char| !c.is_ascii_digit())
+        .filter(|w| !w.is_empty())
+        .map(|w| w.parse::<u64>().unwrap())
+        .collect_vec()
 }
 
+pub fn parse_capitals(input: &str) -> Vec<String> {
+    input
+        .split(|c: char| !c.is_ascii_uppercase())
+        .filter(|w| !w.is_empty())
+        .map(|w| w.to_string())
+        .collect_vec()
+}
 
 #[cfg(test)]
 mod tests {
@@ -35,5 +50,13 @@ mod tests {
         assert_eq!(parse_uints("123x-456x-789"), vec![123, 456, 789]);
         assert_eq!(parse_uints("Point { x: 123, y: 456 }\n"), vec![123, 456]);
         assert_eq!(parse_uints("123   456\n789\n\n"), vec![123, 456, 789]);
+    }
+
+    #[test]
+    fn test_parse_capitals() {
+        assert_eq!(
+            parse_capitals("Valve AA has flow rate=0; tunnels lead to valves DD, II, BB"),
+            vec!["V", "AA", "DD", "II", "BB"].into_iter().map(|x| x.to_string()).collect::<Vec<_>>()
+        );
     }
 }
