@@ -1,11 +1,9 @@
-use itertools::Itertools;
-
 pub fn parse_ints(input: &str) -> Vec<i64> {
     input
         .split(|c: char| !c.is_ascii_digit() && c != '-')
         .filter(|w| !w.is_empty())
         .map(|w| w.parse::<i64>().unwrap())
-        .collect_vec()
+        .collect()
 }
 
 pub fn parse_uints(input: &str) -> Vec<u64> {
@@ -13,7 +11,7 @@ pub fn parse_uints(input: &str) -> Vec<u64> {
         .split(|c: char| !c.is_ascii_digit())
         .filter(|w| !w.is_empty())
         .map(|w| w.parse::<u64>().unwrap())
-        .collect_vec()
+        .collect()
 }
 
 pub fn parse_capitals(input: &str) -> Vec<String> {
@@ -21,7 +19,7 @@ pub fn parse_capitals(input: &str) -> Vec<String> {
         .split(|c: char| !c.is_ascii_uppercase())
         .filter(|w| !w.is_empty())
         .map(|w| w.to_string())
-        .collect_vec()
+        .collect()
 }
 
 #[cfg(test)]
