@@ -40,12 +40,16 @@ impl<T: Clone + From<char>> Grid2D<T> {
         for c in input.chars() {
             if c == '\n' {
                 height += 1;
+                width = width.max(cur_width);
                 cur_width = 0;
             } else {
                 cur_width += 1;
-                width = width.max(cur_width);
                 elems.push(c.into());
             }
+        }
+
+        if cur_width != 0 {
+            height += 1;
         }
 
         assert!(width > 0, "Grid width must be greater than 0");
@@ -417,6 +421,19 @@ mod tests {
         assert_eq!(grid[Coordinate::new(0, 2)], '7');
         assert_eq!(grid[Coordinate::new(1, 2)], '8');
         assert_eq!(grid[Coordinate::new(2, 2)], '9');
+    }
+
+    #[test]
+    fn parse_test_no_trailing_newline() {
+        let input = indoc! {"
+            ASDF
+            JKLÖ
+        "};
+
+        let grid: Grid2D<char> = input.trim_end().into();
+
+        assert_eq!(grid.width(), 4);
+        assert_eq!(grid.height(), 2);
     }
 
     #[test]
