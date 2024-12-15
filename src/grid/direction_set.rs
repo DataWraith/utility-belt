@@ -68,6 +68,14 @@ impl std::fmt::Debug for DirectionSet {
     }
 }
 
+impl From<Direction> for DirectionSet {
+    fn from(dir: Direction) -> Self {
+        let mut set = Self::empty();
+        set.insert(dir);
+        set
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -122,6 +130,16 @@ mod tests {
         set.remove(Direction::Left);
 
         assert!(!set.contains(Direction::Up));
+        assert!(!set.contains(Direction::Right));
+        assert!(!set.contains(Direction::Down));
+        assert!(!set.contains(Direction::Left));
+    }
+
+    #[test]
+    fn test_from() {
+        let set = DirectionSet::from(Direction::Up);
+
+        assert!(set.contains(Direction::Up));
         assert!(!set.contains(Direction::Right));
         assert!(!set.contains(Direction::Down));
         assert!(!set.contains(Direction::Left));
