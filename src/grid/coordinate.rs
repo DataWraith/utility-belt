@@ -1,5 +1,5 @@
 use std::{
-    fmt::{Display, Formatter},
+    fmt::{Debug, Display, Formatter},
     ops::Deref,
 };
 
@@ -13,7 +13,6 @@ use super::Direction;
 /// This is a wrapper around `IVec2` that implements some useful methods.
 #[derive(
     Default,
-    Debug,
     Clone,
     Copy,
     PartialEq,
@@ -31,6 +30,12 @@ use super::Direction;
 pub struct Coordinate(IVec2);
 
 impl Display for Coordinate {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.0.x, self.0.y)
+    }
+}
+
+impl Debug for Coordinate {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {})", self.0.x, self.0.y)
     }
