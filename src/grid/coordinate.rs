@@ -56,6 +56,38 @@ impl Deref for Coordinate {
     }
 }
 
+impl Add<Direction> for Coordinate {
+    type Output = Self;
+
+    fn add(self, dir: Direction) -> Self {
+        let offset: Coordinate = dir.into();
+        self + offset
+    }
+}
+
+impl AddAssign<Direction> for Coordinate {
+    fn add_assign(&mut self, dir: Direction) {
+        let offset: Coordinate = dir.into();
+        *self += offset;
+    }
+}
+
+impl Sub<Direction> for Coordinate {
+    type Output = Self;
+
+    fn sub(self, dir: Direction) -> Self {
+        let offset: Coordinate = dir.into();
+        self - offset
+    }
+}
+
+impl SubAssign<Direction> for Coordinate {
+    fn sub_assign(&mut self, dir: Direction) {
+        let offset: Coordinate = dir.into();
+        *self -= offset;
+    }
+}
+
 impl Coordinate {
     pub fn new(x: i32, y: i32) -> Self {
         Self(IVec2::new(x, y))
@@ -98,12 +130,12 @@ impl Coordinate {
 
     /// Returns neighboring Coordinate in the given direction
     pub fn neighbor(self, dir: Direction) -> Self {
-        self + dir.into()
+        self + dir
     }
 
     /// Return a list of all neighboring coordinates (alias of `von_neumann_neighbors`)
     pub fn neighbors(self) -> impl Iterator<Item = Self> {
-        Direction::cardinal().map(move |dir| self + dir.into())
+        Direction::cardinal().map(move |dir| self + dir)
     }
 
     /// Return a list of all neighboring coordinates (von Neumann Neighborhood)
@@ -113,20 +145,20 @@ impl Coordinate {
 
     /// Return a list of all neighboring coordinates (Moore Neighborhood)
     pub fn moore_neighbors(self) -> impl Iterator<Item = Self> {
-        Direction::all().map(move |dir| self + dir.into())
+        Direction::all().map(move |dir| self + dir)
     }
 
     /// Return a list of all coordinates reachable from self by a knight's move
     pub fn knight_move_neighbors(self) -> impl Iterator<Item = Self> {
         [
-            self + Direction::Up.into() + Direction::Up.into() + Direction::Right.into(),
-            self + Direction::Up.into() + Direction::Up.into() + Direction::Left.into(),
-            self + Direction::Right.into() + Direction::Right.into() + Direction::Up.into(),
-            self + Direction::Right.into() + Direction::Right.into() + Direction::Down.into(),
-            self + Direction::Down.into() + Direction::Down.into() + Direction::Right.into(),
-            self + Direction::Down.into() + Direction::Down.into() + Direction::Left.into(),
-            self + Direction::Left.into() + Direction::Left.into() + Direction::Up.into(),
-            self + Direction::Left.into() + Direction::Left.into() + Direction::Down.into(),
+            self + Direction::Up + Direction::Up + Direction::Right,
+            self + Direction::Up + Direction::Up + Direction::Left,
+            self + Direction::Right + Direction::Right + Direction::Up,
+            self + Direction::Right + Direction::Right + Direction::Down,
+            self + Direction::Down + Direction::Down + Direction::Right,
+            self + Direction::Down + Direction::Down + Direction::Left,
+            self + Direction::Left + Direction::Left + Direction::Up,
+            self + Direction::Left + Direction::Left + Direction::Down,
         ]
         .into_iter()
     }
@@ -324,14 +356,14 @@ mod tests {
         assert_eq!(
             Coordinate::new(1, 1).moore_neighbors().collect::<Vec<_>>(),
             vec![
-                Coordinate::new(1, 1) + Direction::Up.into(),
-                Coordinate::new(1, 1) + Direction::Right.into(),
-                Coordinate::new(1, 1) + Direction::Down.into(),
-                Coordinate::new(1, 1) + Direction::Left.into(),
-                Coordinate::new(1, 1) + Direction::UpLeft.into(),
-                Coordinate::new(1, 1) + Direction::UpRight.into(),
-                Coordinate::new(1, 1) + Direction::DownLeft.into(),
-                Coordinate::new(1, 1) + Direction::DownRight.into(),
+                Coordinate::new(1, 1) + Direction::Up,
+                Coordinate::new(1, 1) + Direction::Right,
+                Coordinate::new(1, 1) + Direction::Down,
+                Coordinate::new(1, 1) + Direction::Left,
+                Coordinate::new(1, 1) + Direction::UpLeft,
+                Coordinate::new(1, 1) + Direction::UpRight,
+                Coordinate::new(1, 1) + Direction::DownLeft,
+                Coordinate::new(1, 1) + Direction::DownRight,
             ]
         );
     }
