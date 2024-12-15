@@ -4,8 +4,8 @@ use num::{Integer, Unsigned};
 pub use num_modular::{ModularCoreOps, ModularInteger, ModularPow, ModularUnaryOps};
 
 pub struct Congruence<T: Integer + Unsigned> {
-    a: T,
-    m: T,
+    pub a: T,
+    pub m: T,
 }
 
 pub fn chinese_remainder_theorem<
