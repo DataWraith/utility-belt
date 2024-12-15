@@ -54,7 +54,10 @@ mod tests {
     fn test_parse_capitals() {
         assert_eq!(
             parse_capitals("Valve AA has flow rate=0; tunnels lead to valves DD, II, BB"),
-            vec!["V", "AA", "DD", "II", "BB"].into_iter().map(|x| x.to_string()).collect::<Vec<_>>()
+            vec!["V", "AA", "DD", "II", "BB"]
+                .into_iter()
+                .map(|x| x.to_string())
+                .collect::<Vec<_>>()
         );
     }
 }
