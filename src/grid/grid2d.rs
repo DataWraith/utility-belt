@@ -13,9 +13,9 @@ pub struct Grid2D<T>
 where
     T: Clone,
 {
-    pub width: i32,
-    pub height: i32,
-    pub data: Array2<T>,
+    pub(crate) width: i32,
+    pub(crate) height: i32,
+    pub(crate) data: Array2<T>,
 }
 
 impl<T: Clone + From<char>> Grid2D<T> {
