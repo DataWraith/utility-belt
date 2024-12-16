@@ -1,3 +1,5 @@
+use std::ops::{Deref, DerefMut, Index, IndexMut};
+
 use super::{Coordinate, Grid2D};
 
 /// A bordered grid is a wrapper around Grid2D that has an implicit border
@@ -38,6 +40,11 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     /// Returns the height of the grid, including the border
     pub fn height(&self) -> usize {
         self.grid.height() + self.border_size as usize * 2
+    }
+
+    /// Returns the size of the grid, including the border
+    pub fn size(&self) -> usize {
+        self.width() * self.height()
     }
 
     /// Accesses the element at the given coordinate
@@ -114,6 +121,28 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
                 self.get(c).unwrap()
             })
         })
+    }
+}
+
+impl<'a, T: Clone> Deref for BorderedGrid2D<'a, T> {
+    type Target = Grid2D<T>;
+
+    fn deref(&self) -> &Self::Target {
+        self.grid
+    }
+}
+
+impl<'a, T: Clone> DerefMut for BorderedGrid2D<'a, T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.grid
+    }
+}
+
+impl<'a, T: Clone> Index<Coordinate> for BorderedGrid2D<'a, T> {
+    type Output = T;
+
+    fn index(&self, index: Coordinate) -> &Self::Output {
+        self.get(index).unwrap()
     }
 }
 
