@@ -75,9 +75,9 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - Small **bitsets** for 8, 16, 32, 64 and 128 values
 
-- **Pathfinding algorithms** (Breadth-First Search, Depth-First Search, Beam search and A*)
+- **Optimization algorithms** (Beam Search)
 
-- Stochastic Gradient Descent with **MADGRAD**. Because I could.
+- **Pathfinding algorithm** (A*)
 
 - Solving equation systems using **Gauss-Jordan elimination**
 
