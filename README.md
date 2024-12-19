@@ -79,3 +79,4 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - Solving equation systems using **Gauss-Jordan elimination**
 
+- Chinese Remainder Theorem
