@@ -77,7 +77,5 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - **Optimization algorithms** (Beam Search)
 
-- **Pathfinding algorithm** (A*)
-
 - Solving equation systems using **Gauss-Jordan elimination**
 
