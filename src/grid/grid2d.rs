@@ -156,16 +156,16 @@ impl<T: Clone> Grid2D<T> {
 
     /// Sets the value at the given coordinate. Out-of-bounds accesses are
     /// ignored.
-    pub fn set(&mut self, coord: Coordinate, value: T) {
-        if coord.x < 0 || coord.y < 0 {
-            return;
+    pub fn set(&mut self, coord: Coordinate, value: T) -> Option<T> {
+        if !self.contains(coord) {
+            return None;
         }
 
-        if coord.x >= self.width || coord.y >= self.height {
-            return;
-        }
+        let old = self.data[(coord.y as usize, coord.x as usize)].clone();
 
         self.data[(coord.y as usize, coord.x as usize)] = value;
+
+        Some(old)
     }
 
     /// Maps the grid to a new grid with the same dimensions, applying the given

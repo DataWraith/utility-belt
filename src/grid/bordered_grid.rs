@@ -90,7 +90,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     }
 
     /// Sets the element at the given coordinate
-    pub fn set(&mut self, coord: Coordinate, value: T) {
+    pub fn set(&mut self, coord: Coordinate, value: T) -> Option<T> {
         let x = coord.x + 1 - self.border_size;
         let y = coord.y + 1 - self.border_size;
         let c = Coordinate::new(x, y);
