@@ -110,10 +110,16 @@ impl<T: Clone> Grid2D<T> {
         self.width as usize * self.height as usize
     }
 
+    /// Returns whether a given coordinate is within the grid
+    #[must_use]
+    pub fn contains(&self, coord: Coordinate) -> bool {
+        coord.x >= 0 && coord.y >= 0 && coord.x < self.width && coord.y < self.height
+    }
+
     /// Returns the value at the given coordinate. Out-of-bounds accesses return
     /// `None`.
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
-        if coord.x < 0 || coord.y < 0 {
+        if !self.contains(coord) {
             return None;
         }
 
@@ -132,7 +138,7 @@ impl<T: Clone> Grid2D<T> {
     /// Returns a mutable reference to the value at the given coordinate,
     /// or `None` if the coordinate is out-of-bounds.
     pub fn get_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
-        if coord.x < 0 || coord.y < 0 {
+        if !self.contains(coord) {
             return None;
         }
 

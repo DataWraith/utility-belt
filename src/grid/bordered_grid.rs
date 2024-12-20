@@ -48,6 +48,19 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
         self.width() * self.height()
     }
 
+    #[must_use]
+    pub fn contains(&self, coord: Coordinate) -> bool {
+        let x = coord.x;
+        let y = coord.y;
+        let w = self.grid.width() as i32;
+        let h = self.grid.height() as i32;
+
+        x >= -self.border_size
+            && x < w + self.border_size
+            && y >= -self.border_size
+            && y < h + self.border_size
+    }
+
     /// Accesses the element at the given coordinate
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
         let x = coord.x;
