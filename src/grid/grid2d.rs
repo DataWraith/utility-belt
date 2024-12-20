@@ -38,7 +38,7 @@ impl<T: Clone + From<char>> Grid2D<T> {
         let mut height = 0;
         let mut elems = Vec::new();
 
-        for c in input.chars() {
+        for c in input.trim().chars() {
             if c == '\n' {
                 height += 1;
                 width = width.max(cur_width);
