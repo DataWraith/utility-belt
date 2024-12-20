@@ -155,15 +155,17 @@ impl Coordinate {
 
     /// Return a list of all coordinates reachable from self by a knight's move
     pub fn knight_move_neighbors(self) -> impl Iterator<Item = Self> {
+        use Direction::*;
+
         [
-            self + Direction::Up + Direction::Up + Direction::Right,
-            self + Direction::Up + Direction::Up + Direction::Left,
-            self + Direction::Right + Direction::Right + Direction::Up,
-            self + Direction::Right + Direction::Right + Direction::Down,
-            self + Direction::Down + Direction::Down + Direction::Right,
-            self + Direction::Down + Direction::Down + Direction::Left,
-            self + Direction::Left + Direction::Left + Direction::Up,
-            self + Direction::Left + Direction::Left + Direction::Down,
+            self + Up + Up + Right,
+            self + Up + Up + Left,
+            self + Right + Right + Up,
+            self + Right + Right + Down,
+            self + Down + Down + Right,
+            self + Down + Down + Left,
+            self + Left + Left + Up,
+            self + Left + Left + Down,
         ]
         .into_iter()
     }
