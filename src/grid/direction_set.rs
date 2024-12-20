@@ -11,8 +11,16 @@ impl DirectionSet {
         Self(MiniBitset::default())
     }
 
+    pub fn cardinal() -> Self {
+        Self(MiniBitset::new(0b00001111))
+    }
+
+    pub fn diagonal() -> Self {
+        Self(MiniBitset::new(0b11110000))
+    }
+
     pub fn all() -> Self {
-        Self(MiniBitset::new(0b1111))
+        Self(MiniBitset::new(0b11111111))
     }
 
     pub fn insert(&mut self, dir: Direction) -> bool {
@@ -29,42 +37,6 @@ impl DirectionSet {
 
     pub fn iter(&self) -> impl Iterator<Item = Direction> {
         self.0.iter().map(|i| (i as u8).try_into().unwrap())
-    }
-}
-
-impl std::fmt::Debug for DirectionSet {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{{")?;
-
-        if *self.0 == 0 {
-            return write!(f, "    }}");
-        }
-
-        if self.contains(Direction::Up) {
-            write!(f, "^")?;
-        } else {
-            write!(f, " ")?;
-        }
-
-        if self.contains(Direction::Right) {
-            write!(f, ">")?;
-        } else {
-            write!(f, " ")?;
-        }
-
-        if self.contains(Direction::Down) {
-            write!(f, "v")?;
-        } else {
-            write!(f, " ")?;
-        }
-
-        if self.contains(Direction::Left) {
-            write!(f, "<")?;
-        } else {
-            write!(f, " ")?;
-        }
-
-        write!(f, "}}")
     }
 }
 
@@ -91,6 +63,26 @@ mod tests {
     }
 
     #[test]
+    fn test_cardinal() {
+        let set = DirectionSet::cardinal();
+
+        assert!(set.contains(Direction::Up));
+        assert!(set.contains(Direction::Right));
+        assert!(set.contains(Direction::Down));
+        assert!(set.contains(Direction::Left));
+    }
+
+    #[test]
+    fn test_diagonal() {
+        let set = DirectionSet::diagonal();
+
+        assert!(set.contains(Direction::UpLeft));
+        assert!(set.contains(Direction::UpRight));
+        assert!(set.contains(Direction::DownLeft));
+        assert!(set.contains(Direction::DownRight));
+    }
+
+    #[test]
     fn test_all() {
         let set = DirectionSet::all();
 
@@ -98,6 +90,10 @@ mod tests {
         assert!(set.contains(Direction::Right));
         assert!(set.contains(Direction::Down));
         assert!(set.contains(Direction::Left));
+        assert!(set.contains(Direction::UpLeft));
+        assert!(set.contains(Direction::UpRight));
+        assert!(set.contains(Direction::DownLeft));
+        assert!(set.contains(Direction::DownRight));
     }
 
     #[test]
@@ -117,12 +113,7 @@ mod tests {
 
     #[test]
     fn test_remove() {
-        let mut set = DirectionSet::empty();
-
-        set.insert(Direction::Up);
-        set.insert(Direction::Right);
-        set.insert(Direction::Down);
-        set.insert(Direction::Left);
+        let mut set = DirectionSet::cardinal();
 
         set.remove(Direction::Up);
         set.remove(Direction::Right);
@@ -143,27 +134,5 @@ mod tests {
         assert!(!set.contains(Direction::Right));
         assert!(!set.contains(Direction::Down));
         assert!(!set.contains(Direction::Left));
-    }
-
-    #[test]
-    fn test_debug() {
-        let mut set = DirectionSet::empty();
-
-        assert_eq!(format!("{:?}", set), "{    }");
-
-        set.insert(Direction::Up);
-        assert_eq!(format!("{:?}", set), "{^   }");
-
-        set.insert(Direction::Right);
-        assert_eq!(format!("{:?}", set), "{^>  }");
-
-        set.insert(Direction::Down);
-        assert_eq!(format!("{:?}", set), "{^>v }");
-
-        set.insert(Direction::Left);
-        assert_eq!(format!("{:?}", set), "{^>v<}");
-
-        set.remove(Direction::Up);
-        assert_eq!(format!("{:?}", set), "{ >v<}");
     }
 }
