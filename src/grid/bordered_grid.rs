@@ -24,6 +24,7 @@ pub struct BorderedGrid2D<'a, T: Clone> {
 
 impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     /// Create a new bordered grid
+    #[must_use]
     pub fn new(border_size: usize, border_element: T, grid: &'a mut Grid2D<T>) -> Self {
         Self {
             grid,
@@ -33,11 +34,13 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     }
 
     /// Returns the width of the grid, including the border
+    #[must_use]
     pub fn width(&self) -> usize {
         self.grid.width() + self.border_size as usize * 2
     }
 
     /// Returns the height of the grid, including the border
+    #[must_use]
     pub fn height(&self) -> usize {
         self.grid.height() + self.border_size as usize * 2
     }
@@ -62,6 +65,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     }
 
     /// Accesses the element at the given coordinate
+    #[must_use]
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
         let x = coord.x;
         let y = coord.y;
@@ -99,6 +103,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     }
 
     /// Returns an iterator over all elements in the grid, including the border
+    #[must_use]
     pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> {
         ((-self.border_size)..(self.height() as i32 - self.border_size)).flat_map(move |y| {
             ((-self.border_size)..(self.width() as i32 - self.border_size)).map(move |x| {
@@ -111,6 +116,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
 
     /// Returns an iterator over all elements in the grid (including the border)
     /// in row-major order
+    #[must_use]
     pub fn row_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.height()).flat_map(move |y| {
             (0..self.width()).map(move |x| {
@@ -125,6 +131,7 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
 
     /// Returns an iterator over all elements in the grid (including the border)
     /// in column-major order
+    #[must_use]
     pub fn col_iter(&self) -> impl Iterator<Item = &T> {
         (0..self.width()).flat_map(move |x| {
             (0..self.height()).map(move |y| {

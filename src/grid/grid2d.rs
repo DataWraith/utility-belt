@@ -31,6 +31,7 @@ impl<T: Clone + From<char>> Grid2D<T> {
     /// The type T must implement `From<char>`, which is used to convert each
     /// character in the string to a value in the grid.
     ///
+    #[must_use]
     pub fn parse(input: &str) -> Self {
         let mut width = 0;
         let mut cur_width = 0;
@@ -68,6 +69,7 @@ impl<T: Clone + From<char>> Grid2D<T> {
 impl<T: Clone> Grid2D<T> {
     /// Creates a new grid of the given size, with all elements initialized to
     /// the given value.
+    #[must_use]
     pub fn new(width: usize, height: usize, default: T) -> Self {
         assert!(width > 0, "Grid width must be greater than 0");
         assert!(height > 0, "Grid height must be greater than 0");
@@ -83,6 +85,7 @@ impl<T: Clone> Grid2D<T> {
     ///
     /// Panics if the given width or height is 0 or if the given data does not
     /// have the same number of elements as a grid of the given width and height.
+    #[must_use]
     pub fn from_shape_vec(width: usize, height: usize, data: Vec<T>) -> Self {
         assert!(width > 0, "Grid width must be greater than 0");
         assert!(height > 0, "Grid height must be greater than 0");
@@ -95,11 +98,13 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns the width of the grid.
+    #[must_use]
     pub fn width(&self) -> usize {
         self.width as usize
     }
 
     /// Returns the height of the grid
+    #[must_use]
     pub fn height(&self) -> usize {
         self.height as usize
     }
@@ -118,6 +123,7 @@ impl<T: Clone> Grid2D<T> {
 
     /// Returns the value at the given coordinate. Out-of-bounds accesses return
     /// `None`.
+    #[must_use]
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
         if !self.contains(coord) {
             return None;
@@ -128,6 +134,7 @@ impl<T: Clone> Grid2D<T> {
 
     /// Returns the value at the given coordinate. Out-of-bound accesses wrap
     /// around back into the grid.
+    #[must_use]
     pub fn get_wrap(&self, coord: Coordinate) -> &T {
         let x = coord.x.rem_euclid(self.width);
         let y = coord.y.rem_euclid(self.height);
@@ -137,6 +144,7 @@ impl<T: Clone> Grid2D<T> {
 
     /// Returns a mutable reference to the value at the given coordinate,
     /// or `None` if the coordinate is out-of-bounds.
+    #[must_use]
     pub fn get_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
         if !self.contains(coord) {
             return None;
@@ -147,6 +155,7 @@ impl<T: Clone> Grid2D<T> {
 
     /// Wraps the coordinate around the grid and returns a mutable reference to
     /// the value at the given coordinate.
+    #[must_use]
     pub fn get_wrap_mut(&mut self, coord: Coordinate) -> &mut T {
         let x = coord.x.rem_euclid(self.width);
         let y = coord.y.rem_euclid(self.height);
@@ -170,6 +179,7 @@ impl<T: Clone> Grid2D<T> {
 
     /// Maps the grid to a new grid with the same dimensions, applying the given
     /// function to each element.
+    #[must_use]
     pub fn map<T2: Clone>(&self, f: impl Fn(&T) -> T2) -> Grid2D<T2> {
         Grid2D {
             width: self.width,
@@ -179,6 +189,7 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns an iterator over the grid's elements and their coordinates.
+    #[must_use]
     pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> + '_ {
         self.data
             .indexed_iter()
@@ -186,17 +197,20 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns an iterator over the grid's rows
+    #[must_use]
     pub fn row_iter(&self) -> impl Iterator<Item = ArrayView1<T>> + '_ {
         self.data.axis_iter(ndarray::Axis(0))
     }
 
     /// Returns an iterator over the grid's columns
+    #[must_use]
     pub fn col_iter(&self) -> impl Iterator<Item = ArrayView1<T>> + '_ {
         self.data.axis_iter(ndarray::Axis(1))
     }
 
     /// Returns all diagonals of the grid as Vec<Vec<T>> going from top-right to
     /// bottom-left and starting with the top-left corner..
+    #[must_use]
     pub fn diagonals(&self) -> Vec<Vec<T>> {
         let w = self.width as isize;
         let h = self.height as isize;
@@ -225,6 +239,7 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns a the result of concatening `other` to the right of `self`.
+    #[must_use]
     pub fn concat_x(&self, other: &Self) -> Self {
         let combined = concatenate![Axis(1), self.data.view(), other.data.view()];
 
@@ -236,6 +251,7 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns a the result of concatening `other` below `self`.
+    #[must_use]
     pub fn concat_y(&self, other: &Self) -> Self {
         let combined = concatenate![Axis(0), self.data.view(), other.data.view()];
 
