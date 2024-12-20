@@ -104,7 +104,9 @@ impl<T: Clone> Grid2D<T> {
         self.height as usize
     }
 
-    pub fn size(&self) -> usize {
+    /// Returns the area of the grid
+    #[must_use]
+    pub fn area(&self) -> usize {
         self.width as usize * self.height as usize
     }
 

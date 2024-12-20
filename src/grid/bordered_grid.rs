@@ -43,7 +43,8 @@ impl<'a, T: Clone> BorderedGrid2D<'a, T> {
     }
 
     /// Returns the size of the grid, including the border
-    pub fn size(&self) -> usize {
+    #[must_use]
+    pub fn area(&self) -> usize {
         self.width() * self.height()
     }
 
