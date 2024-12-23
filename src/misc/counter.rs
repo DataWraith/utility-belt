@@ -4,6 +4,7 @@ use std::{hash::Hash, ops::Deref, ops::Index};
 
 use ahash::AHashMap;
 
+#[derive(Debug)]
 pub struct Counter<T> {
     counts: AHashMap<T, usize>,
     count_sum: usize,
