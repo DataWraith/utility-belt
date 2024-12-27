@@ -115,6 +115,11 @@ impl<T: Clone> Grid2D<T> {
         self.width as usize * self.height as usize
     }
 
+    /// Returns the dimensions of the grid
+    pub fn dims(&self) -> Coordinate {
+        Coordinate::new(self.width, self.height)
+    }
+
     /// Returns whether a given coordinate is within the grid
     #[must_use]
     pub fn contains(&self, coord: Coordinate) -> bool {
