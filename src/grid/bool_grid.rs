@@ -8,6 +8,7 @@ use super::Grid2D;
 /// A grid of booleans
 ///
 /// This is a wrapper around Grid2D<bool> that implements Display and Debug.
+#[derive(Clone)]
 pub struct BoolGrid2D {
     grid: Grid2D<bool>,
 }
