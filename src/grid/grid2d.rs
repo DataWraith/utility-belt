@@ -116,6 +116,7 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns the dimensions of the grid
+    #[must_use]
     pub fn dims(&self) -> Coordinate {
         Coordinate::new(self.width, self.height)
     }
