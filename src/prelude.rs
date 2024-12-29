@@ -33,19 +33,12 @@ pub use crate::optimization::*;
 // parsing
 pub use crate::parsing::*;
 
-// rand
-pub use rand::prelude::*;
-
 // rstest
 pub use rstest;
 pub use rstest::*;
 
 // search
 pub use crate::search::*;
-
-// tinyvec
-pub use tinyvec::ArrayVec;
-pub use tinyvec::TinyVec;
 
 // VecDeque
 pub use std::collections::VecDeque;
