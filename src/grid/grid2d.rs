@@ -194,6 +194,25 @@ impl<T: Clone> Grid2D<T> {
         }
     }
 
+    /// Returns a new, larger grid that contains the original grid. The
+    /// new grid is padded with the given value.
+    #[must_use]
+    pub fn pad(&self, border_width: usize, border_value: T) -> Self {
+        let mut grid = Self::new(
+            self.width() + 2 * border_width,
+            self.height() + 2 * border_width,
+            border_value,
+        );
+
+        let offset = Coordinate::new(border_width as i32, border_width as i32);
+
+        self.iter().for_each(|(coord, value)| {
+            grid.set(coord + offset, value.clone());
+        });
+
+        grid
+    }
+
     /// Returns an iterator over the grid's elements and their coordinates.
     #[must_use]
     pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> + '_ {
@@ -612,5 +631,26 @@ mod tests {
                 vec![9],       //
             ]
         );
+    }
+
+    #[test]
+    fn test_pad() {
+        let grid: Grid2D<i32> = Grid2D::from_shape_vec(3, 3, vec![1, 2, 3, 4, 5, 6, 7, 8, 9]);
+        let padded = grid.pad(3, 0);
+
+        assert_eq!(padded.width(), 9);
+        assert_eq!(padded.height(), 9);
+
+        assert!(!padded.contains(Coordinate::new(-1, -1)));
+        assert_eq!(padded[Coordinate::new(0, 0)], 0);
+        assert_eq!(padded[Coordinate::new(1, 1)], 0);
+        assert_eq!(padded[Coordinate::new(2, 2)], 0);
+        assert_eq!(padded[Coordinate::new(3, 3)], 1);
+        assert_eq!(padded[Coordinate::new(4, 4)], 5);
+        assert_eq!(padded[Coordinate::new(5, 5)], 9);
+        assert_eq!(padded[Coordinate::new(6, 6)], 0);
+        assert_eq!(padded[Coordinate::new(7, 7)], 0);
+        assert_eq!(padded[Coordinate::new(8, 8)], 0);
+        assert!(!padded.contains(Coordinate::new(9, 9)));
     }
 }
