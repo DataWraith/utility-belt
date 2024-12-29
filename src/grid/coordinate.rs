@@ -17,13 +17,19 @@ where
     pub y: T,
 }
 
-impl Display for Coordinate {
+impl<T> Display for Coordinate<T>
+where
+    T: Num + Copy + PartialOrd + PartialEq + Neg + Display,
+{
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {})", self.x, self.y)
     }
 }
 
-impl Debug for Coordinate {
+impl<T> Debug for Coordinate<T>
+where
+    T: Num + Copy + PartialOrd + PartialEq + Neg + Debug,
+{
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "({:?}, {:?})", self.x, self.y)
     }
@@ -276,6 +282,7 @@ impl From<(i32, i32)> for Coordinate {
 
 #[cfg(test)]
 mod tests {
+    use num::Rational64;
     use rstest::rstest;
 
     use super::*;
@@ -496,5 +503,16 @@ mod tests {
         let b = 7;
         a *= b;
         assert_eq!(a, Coordinate::new(11 * 7, 38 * 7));
+    }
+
+    #[test]
+    fn test_coord_can_be_generic() {
+        let a = Coordinate::new(Rational64::from(1), Rational64::from(2));
+        let b = Coordinate::new(Rational64::from(3), Rational64::from(4));
+
+        assert_eq!(
+            a + b,
+            Coordinate::new(Rational64::from(4), Rational64::from(6))
+        );
     }
 }
