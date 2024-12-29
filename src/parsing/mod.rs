@@ -1,3 +1,4 @@
+// Parses all integers in the input string, regardless of other characters.
 pub fn parse_ints(input: &str) -> Vec<i64> {
     input
         .split(|c: char| !c.is_ascii_digit() && c != '-')
@@ -6,6 +7,7 @@ pub fn parse_ints(input: &str) -> Vec<i64> {
         .collect()
 }
 
+// Parses all unsigned integers in the input string, regardless of other characters.
 pub fn parse_uints(input: &str) -> Vec<u64> {
     input
         .split(|c: char| !c.is_ascii_digit())
@@ -14,6 +16,7 @@ pub fn parse_uints(input: &str) -> Vec<u64> {
         .collect()
 }
 
+// Parses all uppercase strings in the input string, regardless of other characters.
 pub fn parse_capitals(input: &str) -> Vec<String> {
     input
         .split(|c: char| !c.is_ascii_uppercase())
