@@ -2,12 +2,6 @@
 pub use ahash::AHashMap as HashMap;
 pub use ahash::AHashSet as HashSet;
 
-// glam
-pub use glam::I64Vec2;
-pub use glam::I64Vec3;
-pub use glam::IVec2;
-pub use glam::IVec3;
-
 // grid
 pub use crate::grid::*;
 

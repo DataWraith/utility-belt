@@ -1,10 +1,10 @@
 use std::{
     fmt::{Debug, Display, Formatter},
-    ops::{Deref, Rem, RemAssign},
+    ops::{Neg, Rem, RemAssign},
 };
 
 use derive_more::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
-use glam::IVec2;
+use num::Num;
 
 use super::Direction;
 
@@ -14,23 +14,29 @@ use super::Direction;
 #[derive(
     Default, Clone, Copy, PartialEq, Eq, Hash, Add, AddAssign, Sub, SubAssign, Mul, MulAssign,
 )]
-pub struct Coordinate(IVec2);
+pub struct Coordinate<T = i32>
+where
+    T: Num + Copy + PartialOrd + PartialEq + Neg,
+{
+    pub x: T,
+    pub y: T,
+}
 
 impl Display for Coordinate {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "({}, {})", self.0.x, self.0.y)
+        write!(f, "({}, {})", self.x, self.y)
     }
 }
 
 impl Debug for Coordinate {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "({}, {})", self.0.x, self.0.y)
+        write!(f, "({:?}, {:?})", self.x, self.y)
     }
 }
 
 impl Ord for Coordinate {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.0.y.cmp(&other.0.y).then(self.0.x.cmp(&other.0.x))
+        self.y.cmp(&other.y).then(self.x.cmp(&other.x))
     }
 }
 
@@ -40,19 +46,14 @@ impl PartialOrd for Coordinate {
     }
 }
 
-impl Deref for Coordinate {
-    type Target = IVec2;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
-    }
-}
-
-impl Add<Direction> for Coordinate {
+impl<T> Add<Direction> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
     type Output = Self;
 
     fn add(self, dir: Direction) -> Self {
-        let offset: Coordinate = dir.into();
+        let offset: Coordinate<T> = dir.into();
         self + offset
     }
 }
@@ -94,9 +95,12 @@ impl RemAssign<Coordinate> for Coordinate {
     }
 }
 
-impl Coordinate {
-    pub fn new(x: i32, y: i32) -> Self {
-        Self(IVec2::new(x, y))
+impl<T> Coordinate<T>
+where
+    T: Num + Copy + PartialOrd + PartialEq + Neg<Output = T>,
+{
+    pub fn new(x: T, y: T) -> Self {
+        Self { x, y }
     }
 
     /// Rotate the coordinate 90 degrees clockwise. The anchor point is at the bottom left.
@@ -120,8 +124,8 @@ impl Coordinate {
     }
 
     /// Mirror the coordinate along the X axis, wrapping it so that it stays within the given width.
-    pub fn mirror_x_wrap(self, width: i32) -> Self {
-        Self::new(width - 1 - self.x, self.y)
+    pub fn mirror_x_wrap(self, width: T) -> Self {
+        Self::new(width - T::one() - self.x, self.y)
     }
 
     /// Mirror the coordinate along the Y axis.
@@ -130,8 +134,8 @@ impl Coordinate {
     }
 
     /// Mirror the coordinate along the Y axis, wrapping it so that it stays within the given height.
-    pub fn mirror_y_wrap(self, height: i32) -> Self {
-        Self::new(self.x, height - 1 - self.y)
+    pub fn mirror_y_wrap(self, height: T) -> Self {
+        Self::new(self.x, height - T::one() - self.y)
     }
 
     /// Returns neighboring Coordinate in the given direction
@@ -173,12 +177,17 @@ impl Coordinate {
 
     /// Returns whether the two coordinates are adjacent
     pub fn adjacent(self, other: Self) -> bool {
-        self.manhattan_distance(other) == 1
+        self.manhattan_distance(other) == T::one()
     }
 
     /// Returns the Manhattan distance between the two coordinates
-    pub fn manhattan_distance(self, other: Self) -> i32 {
-        (self.x.abs_diff(other.x) + self.y.abs_diff(other.y)) as i32
+    pub fn manhattan_distance(self, other: Self) -> T {
+        let x_max = if self.x > other.x { self.x } else { other.x };
+        let x_min = if self.x < other.x { self.x } else { other.x };
+        let y_max = if self.y > other.y { self.y } else { other.y };
+        let y_min = if self.y < other.y { self.y } else { other.y };
+
+        x_max - x_min + y_max - y_min
     }
 
     /// Returns the direction from self towards other
@@ -193,61 +202,22 @@ impl Coordinate {
             Direction::Down
         }
     }
-
-    /// Returns the Z-order curve value of the coordinate
-    pub fn z_index(self) -> u64 {
-        fn spread(x: u32) -> u64 {
-            let mut x = x as u64;
-            x = (x | (x << 16)) & 0x0000ffff0000ffff;
-            x = (x | (x << 8)) & 0x00ff00ff00ff00ff;
-            x = (x | (x << 4)) & 0x0f0f0f0f0f0f0f0f;
-            x = (x | (x << 2)) & 0x3333333333333333;
-            x = (x | (x << 1)) & 0x5555555555555555;
-            x
-        }
-
-        let unsigned_x = self.x as u32;
-        let unsigned_y = self.y as u32;
-
-        spread(unsigned_x) | (spread(unsigned_y) << 1)
-    }
-
-    /// Converts a Z-order curve index into to x and y coordinates
-    pub fn from_z_index(z_index: u64) -> Self {
-        fn compact(x: u64) -> u32 {
-            let mut x = x & 0x5555555555555555;
-            x = (x | (x >> 1)) & 0x3333333333333333;
-            x = (x | (x >> 2)) & 0x0f0f0f0f0f0f0f0f;
-            x = (x | (x >> 4)) & 0x00ff00ff00ff00ff;
-            x = (x | (x >> 8)) & 0x0000ffff0000ffff;
-            x = (x | (x >> 16)) & 0x00000000ffffffff;
-            x as u32
-        }
-
-        let x = compact(z_index);
-        let y = compact(z_index >> 1);
-
-        Self::new(x as i32, y as i32)
-    }
 }
 
-impl From<IVec2> for Coordinate {
-    fn from(vec: IVec2) -> Self {
-        Self(vec)
-    }
-}
-
-impl From<Direction> for Coordinate {
+impl<T> From<Direction> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
     fn from(dir: Direction) -> Self {
         match dir {
-            Direction::Up => Self::new(0, -1),
-            Direction::Right => Self::new(1, 0),
-            Direction::Down => Self::new(0, 1),
-            Direction::Left => Self::new(-1, 0),
-            Direction::UpLeft => Self::new(-1, -1),
-            Direction::UpRight => Self::new(1, -1),
-            Direction::DownLeft => Self::new(-1, 1),
-            Direction::DownRight => Self::new(1, 1),
+            Direction::Up => Self::new(T::zero(), T::one().neg()),
+            Direction::Right => Self::new(T::one(), T::zero()),
+            Direction::Down => Self::new(T::zero(), T::one()),
+            Direction::Left => Self::new(T::one().neg(), T::zero()),
+            Direction::UpLeft => Self::new(T::one().neg(), T::one().neg()),
+            Direction::UpRight => Self::new(T::one(), T::one().neg()),
+            Direction::DownLeft => Self::new(T::one().neg(), T::one()),
+            Direction::DownRight => Self::new(T::one(), T::one()),
         }
     }
 }
@@ -417,34 +387,6 @@ mod tests {
     #[case((0, 0), (-2, 0))]
     fn test_not_adjacent(#[case] a: (i32, i32), #[case] b: (i32, i32)) {
         assert!(!Coordinate::from(a).adjacent(Coordinate::from(b)));
-    }
-
-    #[rstest]
-    #[case((0, 0), 0)]
-    #[case((1, 0), 1)]
-    #[case((0, 1), 2)]
-    #[case((1, 1), 3)]
-    #[case((2, 0), 4)]
-    #[case((0, 2), 8)]
-    #[case((7, 7), 63)]
-    #[case((8, 0), 64)]
-    #[case((0, 8), 128)]
-    #[case((-1, -1), 18446744073709551615)]
-    fn test_z_order(#[case] input: (i32, i32), #[case] expected: u64) {
-        assert_eq!(Coordinate::from(input).z_index(), expected);
-    }
-
-    #[test]
-    fn test_from_z_index() {
-        assert_eq!(Coordinate::from_z_index(0), Coordinate::new(0, 0));
-        assert_eq!(Coordinate::from_z_index(1), Coordinate::new(1, 0));
-        assert_eq!(Coordinate::from_z_index(2), Coordinate::new(0, 1));
-
-        let x = 12345;
-        let y = 67890;
-        let z = Coordinate::new(x, y).z_index();
-
-        assert_eq!(Coordinate::from_z_index(z), Coordinate::new(x, y));
     }
 
     #[test]

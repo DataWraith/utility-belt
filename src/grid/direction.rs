@@ -3,7 +3,7 @@ use std::ops::{Add, Mul};
 use super::Coordinate;
 
 /// An enum representing the eight directions in a grid
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
 pub enum Direction {
     #[default]
     Up = 0,
