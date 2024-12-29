@@ -462,4 +462,51 @@ mod tests {
         a %= b;
         assert_eq!(a, Coordinate::new(11 % 7, 38 % 9));
     }
+
+    #[test]
+    fn test_add() {
+        let a = Coordinate::new(11, 38);
+        let b = Coordinate::new(7, 9);
+        assert_eq!(a + b, Coordinate::new(11 + 7, 38 + 9));
+    }
+
+    #[test]
+    fn test_add_assign() {
+        let mut a = Coordinate::new(11, 38);
+        let b = Coordinate::new(7, 9);
+        a += b;
+
+        assert_eq!(a, Coordinate::new(11 + 7, 38 + 9));
+    }
+
+    #[test]
+    fn test_sub() {
+        let a = Coordinate::new(11, 38);
+        let b = Coordinate::new(7, 9);
+        assert_eq!(a - b, Coordinate::new(11 - 7, 38 - 9));
+    }
+
+    #[test]
+    fn test_sub_assign() {
+        let mut a = Coordinate::new(11, 38);
+        let b = Coordinate::new(7, 9);
+        a -= b;
+
+        assert_eq!(a, Coordinate::new(11 - 7, 38 - 9));
+    }
+
+    #[test]
+    fn test_mul() {
+        let a = Coordinate::new(11, 38);
+        let b = 7;
+        assert_eq!(a * b, Coordinate::new(11 * 7, 38 * 7));
+    }
+
+    #[test]
+    fn test_mul_assign() {
+        let mut a = Coordinate::new(11, 38);
+        let b = 7;
+        a *= b;
+        assert_eq!(a, Coordinate::new(11 * 7, 38 * 7));
+    }
 }
