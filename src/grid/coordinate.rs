@@ -1,9 +1,9 @@
 use std::{
     fmt::{Debug, Display, Formatter},
-    ops::Deref,
+    ops::{Deref, Rem, RemAssign},
 };
 
-use derive_more::{Add, AddAssign, Mul, MulAssign, Rem, RemAssign, Sub, SubAssign};
+use derive_more::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 use glam::IVec2;
 
 use super::Direction;
@@ -12,20 +12,7 @@ use super::Direction;
 ///
 /// This is a wrapper around `IVec2` that implements some useful methods.
 #[derive(
-    Default,
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    Hash,
-    Add,
-    AddAssign,
-    Sub,
-    SubAssign,
-    Mul,
-    MulAssign,
-    Rem,
-    RemAssign,
+    Default, Clone, Copy, PartialEq, Eq, Hash, Add, AddAssign, Sub, SubAssign, Mul, MulAssign,
 )]
 pub struct Coordinate(IVec2);
 
@@ -90,6 +77,20 @@ impl SubAssign<Direction> for Coordinate {
     fn sub_assign(&mut self, dir: Direction) {
         let offset: Coordinate = dir.into();
         *self -= offset;
+    }
+}
+
+impl Rem<Coordinate> for Coordinate {
+    type Output = Coordinate;
+
+    fn rem(self, other: Coordinate) -> Self {
+        Self::new(self.x.rem_euclid(other.x), self.y.rem_euclid(other.y))
+    }
+}
+
+impl RemAssign<Coordinate> for Coordinate {
+    fn rem_assign(&mut self, other: Coordinate) {
+        *self = *self % other;
     }
 }
 
@@ -444,5 +445,21 @@ mod tests {
         let z = Coordinate::new(x, y).z_index();
 
         assert_eq!(Coordinate::from_z_index(z), Coordinate::new(x, y));
+    }
+
+    #[test]
+    fn test_rem() {
+        let a = Coordinate::new(11, 38);
+        let b = Coordinate::new(7, 9);
+
+        assert_eq!(a % b, Coordinate::new(11 % 7, 38 % 9));
+    }
+
+    #[test]
+    fn test_rem_assign() {
+        let mut a = Coordinate::new(11, 38);
+        let b = Coordinate::new(7, 9);
+        a %= b;
+        assert_eq!(a, Coordinate::new(11 % 7, 38 % 9));
     }
 }
