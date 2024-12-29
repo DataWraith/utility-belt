@@ -7,6 +7,9 @@ pub use bitset::*;
 pub mod counter;
 pub use counter::*;
 
+pub mod cartesian_tree;
+pub use cartesian_tree::*;
+
 use std::hash::Hash;
 
 use crate::prelude::HashMap;
