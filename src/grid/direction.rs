@@ -1,3 +1,7 @@
+use std::ops::{Add, Mul};
+
+use super::Coordinate;
+
 /// An enum representing the eight directions in a grid
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub enum Direction {
@@ -186,5 +190,49 @@ impl From<Direction> for u8 {
 impl From<Direction> for usize {
     fn from(dir: Direction) -> Self {
         dir as usize
+    }
+}
+
+impl Add<Direction> for Direction {
+    type Output = Coordinate;
+
+    fn add(self, other: Direction) -> Self::Output {
+        let coord: Coordinate = self.into();
+
+        coord + other
+    }
+}
+
+impl Mul<i32> for Direction {
+    type Output = Coordinate;
+
+    fn mul(self, steps: i32) -> Self::Output {
+        let coord: Coordinate = self.into();
+
+        coord * steps
+    }
+}
+
+impl Mul<Direction> for i32 {
+    type Output = Coordinate;
+
+    fn mul(self, dir: Direction) -> Self::Output {
+        dir * self
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_add() {
+        assert_eq!(Direction::Up + Direction::Up, Coordinate::new(0, -2));
+    }
+
+    #[test]
+    fn test_mul() {
+        assert_eq!(Direction::Up * 2, Coordinate::new(0, -2));
+        assert_eq!(2 * Direction::Right, Coordinate::new(2, 0));
     }
 }
