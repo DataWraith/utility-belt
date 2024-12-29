@@ -17,41 +17,51 @@ pub struct UnionFind {
     sizes: Vec<usize>,
 }
 
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
+pub struct DisjointSetIndex(usize);
+
+impl From<DisjointSetIndex> for usize {
+    fn from(value: DisjointSetIndex) -> Self {
+        value.0
+    }
+}
+
 impl UnionFind {
     /// Adds a singleton set to the data structure and returns the index of the
     /// set.
-    pub fn make_set(&mut self) -> usize {
+    pub fn add_set(&mut self) -> DisjointSetIndex {
         let index = self.parents.len();
 
         self.parents.push(index);
         self.sizes.push(1);
 
-        index
+        DisjointSetIndex(index)
     }
 
     /// Returns the size of the set that `x` belongs to.
-    pub fn size_of_set(&mut self, x: usize) -> Option<usize> {
-        self.find(x).map(|r| self.sizes[r])
+    pub fn size_of_set(&mut self, x: DisjointSetIndex) -> Option<usize> {
+        self.find(x).map(|r| self.sizes[r.0])
     }
 
     /// Returns the indices of all distinct sets.
-    pub fn roots(&mut self) -> HashSet<usize> {
+    pub fn roots(&mut self) -> HashSet<DisjointSetIndex> {
         let mut result = HashSet::default();
 
         for p in self.parents.clone().into_iter() {
-            result.insert(self.find(p).unwrap());
+            let root = self.find(DisjointSetIndex(p)).unwrap();
+            result.insert(root);
         }
 
         result
     }
 
     /// Returns the index of the set that `x` belongs to.
-    pub fn find(&mut self, x: usize) -> Option<usize> {
-        if x >= self.parents.len() {
+    pub fn find(&mut self, x: DisjointSetIndex) -> Option<DisjointSetIndex> {
+        if x.0 >= self.parents.len() {
             return None;
         }
 
-        let mut x = x;
+        let mut x = x.0;
 
         while self.parents[x] != x {
             let new_x = self.parents[x];
@@ -64,33 +74,31 @@ impl UnionFind {
             x = new_x;
         }
 
-        Some(x)
+        Some(DisjointSetIndex(x))
     }
 
     /// Unions the sets that `x` and `y` belong to.
-    pub fn union(&mut self, x: usize, y: usize) -> Result<(), &str> {
+    pub fn union(&mut self, x: DisjointSetIndex, y: DisjointSetIndex) {
         let x_root = self.find(x);
         let y_root = self.find(y);
 
         if x_root.is_none() || y_root.is_none() {
-            return Err("Cannot union elements that are not in the data structure.");
+            panic!("Cannot union elements that are not in the data structure.");
         }
 
         if x_root == y_root {
-            return Ok(());
+            return;
         }
 
         let mut x_root = x_root.unwrap();
         let mut y_root = y_root.unwrap();
 
-        if self.sizes[x_root] < self.sizes[y_root] {
+        if self.sizes[x_root.0] < self.sizes[y_root.0] {
             std::mem::swap(&mut x_root, &mut y_root);
         }
 
-        self.parents[y_root] = x_root;
-        self.sizes[x_root] += self.sizes[y_root];
-
-        Ok(())
+        self.parents[y_root.0] = x_root.0;
+        self.sizes[x_root.0] += self.sizes[y_root.0];
     }
 }
 
@@ -102,12 +110,12 @@ mod tests {
     fn union_find_test() {
         let mut uf = UnionFind::default();
 
-        let a = uf.make_set();
-        let b = uf.make_set();
-        let c = uf.make_set();
-        let d = uf.make_set();
-        let e = uf.make_set();
-        let f = uf.make_set();
+        let a = uf.add_set();
+        let b = uf.add_set();
+        let c = uf.add_set();
+        let d = uf.add_set();
+        let e = uf.add_set();
+        let f = uf.add_set();
 
         let _ = uf.union(a, b);
         let _ = uf.union(b, c);
