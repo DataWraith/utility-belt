@@ -214,7 +214,6 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns an iterator over the grid's elements and their coordinates.
-    #[must_use]
     pub fn iter(&self) -> impl Iterator<Item = (Coordinate, &T)> + '_ {
         self.data
             .indexed_iter()
@@ -222,13 +221,11 @@ impl<T: Clone> Grid2D<T> {
     }
 
     /// Returns an iterator over the grid's rows
-    #[must_use]
     pub fn row_iter(&self) -> impl Iterator<Item = ArrayView1<T>> + '_ {
         self.data.axis_iter(ndarray::Axis(0))
     }
 
     /// Returns an iterator over the grid's columns
-    #[must_use]
     pub fn col_iter(&self) -> impl Iterator<Item = ArrayView1<T>> + '_ {
         self.data.axis_iter(ndarray::Axis(1))
     }

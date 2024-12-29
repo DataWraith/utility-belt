@@ -24,6 +24,15 @@ pub struct CTNode<K, V> {
     count: usize,
 }
 
+impl<K, V> Default for CartesianTree<K, V>
+where
+    K: Ord,
+{
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<K, V> CartesianTree<K, V>
 where
     K: Ord,
@@ -108,10 +117,7 @@ where
 
     // Returns the index the key would have in a sorted list of the subtree's keys.
     fn index_of(&self, root: Option<Index>, key: K) -> Option<usize> {
-        let Some(root_idx) = root else {
-            return None;
-        };
-
+        let root_idx = root?;
         let root_node = self.arena.get(root_idx).unwrap();
 
         let left_count = root_node
@@ -123,29 +129,25 @@ where
                 // If the key is the root, return the size of the left subtree
                 // -- those are the elements that come before it in a sorted
                 // list.
-                return Some(left_count);
+                Some(left_count)
             }
 
             Ordering::Greater => {
                 // Key is in right subtree, so we need to add the size of the
                 // left subtree and the root to the recursive result.
-                return self
-                    .index_of(root_node.right, key)
-                    .map(|i| i + 1 + left_count);
+                self.index_of(root_node.right, key)
+                    .map(|i| i + 1 + left_count)
             }
 
             Ordering::Less => {
                 // Key is in left subtree, so we just need to recurse.
-                return self.index_of(root_node.left, key);
+                self.index_of(root_node.left, key)
             }
         }
     }
 
     fn kth_largest_of(&self, root: Option<Index>, k: usize) -> Option<(&K, &V, Priority)> {
-        let Some(root_idx) = root else {
-            return None;
-        };
-
+        let root_idx = root?;
         let root_node = self.arena.get(root_idx).unwrap();
 
         let left_count = root_node
@@ -160,12 +162,12 @@ where
 
         if k < left_count {
             // We know that the k-th largest element is in the left subtree.
-            return self.kth_largest_of(root_node.left, k);
+            self.kth_largest_of(root_node.left, k)
         } else {
             // We know that the k-th largest element is in the right subtree.
             // However, we need to account for the size of the left subtree and
             // the current node.
-            return self.kth_largest_of(root_node.right, k - left_count - 1);
+            self.kth_largest_of(root_node.right, k - left_count - 1)
         }
     }
 
@@ -336,7 +338,7 @@ where
 
             self.update_count(Some(root_idx));
 
-            return (Some(root_idx), value_and_priority);
+            (Some(root_idx), value_and_priority)
         } else {
             let Some(root_idx) = self.rotate_left(root) else {
                 unreachable!("We know that the right node and the root node exist.");
@@ -349,7 +351,7 @@ where
 
             self.update_count(Some(root_idx));
 
-            return (Some(root_idx), value_and_priority);
+            (Some(root_idx), value_and_priority)
         }
     }
 
@@ -437,7 +439,7 @@ where
             let new_root = self.rotate_left(Some(root_idx));
             let (new_root, result) = self.remove_by_index(new_root, k);
             self.update_count(Some(new_root.unwrap()));
-            return (new_root, result);
+            (new_root, result)
         } else {
             let new_root = self.rotate_right(Some(root_idx));
             let new_root_node = self.arena.get(new_root.unwrap()).unwrap();
@@ -448,7 +450,7 @@ where
 
             let (new_root, result) = self.remove_by_index(new_root, k - new_left_count - 1);
             self.update_count(Some(new_root.unwrap()));
-            return (new_root, result);
+            (new_root, result)
         }
     }
 
@@ -531,6 +533,12 @@ impl<K: Debug, V: Debug> std::fmt::Debug for CartesianTree<K, V> {
 #[derive(Debug)]
 pub struct Treap<K, V> {
     tree: CartesianTree<K, V>,
+}
+
+impl<K: Ord, V> Default for Treap<K, V> {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl<K: Ord, V> Treap<K, V> {
@@ -641,21 +649,21 @@ mod tests {
     fn test_treap() {
         let mut treap = Treap::new();
 
-        for i in (0..100) {
+        for i in 0..100 {
             treap.insert(i, i * i);
         }
 
         assert_eq!(treap.len(), 100);
 
-        for i in (0..100) {
+        for i in 0..100 {
             assert_eq!(treap.get(&i), Some(&(i * i)));
         }
 
-        for i in (0..100) {
+        for i in 0..100 {
             assert_eq!(treap.get_index(i), Some((&i, &(i * i))));
         }
 
-        for i in (0..100) {
+        for i in 0..100 {
             assert_eq!(treap.index(i), Some(i));
         }
 
@@ -664,7 +672,7 @@ mod tests {
         assert_eq!(treap.get_index(3), Some((&4, &16)));
         assert_eq!(treap.len(), 99);
 
-        for i in (0..10) {
+        for i in 0..10 {
             treap.remove_index(i);
         }
 

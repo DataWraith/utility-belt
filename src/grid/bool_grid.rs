@@ -34,9 +34,9 @@ impl Display for BoolGrid2D {
         for y in 0..self.grid.height {
             for x in 0..self.grid.width {
                 if self.grid[(x, y).into()] {
-                    write!(f, "{}", "#")?;
+                    write!(f, "#")?;
                 } else {
-                    write!(f, "{}", ".")?;
+                    write!(f, ".")?;
                 }
             }
 
