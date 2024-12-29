@@ -88,11 +88,11 @@ where
 
 /// Iterates a state function once.
 ///
-/// The idea is to have a HashMap containing the current states. Then a
+/// The idea is to have a Counter containing the current states. Then a
 /// transition function (which may take an input value) is applied to each
-/// state, and the resulting state(s) are collected in a new HashMap.
+/// state, and the resulting state(s) are collected in a new Counter.
 ///
-/// The HashMap keeps track of how often a given state has occurred. This can be
+/// The Counter keeps track of how often a given state has occurred. This can be
 /// used to, for example, count how often a state is visited in a finite state
 /// machine after n iterations.
 ///
