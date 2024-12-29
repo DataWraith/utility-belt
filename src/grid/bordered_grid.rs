@@ -16,6 +16,7 @@ use super::{Coordinate, Grid2D};
 ///
 /// The element marked A is at (-1, -1) and the B is at (3, 3). Both A and B
 /// have, of course, the border-element value, 0.
+#[derive(PartialEq, Eq, Hash)]
 pub struct BorderedGrid2D<'a, T: Clone> {
     grid: &'a mut Grid2D<T>,
     border_size: i32,
