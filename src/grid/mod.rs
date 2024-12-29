@@ -1,5 +1,4 @@
 mod bool_grid;
-mod bordered_grid;
 mod coordinate;
 mod direction;
 mod direction_set;
@@ -9,7 +8,6 @@ mod save_to_image;
 mod transformations;
 
 pub use bool_grid::*;
-pub use bordered_grid::*;
 pub use coordinate::*;
 pub use direction::*;
 pub use direction_set::*;
