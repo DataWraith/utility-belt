@@ -1,19 +1,14 @@
 use std::{
     fmt::{Debug, Display, Formatter},
-    ops::{Neg, Rem, RemAssign},
+    ops::{Add, AddAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
 
-use derive_more::{Add, AddAssign, Mul, MulAssign, Sub, SubAssign};
 use num::Num;
 
 use super::Direction;
 
 /// A coordinate in a 2D grid.
-///
-/// This is a wrapper around `IVec2` that implements some useful methods.
-#[derive(
-    Default, Clone, Copy, PartialEq, Eq, Hash, Add, AddAssign, Sub, SubAssign, Mul, MulAssign,
-)]
+#[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Coordinate<T = i32>
 where
     T: Num + Copy + PartialOrd + PartialEq + Neg,
@@ -46,6 +41,17 @@ impl PartialOrd for Coordinate {
     }
 }
 
+impl<T> Add<Coordinate<T>> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Self::new(self.x + other.x, self.y + other.y)
+    }
+}
+
 impl<T> Add<Direction> for Coordinate<T>
 where
     T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
@@ -58,10 +64,24 @@ where
     }
 }
 
+impl AddAssign<Coordinate> for Coordinate {
+    fn add_assign(&mut self, other: Self) {
+        *self = *self + other;
+    }
+}
+
 impl AddAssign<Direction> for Coordinate {
     fn add_assign(&mut self, dir: Direction) {
         let offset: Coordinate = dir.into();
         *self += offset;
+    }
+}
+
+impl Sub<Coordinate> for Coordinate {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        Self::new(self.x - other.x, self.y - other.y)
     }
 }
 
@@ -74,10 +94,36 @@ impl Sub<Direction> for Coordinate {
     }
 }
 
+impl SubAssign<Coordinate> for Coordinate {
+    fn sub_assign(&mut self, other: Self) {
+        *self = *self - other;
+    }
+}
+
 impl SubAssign<Direction> for Coordinate {
     fn sub_assign(&mut self, dir: Direction) {
         let offset: Coordinate = dir.into();
         *self -= offset;
+    }
+}
+
+impl<T> Mul<T> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    type Output = Self;
+
+    fn mul(self, other: T) -> Self {
+        Self::new(self.x * other, self.y * other)
+    }
+}
+
+impl<T> MulAssign<T> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    fn mul_assign(&mut self, other: T) {
+        *self = *self * other;
     }
 }
 
