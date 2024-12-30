@@ -48,6 +48,33 @@ impl From<Direction> for DirectionSet {
     }
 }
 
+impl std::fmt::Display for DirectionSet {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+impl std::fmt::Debug for DirectionSet {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{{")?;
+
+        for dir in self.iter() {
+            match dir {
+                Direction::Up => write!(f, "↑")?,
+                Direction::Right => write!(f, "→")?,
+                Direction::Down => write!(f, "↓")?,
+                Direction::Left => write!(f, "←")?,
+                Direction::UpLeft => write!(f, "↖")?,
+                Direction::UpRight => write!(f, "↗")?,
+                Direction::DownLeft => write!(f, "↙")?,
+                Direction::DownRight => write!(f, "↘")?,
+            }
+        }
+
+        write!(f, "}}")
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
