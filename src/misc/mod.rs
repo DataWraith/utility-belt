@@ -7,6 +7,9 @@ pub use bitset::*;
 pub mod counter;
 pub use counter::*;
 
+pub mod implicit_treap;
+pub use implicit_treap::*;
+
 use std::hash::Hash;
 
 use crate::prelude::HashMap;
