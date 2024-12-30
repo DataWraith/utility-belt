@@ -11,6 +11,10 @@ impl DirectionSet {
         Self(MiniBitset::default())
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
     pub fn cardinal() -> Self {
         Self(MiniBitset::new(0b00001111))
     }
