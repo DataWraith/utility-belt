@@ -3,7 +3,7 @@ use crate::misc::MiniBitset;
 use super::Direction;
 
 /// A set of directions
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub struct DirectionSet(MiniBitset<u8>);
 
 impl DirectionSet {
