@@ -29,7 +29,7 @@ use crate::prelude::Coordinate;
 /// because the vertices are anchored to the center of the squares, the
 /// actual area is (1 + 4 * 0.5 + 4 * 0.25) = 4.
 ///
-/// To get an area of 9, you add  one plus half the perimeter of the polygon:
+/// To get an area of 9, you add one plus half the perimeter of the polygon:
 /// (8 / 2) = 4. Then 4 + 4 + 1 = 9. Note that perimeter refers to the perimeter
 /// of the smaller box inside, not the perimeter of the larger box outside.
 ///
