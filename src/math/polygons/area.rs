@@ -1,4 +1,8 @@
+use std::ops::Neg;
+
 use num::{Num, Signed};
+
+use crate::prelude::Coordinate;
 
 /// Calculates the area of a simple polygon given its vertices.
 ///
@@ -34,7 +38,9 @@ use num::{Num, Signed};
 /// The other solution to this problem involves moving the vertices to the
 /// corners of the squares, but that's a lot more work.
 ///
-pub fn polygon_area<T: Num + Copy + Signed>(vertices: &[(T, T)]) -> T {
+pub fn polygon_area<T: Num + Copy + PartialEq + PartialOrd + Signed>(
+    vertices: &[Coordinate<T>],
+) -> T {
     let mut area = T::zero();
 
     let num_vertices = vertices.len();
@@ -47,8 +53,8 @@ pub fn polygon_area<T: Num + Copy + Signed>(vertices: &[(T, T)]) -> T {
     };
 
     for i in 0..(last_index) {
-        area = area + vertices[i].0 * vertices[(i + 1) % num_vertices].1;
-        area = area - vertices[(i + 1) % num_vertices].0 * vertices[i].1;
+        area = area + vertices[i].x * vertices[(i + 1) % num_vertices].y;
+        area = area - vertices[(i + 1) % num_vertices].x * vertices[i].y;
     }
 
     area.abs() / (T::one() + T::one())
@@ -66,18 +72,36 @@ mod tests {
     #[case([(0, 0), (0, 6), (6, 6), (6, 0)], 36)]
     #[case([(0, 0), (5, 0), (5, 5), (0, 0)], 5 * 5 / 2)]
     fn polygon_area_works(#[case] vertices: [(isize, isize); 4], #[case] expected: isize) {
+        let vertices = vertices
+            .iter()
+            .map(|(x, y)| Coordinate::new(*x, *y))
+            .collect::<Vec<_>>();
+
         assert_eq!(polygon_area(&vertices), expected);
     }
 
     #[test]
     fn polygon_area_works_for_triangle() {
-        let vertices = [(0, 0), (0, 100), (100, 0), (0, 0)];
+        let vertices = [
+            Coordinate::new(0, 0),
+            Coordinate::new(0, 100),
+            Coordinate::new(100, 0),
+            Coordinate::new(0, 0),
+        ];
+
         assert_eq!(polygon_area(&vertices), 100 * 100 / 2);
     }
 
     #[test]
     fn polygon_area_wikipedia_example() {
-        let vertices = [(1.0, 6.0), (3.0, 1.0), (7.0, 2.0), (4.0, 4.0), (8.0, 5.0)];
+        let vertices = [
+            Coordinate::new(1.0, 6.0),
+            Coordinate::new(3.0, 1.0),
+            Coordinate::new(7.0, 2.0),
+            Coordinate::new(4.0, 4.0),
+            Coordinate::new(8.0, 5.0),
+        ];
+
         assert_eq!(polygon_area(&vertices), 16.5);
     }
 }
