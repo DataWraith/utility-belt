@@ -25,19 +25,26 @@ where
         Self { x, y }
     }
 
-    /// Rotate the coordinate 90 degrees clockwise. The anchor point is at the bottom left.
-    pub fn rotate_right(self) -> Self {
-        Self::new(self.y, -self.x)
+    /// Rotate the coordinate 90 degrees clockwise in a right-handed coordinate system.
+    pub fn rotate_clockwise(self) -> Self {
+        self.rotate(T::zero(), T::one())
     }
 
-    /// Rotate the coordinate 90 degrees counter-clockwise. The anchor point is at the bottom left.
-    pub fn rotate_left(self) -> Self {
-        Self::new(-self.y, self.x)
+    /// Rotate the coordinate 90 degrees counter-clockwise in a right-handed coordinate system.
+    pub fn rotate_counterclockwise(self) -> Self {
+        self.rotate(T::zero(), T::one().neg())
     }
 
-    /// Rotate the coordinate 180 degrees. The anchor point is at the bottom left.
+    /// Rotate the coordinate 180 degrees in a right-handed coordinate system.
     pub fn rotate_180(self) -> Self {
-        Self::new(-self.x, -self.y)
+        self.rotate(T::one().neg(), T::zero())
+    }
+
+    fn rotate(self, cos_theta: T, sin_theta: T) -> Self {
+        Self::new(
+            self.x * cos_theta - self.y * sin_theta,
+            self.x * sin_theta + self.y * cos_theta,
+        )
     }
 
     /// Mirror the coordinate along the X axis. The anchor point is at the bottom left.
@@ -291,13 +298,19 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_rotate_right() {
-        assert_eq!(Coordinate::new(1, 2).rotate_right(), Coordinate::new(2, -1));
+    fn test_rotate_cw() {
+        assert_eq!(
+            Coordinate::new(1, 2).rotate_clockwise(),
+            Coordinate::new(-2, 1)
+        );
     }
 
     #[test]
-    fn test_rotate_left() {
-        assert_eq!(Coordinate::new(1, 2).rotate_left(), Coordinate::new(-2, 1));
+    fn test_rotate_ccw() {
+        assert_eq!(
+            Coordinate::new(1, 2).rotate_counterclockwise(),
+            Coordinate::new(2, -1)
+        );
     }
 
     #[test]
