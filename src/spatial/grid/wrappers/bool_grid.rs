@@ -3,7 +3,7 @@ use std::{
     ops::{Deref, DerefMut},
 };
 
-use super::Grid2D;
+use crate::spatial::grid::Grid2D;
 
 /// A grid of booleans
 ///
