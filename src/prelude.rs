@@ -2,9 +2,6 @@
 pub use ahash::AHashMap as HashMap;
 pub use ahash::AHashSet as HashSet;
 
-// bitvec
-pub use bitvec::prelude as bv;
-
 // indoc
 pub use indoc::indoc;
 
