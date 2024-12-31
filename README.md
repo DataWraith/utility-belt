@@ -22,7 +22,6 @@ In your Advent of Code projects, simply `use utility_belt::prelude::*;`.
 Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - [ahash](https://docs.rs/ahash) - fast HashMap and HashSet implementation
-- [bitvec](https://docs.rs/bitvec) - bit-vector implementation
 - [indoc](https://docs.rs/indoc) - exposes macros for convenient inline String formatting
 - [itertools](https://docs.rs/itertools) - various tools for working with iterators
 - [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements
@@ -37,17 +36,13 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
   Comes with various ancillary structs (e.g. `Direction` and `Coordinate`) to
   make working with grids easier.
 
-- **BorderedGrid2D**, a wrapper around Grid2D that adds an implicit border
-  around the grid. This is sometimes useful, for example if you need to find
-  all tiles connected to the outside of the grid.
-
 - A few useful **math functions** (`gcd` and `lcm` for now), a few helpers for
   working with polynomials.
 
 - Functions for calculating **area** of a simple polygon and determining whether
   or not a **point is inside of a polygon**.
 
-- **Cumulative sum** helpers in 1D (`PrefixSum`, `FenwickTree`) and 2D (`SummedAreaTable`).
+- **Cumulative sum** helpers in 1D (`PrefixSum`) and 2D (`SummedAreaTable`).
 
   These allow you to quickly look up the sum of values in a given 1D range or 2D
   rectangle.
@@ -73,7 +68,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - Small **bitsets** for 8, 16, 32, 64 and 128 values
 
-- **Optimization algorithms** (Beam Search)
+- Beam Search
 
 - Solving equation systems using **Gauss-Jordan elimination**
 
