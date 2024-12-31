@@ -3,7 +3,7 @@ use std::{
     ops::{Add, AddAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
 
-use num::{traits::real::Real, Num};
+use num::{FromPrimitive, Num};
 
 use super::Direction;
 
@@ -25,17 +25,17 @@ where
         Self { x, y }
     }
 
-    /// Rotate the coordinate 90 degrees clockwise in a right-handed coordinate system.
+    /// Rotate the coordinate 90 degrees clockwise in a left-handed coordinate system.
     pub fn rotate_clockwise(self) -> Self {
         self.rotate_by(T::zero(), T::one())
     }
 
-    /// Rotate the coordinate 90 degrees counter-clockwise in a right-handed coordinate system.
+    /// Rotate the coordinate 90 degrees counter-clockwise in a left-handed coordinate system.
     pub fn rotate_counterclockwise(self) -> Self {
         self.rotate_by(T::zero(), T::one().neg())
     }
 
-    /// Rotate the coordinate 180 degrees in a right-handed coordinate system.
+    /// Rotate the coordinate 180 degrees in a left-handed coordinate system.
     pub fn rotate_180(self) -> Self {
         self.rotate_by(T::one().neg(), T::zero())
     }
@@ -136,11 +136,15 @@ where
 
 impl<T> Coordinate<T>
 where
-    T: Num + Real + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+    T: Num + FromPrimitive + Copy + PartialOrd + PartialEq + Neg<Output = T>,
 {
-    pub fn rotate(self, angle: T) -> Self {
+    pub fn rotate(self, angle: f64) -> Self {
         let angle = angle.to_radians();
-        self.rotate_by(angle.cos(), angle.sin())
+
+        let cos_theta: T = T::from_f64(angle.cos()).unwrap();
+        let sin_theta: T = T::from_f64(angle.sin()).unwrap();
+
+        self.rotate_by(cos_theta.into(), sin_theta.into())
     }
 }
 
@@ -326,13 +330,23 @@ mod tests {
 
     #[test]
     fn test_rotate_by_angle() {
-        let rotated = Coordinate::new(1.0, 0.0).rotate(90.0);
+        use num::Signed;
+
+        let rotated = Coordinate::new(1f64, 0.0).rotate(90.0);
         assert!(rotated.x.abs() < 1e-15);
         assert_eq!(rotated.y, 1.0);
 
-        let rotated = Coordinate::new(1.0, 0.0).rotate(45.0);
-        assert!((rotated.x - 0.7071067811865475).abs() < 1e-15);
-        assert!((rotated.y - 0.7071067811865475).abs() < 1e-15);
+        let rotated = Coordinate::new(1.0f64, 0.0).rotate(45.0);
+        assert!((rotated.x - 1.0 / std::f64::consts::SQRT_2).abs() < 1e-15);
+        assert!((rotated.y - 1.0 / std::f64::consts::SQRT_2).abs() < 1e-15);
+
+        let one = Rational64::from_integer(1);
+        let zero = Rational64::from_integer(0);
+        let sqrt2 = Rational64::from_f64(std::f64::consts::SQRT_2).unwrap();
+        let rotated = Coordinate::new(one, zero).rotate(45.0);
+
+        assert!((rotated.x - one / sqrt2).abs() < Rational64::from_f64(1e-15).unwrap());
+        assert!((rotated.y - one / sqrt2).abs() < Rational64::from_f64(1e-15).unwrap());
     }
 
     #[test]
