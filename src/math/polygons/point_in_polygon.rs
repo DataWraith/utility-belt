@@ -1,4 +1,8 @@
+use std::ops::Neg;
+
 use num::Num;
+
+use crate::prelude::Coordinate;
 
 /// Point in polygon algorithm
 ///
@@ -11,7 +15,10 @@ use num::Num;
 /// NOTE: This is a bit wonky with integer math. You may want to either increase
 ///       your number's resolution or resort to using floating point numbers.
 ///
-pub fn point_in_polygon<T: Num + Ord + Copy>(vertices: &[(T, T)], query: (T, T)) -> bool {
+pub fn point_in_polygon<T: Num + Ord + Copy + Neg<Output = T>>(
+    vertices: &[Coordinate<T>],
+    query: Coordinate<T>,
+) -> bool {
     let mut result = false;
 
     let n = vertices.len();
@@ -23,10 +30,10 @@ pub fn point_in_polygon<T: Num + Ord + Copy>(vertices: &[(T, T)], query: (T, T))
         let b = vertices[j];
 
         // Is a above the query point?
-        let first_is_above = a.1 > query.1;
+        let first_is_above = a.y > query.y;
 
         // Is b below the query point?
-        let second_is_below = b.1 <= query.1;
+        let second_is_below = b.y <= query.y;
 
         // If both are above or both are below, there can be no intersection.
         // So we need to check whether they are on opposite sides of the query
@@ -39,19 +46,19 @@ pub fn point_in_polygon<T: Num + Ord + Copy>(vertices: &[(T, T)], query: (T, T))
         // This calculates the x-coordinate of the intersection of the line
         // between a and b with the horizontal line through the query point.
         let horizontal_intersection_point = {
-            let horizontal_distance_ab = b.0 - a.0;
-            let vertical_distance_ab = b.1 - a.1;
+            let horizontal_distance_ab = b.x - a.x;
+            let vertical_distance_ab = b.y - a.y;
 
             if vertical_distance_ab == T::zero() {
-                a.0
+                a.x
             } else {
-                horizontal_distance_ab * (query.1 - a.1) / (vertical_distance_ab) + a.0
+                horizontal_distance_ab * (query.y - a.y) / (vertical_distance_ab) + a.x
             }
         };
 
         // If the intersection point is to the right of the query point, we
         // count it as an intersection.
-        if query.0 < horizontal_intersection_point {
+        if query.x < horizontal_intersection_point {
             result = !result;
         }
     }
@@ -90,7 +97,13 @@ mod tests {
     #[case((10, 5), false)]
     #[case((-10, 5), true)]
     fn test_point_in_polygon(#[case] query: (isize, isize), #[case] expected: bool) {
-        let vertices = vec![(-10, -10), (-10, 10), (10, 10), (10, -10)];
-        assert_eq!(point_in_polygon(&vertices, query), expected);
+        let vertices = vec![
+            (-10, -10).into(),
+            (-10, 10).into(),
+            (10, 10).into(),
+            (10, -10).into(),
+        ];
+
+        assert_eq!(point_in_polygon(&vertices, query.into()), expected);
     }
 }
