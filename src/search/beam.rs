@@ -1,22 +1,20 @@
 /// Beam search
-pub struct BeamSearch<N, C>
+pub struct BeamSearch<N, SC>
 where
-    N: Clone,
-    C: Ord + Clone,
+    SC: Ord + Clone,
 {
-    cur: Vec<(N, C)>,
-    next: Vec<(N, C)>,
+    cur: Vec<(N, SC)>,
+    next: Vec<(N, SC)>,
     beam_size: usize,
 }
 
-impl<N, C> BeamSearch<N, C>
+impl<N, SC> BeamSearch<N, SC>
 where
-    N: Clone,
-    C: Ord + Clone,
+    SC: Ord + Clone,
 {
     pub fn new<IN>(beam_size: usize, start: IN) -> Self
     where
-        IN: IntoIterator<Item = (N, C)>,
+        IN: IntoIterator<Item = (N, SC)>,
     {
         assert!(beam_size > 0, "Beam size cannot be 0.");
 
@@ -36,15 +34,15 @@ where
         self.beam_size
     }
 
-    pub fn next<S, IN>(&mut self, mut successors: S) -> Option<(N, C)>
+    pub fn next<S, IN>(&mut self, mut successors: S) -> Option<(N, SC)>
     where
         S: FnMut(&N) -> IN,
-        IN: IntoIterator<Item = (N, C)>,
+        IN: IntoIterator<Item = (N, SC)>,
     {
         loop {
             if let Some((cur, score)) = self.cur.pop() {
                 for next in successors(&cur) {
-                    self.next.push(next.clone());
+                    self.next.push(next);
                 }
 
                 return Some((cur, score));
