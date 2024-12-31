@@ -3,7 +3,7 @@ use std::{
     ops::{Add, AddAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
 
-use num::Num;
+use num::{traits::real::Real, Num};
 
 use super::Direction;
 
@@ -27,20 +27,21 @@ where
 
     /// Rotate the coordinate 90 degrees clockwise in a right-handed coordinate system.
     pub fn rotate_clockwise(self) -> Self {
-        self.rotate(T::zero(), T::one())
+        self.rotate_by(T::zero(), T::one())
     }
 
     /// Rotate the coordinate 90 degrees counter-clockwise in a right-handed coordinate system.
     pub fn rotate_counterclockwise(self) -> Self {
-        self.rotate(T::zero(), T::one().neg())
+        self.rotate_by(T::zero(), T::one().neg())
     }
 
     /// Rotate the coordinate 180 degrees in a right-handed coordinate system.
     pub fn rotate_180(self) -> Self {
-        self.rotate(T::one().neg(), T::zero())
+        self.rotate_by(T::one().neg(), T::zero())
     }
 
-    fn rotate(self, cos_theta: T, sin_theta: T) -> Self {
+    // https://en.wikipedia.org/wiki/Rotation_matrix
+    fn rotate_by(self, cos_theta: T, sin_theta: T) -> Self {
         Self::new(
             self.x * cos_theta - self.y * sin_theta,
             self.x * sin_theta + self.y * cos_theta,
@@ -130,6 +131,16 @@ where
         } else {
             Direction::Down
         }
+    }
+}
+
+impl<T> Coordinate<T>
+where
+    T: Num + Real + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    pub fn rotate(self, angle: T) -> Self {
+        let angle = angle.to_radians();
+        self.rotate_by(angle.cos(), angle.sin())
     }
 }
 
@@ -311,6 +322,17 @@ mod tests {
             Coordinate::new(1, 2).rotate_counterclockwise(),
             Coordinate::new(2, -1)
         );
+    }
+
+    #[test]
+    fn test_rotate_by_angle() {
+        let rotated = Coordinate::new(1.0, 0.0).rotate(90.0);
+        assert!(rotated.x.abs() < 1e-15);
+        assert_eq!(rotated.y, 1.0);
+
+        let rotated = Coordinate::new(1.0, 0.0).rotate(45.0);
+        assert!((rotated.x - 0.7071067811865475).abs() < 1e-15);
+        assert!((rotated.y - 0.7071067811865475).abs() < 1e-15);
     }
 
     #[test]
