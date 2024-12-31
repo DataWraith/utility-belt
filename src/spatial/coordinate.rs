@@ -17,136 +17,6 @@ where
     pub y: T,
 }
 
-impl<T> Display for Coordinate<T>
-where
-    T: Num + Copy + PartialOrd + PartialEq + Neg + Display,
-{
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "({}, {})", self.x, self.y)
-    }
-}
-
-impl<T> Debug for Coordinate<T>
-where
-    T: Num + Copy + PartialOrd + PartialEq + Neg + Debug,
-{
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "({:?}, {:?})", self.x, self.y)
-    }
-}
-
-impl Ord for Coordinate {
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        self.y.cmp(&other.y).then(self.x.cmp(&other.x))
-    }
-}
-
-impl PartialOrd for Coordinate {
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        Some(self.cmp(other))
-    }
-}
-
-impl<T> Add<Coordinate<T>> for Coordinate<T>
-where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
-{
-    type Output = Self;
-
-    fn add(self, other: Self) -> Self {
-        Self::new(self.x + other.x, self.y + other.y)
-    }
-}
-
-impl<T> Add<Direction> for Coordinate<T>
-where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
-{
-    type Output = Self;
-
-    fn add(self, dir: Direction) -> Self {
-        let offset: Coordinate<T> = dir.into();
-        self + offset
-    }
-}
-
-impl AddAssign<Coordinate> for Coordinate {
-    fn add_assign(&mut self, other: Self) {
-        *self = *self + other;
-    }
-}
-
-impl AddAssign<Direction> for Coordinate {
-    fn add_assign(&mut self, dir: Direction) {
-        let offset: Coordinate = dir.into();
-        *self += offset;
-    }
-}
-
-impl Sub<Coordinate> for Coordinate {
-    type Output = Self;
-
-    fn sub(self, other: Self) -> Self {
-        Self::new(self.x - other.x, self.y - other.y)
-    }
-}
-
-impl Sub<Direction> for Coordinate {
-    type Output = Self;
-
-    fn sub(self, dir: Direction) -> Self {
-        let offset: Coordinate = dir.into();
-        self - offset
-    }
-}
-
-impl SubAssign<Coordinate> for Coordinate {
-    fn sub_assign(&mut self, other: Self) {
-        *self = *self - other;
-    }
-}
-
-impl SubAssign<Direction> for Coordinate {
-    fn sub_assign(&mut self, dir: Direction) {
-        let offset: Coordinate = dir.into();
-        *self -= offset;
-    }
-}
-
-impl<T> Mul<T> for Coordinate<T>
-where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
-{
-    type Output = Self;
-
-    fn mul(self, other: T) -> Self {
-        Self::new(self.x * other, self.y * other)
-    }
-}
-
-impl<T> MulAssign<T> for Coordinate<T>
-where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
-{
-    fn mul_assign(&mut self, other: T) {
-        *self = *self * other;
-    }
-}
-
-impl Rem<Coordinate> for Coordinate {
-    type Output = Coordinate;
-
-    fn rem(self, other: Coordinate) -> Self {
-        Self::new(self.x.rem_euclid(other.x), self.y.rem_euclid(other.y))
-    }
-}
-
-impl RemAssign<Coordinate> for Coordinate {
-    fn rem_assign(&mut self, other: Coordinate) {
-        *self = *self % other;
-    }
-}
-
 impl<T> Coordinate<T>
 where
     T: Num + Copy + PartialOrd + PartialEq + Neg<Output = T>,
@@ -280,6 +150,136 @@ where
 {
     fn from((x, y): (T, T)) -> Self {
         Self::new(x, y)
+    }
+}
+
+impl<T> Display for Coordinate<T>
+where
+    T: Num + Copy + PartialOrd + PartialEq + Neg + Display,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.x, self.y)
+    }
+}
+
+impl<T> Debug for Coordinate<T>
+where
+    T: Num + Copy + PartialOrd + PartialEq + Neg + Debug,
+{
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({:?}, {:?})", self.x, self.y)
+    }
+}
+
+impl Ord for Coordinate {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.y.cmp(&other.y).then(self.x.cmp(&other.x))
+    }
+}
+
+impl PartialOrd for Coordinate {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl<T> Add<Coordinate<T>> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    type Output = Self;
+
+    fn add(self, other: Self) -> Self {
+        Self::new(self.x + other.x, self.y + other.y)
+    }
+}
+
+impl<T> Add<Direction> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    type Output = Self;
+
+    fn add(self, dir: Direction) -> Self {
+        let offset: Coordinate<T> = dir.into();
+        self + offset
+    }
+}
+
+impl AddAssign<Coordinate> for Coordinate {
+    fn add_assign(&mut self, other: Self) {
+        *self = *self + other;
+    }
+}
+
+impl AddAssign<Direction> for Coordinate {
+    fn add_assign(&mut self, dir: Direction) {
+        let offset: Coordinate = dir.into();
+        *self += offset;
+    }
+}
+
+impl Sub<Coordinate> for Coordinate {
+    type Output = Self;
+
+    fn sub(self, other: Self) -> Self {
+        Self::new(self.x - other.x, self.y - other.y)
+    }
+}
+
+impl Sub<Direction> for Coordinate {
+    type Output = Self;
+
+    fn sub(self, dir: Direction) -> Self {
+        let offset: Coordinate = dir.into();
+        self - offset
+    }
+}
+
+impl SubAssign<Coordinate> for Coordinate {
+    fn sub_assign(&mut self, other: Self) {
+        *self = *self - other;
+    }
+}
+
+impl SubAssign<Direction> for Coordinate {
+    fn sub_assign(&mut self, dir: Direction) {
+        let offset: Coordinate = dir.into();
+        *self -= offset;
+    }
+}
+
+impl<T> Mul<T> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    type Output = Self;
+
+    fn mul(self, other: T) -> Self {
+        Self::new(self.x * other, self.y * other)
+    }
+}
+
+impl<T> MulAssign<T> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    fn mul_assign(&mut self, other: T) {
+        *self = *self * other;
+    }
+}
+
+impl Rem<Coordinate> for Coordinate {
+    type Output = Coordinate;
+
+    fn rem(self, other: Coordinate) -> Self {
+        Self::new(self.x.rem_euclid(other.x), self.y.rem_euclid(other.y))
+    }
+}
+
+impl RemAssign<Coordinate> for Coordinate {
+    fn rem_assign(&mut self, other: Coordinate) {
+        *self = *self % other;
     }
 }
 
