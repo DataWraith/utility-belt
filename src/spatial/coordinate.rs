@@ -195,12 +195,12 @@ where
         self + dir
     }
 
-    /// Return a list of all neighboring coordinates (alias of `von_neumann_neighbors`)
+    /// Return a list of all neighboring coordinates (von Neumann Neighborhood)
     pub fn neighbors(self) -> impl Iterator<Item = Self> {
         Direction::cardinal().map(move |dir| self + dir)
     }
 
-    /// Return a list of all neighboring coordinates (von Neumann Neighborhood)
+    /// Return a list of all neighboring coordinates (alias of `neighbors`)
     pub fn von_neumann_neighbors(self) -> impl Iterator<Item = Self> {
         self.neighbors()
     }
