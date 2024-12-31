@@ -163,10 +163,10 @@ impl TryFrom<Direction> for char {
 
     fn try_from(dir: Direction) -> Result<Self, Self::Error> {
         match dir {
-            Direction::Up => Ok('U'),
-            Direction::Right => Ok('R'),
-            Direction::Down => Ok('D'),
-            Direction::Left => Ok('L'),
+            Direction::Up => Ok('^'),
+            Direction::Right => Ok('>'),
+            Direction::Down => Ok('v'),
+            Direction::Left => Ok('<'),
             _ => Err(()),
         }
     }
