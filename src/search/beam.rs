@@ -78,7 +78,7 @@ mod tests {
 
     #[test]
     fn test_beam_search() {
-        let mut seen = bv::bitarr![u32, bv::Lsb0; 0u8; 1];
+        let mut seen = bv::bitarr![u32, bv::Lsb0; 0; 1];
         seen.set(0, true);
 
         let mut successors = |n: &i32| {

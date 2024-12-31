@@ -67,7 +67,7 @@ mod tests {
     fn test_branch_and_bound() {
         let start = 0;
 
-        let mut seen = bv::bitarr![u8, bv::Lsb0; 0u8; 1];
+        let mut seen = bv::bitarr![u8, bv::Lsb0; 0; 1];
         seen.set(0, true);
 
         let successors = |n: &i32| {
