@@ -38,6 +38,16 @@ impl UnionFind {
         DisjointSetIndex(index)
     }
 
+    /// Adds `n` singleton sets to the data structure.
+    pub fn extend(&mut self, n: usize) -> Vec<DisjointSetIndex> {
+        let start = self.parents.len();
+
+        self.parents.extend(start..(start + n));
+        self.sizes.extend(std::iter::repeat(1).take(n));
+
+        (start..start + n).map(DisjointSetIndex).collect()
+    }
+
     /// Returns the size of the set that `x` belongs to.
     pub fn size_of_set(&mut self, x: DisjointSetIndex) -> Option<usize> {
         self.find(x).map(|r| self.sizes[r.0])
@@ -113,9 +123,12 @@ mod tests {
         let a = uf.add_set();
         let b = uf.add_set();
         let c = uf.add_set();
-        let d = uf.add_set();
-        let e = uf.add_set();
-        let f = uf.add_set();
+
+        let def = uf.extend(3);
+
+        let d = def[0];
+        let e = def[1];
+        let f = def[2];
 
         let _ = uf.union(a, b);
         let _ = uf.union(b, c);
