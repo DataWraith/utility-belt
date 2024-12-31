@@ -73,15 +73,13 @@ mod tests {
         let successors = |n: &i32| {
             let mut result = Vec::new();
 
-            dbg!(&seen);
-
             if *n < 5 {
-                if seen.get((n + 1) as usize).as_deref() == Some(&false) {
+                if !seen[(n + 1) as usize] {
                     seen.set((n + 1) as usize, true);
                     result.push(n + 1);
                 }
 
-                if *n != 0 && seen.get((n - 1) as usize).as_deref() == Some(&false) {
+                if *n != 0 && !seen[(n - 1) as usize] {
                     seen.set((n - 1) as usize, true);
                     result.push(n - 1);
                 }

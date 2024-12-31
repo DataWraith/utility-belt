@@ -82,7 +82,7 @@ mod tests {
         seen.set(0, true);
 
         let mut successors = |n: &i32| {
-            if n.abs() < 5 && seen.get((5 + n) as usize).as_deref() == Some(&false) {
+            if n.abs() < 5 && !seen[(5 + n) as usize] {
                 seen.set((5 + n) as usize, true);
                 vec![(n + 1, 2), (n - 1, 1)]
             } else {
