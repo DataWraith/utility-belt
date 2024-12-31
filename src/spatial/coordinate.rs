@@ -274,8 +274,11 @@ where
     }
 }
 
-impl From<(i32, i32)> for Coordinate {
-    fn from((x, y): (i32, i32)) -> Self {
+impl<T> From<(T, T)> for Coordinate<T>
+where
+    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+{
+    fn from((x, y): (T, T)) -> Self {
         Self::new(x, y)
     }
 }

@@ -1,4 +1,4 @@
-use crate::grid::Grid2D;
+use crate::prelude::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
     /// Rotates the grid 90 degrees clockwise

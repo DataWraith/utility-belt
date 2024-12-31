@@ -1,4 +1,4 @@
-use crate::grid::{Coordinate, Grid2D};
+use crate::prelude::{Coordinate, Grid2D};
 
 impl<T: Clone> Grid2D<T> {
     /// "Unfolds" the grid by mirroring it along the x-axis and concatenating the two halves.

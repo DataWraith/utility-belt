@@ -1,4 +1,4 @@
-use crate::{grid::Grid2D, prelude::Coordinate};
+use crate::prelude::{Coordinate, Grid2D};
 
 impl<T: Clone> Grid2D<T> {
     /// Replicates the grid `n` by `m` times and returns it as a new grid.

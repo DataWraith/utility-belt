@@ -5,7 +5,7 @@ use std::{
 
 use ndarray::{concatenate, Array2, ArrayView1, Axis};
 
-use super::Coordinate;
+use crate::prelude::Coordinate;
 
 /// A 2D grid backed by ndarray.
 #[derive(Clone, PartialEq, Eq, Hash)]

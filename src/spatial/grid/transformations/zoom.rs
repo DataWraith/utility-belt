@@ -1,4 +1,4 @@
-use crate::{grid::Grid2D, prelude::Coordinate};
+use crate::prelude::{Coordinate, Grid2D};
 
 impl<T: Clone> Grid2D<T> {
     /// 'Zooms' the grid by a factor of `factor` and returns it as a new grid.

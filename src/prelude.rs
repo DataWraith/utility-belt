@@ -5,9 +5,6 @@ pub use ahash::AHashSet as HashSet;
 // bitvec
 pub use bitvec::prelude as bv;
 
-// grid
-pub use crate::grid::*;
-
 // indoc
 pub use indoc::indoc;
 
@@ -36,6 +33,9 @@ pub use rstest::*;
 
 // search
 pub use crate::search::*;
+
+// Spatial stuff
+pub use crate::spatial::*;
 
 // VecDeque
 pub use std::collections::VecDeque;

@@ -1,6 +1,6 @@
 use ndarray::Axis;
 
-use crate::grid::Grid2D;
+use crate::prelude::Grid2D;
 
 impl<T: Clone> Grid2D<T> {
     /// Flips the grid horizontally
