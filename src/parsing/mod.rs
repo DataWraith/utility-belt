@@ -3,7 +3,7 @@ pub fn parse_ints(input: &str) -> Vec<i64> {
     input
         .split(|c: char| !c.is_ascii_digit() && c != '-')
         .filter(|w| !w.is_empty())
-        .map(|w| w.parse::<i64>().unwrap())
+        .filter_map(|w| w.parse::<i64>().ok())
         .collect()
 }
 
@@ -39,6 +39,7 @@ mod tests {
         assert_eq!(parse_ints("123x-456x-789"), vec![123, -456, -789]);
         assert_eq!(parse_ints("123   456\n789"), vec![123, 456, 789]);
         assert_eq!(parse_ints("123   456\n789\n\n"), vec![123, 456, 789]);
+        assert_eq!(parse_ints("12,34 -> 56,78"), vec![12, 34, 56, 78]);
     }
 
     #[test]
