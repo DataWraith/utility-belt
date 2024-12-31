@@ -9,8 +9,7 @@
 /// the current best solution, the candidate is discarded, because it cannot
 /// possibly be better than the current best solution.
 ///
-/// This version minimizes the cost of the solution. If you want to maximize the
-/// value of the returned state, you can simply wrap the cost in std::cmp::Reverse.
+/// This version minimizes the cost of the solution.
 ///
 /// # Arguments
 ///
