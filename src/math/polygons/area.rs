@@ -1,5 +1,3 @@
-use std::ops::Neg;
-
 use num::{Num, Signed};
 
 use crate::prelude::Coordinate;
