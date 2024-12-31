@@ -60,25 +60,26 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::misc::MiniBitset;
 
+    use crate::prelude::*;
 
     #[test]
     fn test_branch_and_bound() {
         let start = 0;
-        let mut seen = MiniBitset::<u8>::new(1);
+
+        let mut seen = Set::new(1u8);
 
         let successors = |n: &i32| {
             let mut result = Vec::new();
 
             if *n < 5 {
-                if !seen.contains((n + 1) as usize) {
-                    seen.insert((n + 1) as usize);
+                if !seen.test_bit((n + 1) as u32) {
+                    seen.set_bit((n + 1) as u32);
                     result.push(n + 1);
                 }
 
-                if *n != 0 && !seen.contains((n - 1) as usize) {
-                    seen.insert((n - 1) as usize);
+                if *n != 0 && !seen.test_bit((n - 1) as u32) {
+                    seen.set_bit((n - 1) as u32);
                     result.push(n - 1);
                 }
             }

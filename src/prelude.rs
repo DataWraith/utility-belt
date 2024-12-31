@@ -2,6 +2,10 @@
 pub use ahash::AHashMap as HashMap;
 pub use ahash::AHashSet as HashSet;
 
+// bitset
+pub use bittle::prelude::*;
+pub use bittle::Set;
+
 // indoc
 pub use indoc::indoc;
 

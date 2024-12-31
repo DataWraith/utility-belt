@@ -72,15 +72,15 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::misc::MiniBitset;
+    use crate::prelude::*;
 
     #[test]
     fn test_beam_search() {
-        let mut seen = MiniBitset::<u32>::default();
+        let mut seen = Set::new(0u32);
 
         let mut successors = |n: &i32| {
-            if n.abs() < 5 && !seen.contains((5 + n) as usize) {
-                seen.insert((5 + n) as usize);
+            if n.abs() < 5 && !seen.test_bit((5 + n) as u32) {
+                seen.set_bit((5 + n) as u32);
                 vec![(n + 1, 2), (n - 1, 1)]
             } else {
                 vec![]
