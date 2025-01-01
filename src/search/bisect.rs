@@ -1,3 +1,7 @@
+use std::ops::{Add, Sub};
+
+use num::Num;
+
 /// Binary search
 ///
 /// Finds the first index `i` in the range `[lo, hi)` such that `pred(i)` is
@@ -7,11 +11,15 @@
 /// Returns None if no such index exists (e.g. if `pred(lo)` is true or
 /// `pred(hi)` is false).
 ///
-pub fn bisect(lo: usize, hi: usize, pred: impl Fn(&usize) -> bool) -> Option<usize> {
+pub fn bisect<T: Num + Copy + PartialOrd + Add + Sub>(
+    lo: T,
+    hi: T,
+    pred: impl Fn(&T) -> bool,
+) -> Option<T> {
     if let Some((left, _right)) = bsearch(
         |lo, hi| {
-            if lo + 1 < *hi {
-                Some(lo + (hi - lo) / 2)
+            if *lo + T::one() < *hi {
+                Some(*lo + (*hi - *lo) / (T::one() + T::one()))
             } else {
                 None
             }
