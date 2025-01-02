@@ -1,7 +1,6 @@
 use ndarray::array;
-use num::{Num, Signed};
 
-use crate::prelude::Coordinate;
+use crate::prelude::{Coordinate, CoordinateNum};
 
 use super::gauss_jordan;
 
@@ -15,7 +14,7 @@ use super::gauss_jordan;
 /// * `a` - The first line, given as a pair of points.
 /// * `b` - The second line, given as a pair of points.
 /// * `eps` - A small value (e.g. 1e-9) to help with limited floating point precision.
-pub fn line_intersection_point<T: Num + Signed + PartialOrd + PartialEq + Copy>(
+pub fn line_intersection_point<T: CoordinateNum>(
     a: (Coordinate<T>, Coordinate<T>),
     b: (Coordinate<T>, Coordinate<T>),
     eps: T,

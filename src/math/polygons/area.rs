@@ -1,6 +1,4 @@
-use num::{Num, Signed};
-
-use crate::prelude::Coordinate;
+use crate::prelude::{Coordinate, CoordinateNum};
 
 /// Calculates the area of a simple polygon given its vertices.
 ///
@@ -36,9 +34,7 @@ use crate::prelude::Coordinate;
 /// The other solution to this problem involves moving the vertices to the
 /// corners of the squares, but that's a lot more work.
 ///
-pub fn polygon_area<T: Num + Copy + PartialEq + PartialOrd + Signed>(
-    vertices: &[Coordinate<T>],
-) -> T {
+pub fn polygon_area<T: CoordinateNum>(vertices: &[Coordinate<T>]) -> T {
     let mut area = T::zero();
 
     let num_vertices = vertices.len();

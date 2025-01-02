@@ -1,6 +1,4 @@
-use std::ops::Neg;
-
-use num::{Bounded, Num};
+use num::Bounded;
 
 pub mod coordinate;
 pub mod direction;
@@ -10,7 +8,7 @@ pub use coordinate::*;
 pub use direction::*;
 pub use grid::*;
 
-pub fn bounding_box<T: Num + Bounded + Copy + PartialOrd + PartialEq + Neg<Output = T>>(
+pub fn bounding_box<T: CoordinateNum + Bounded>(
     points: impl Iterator<Item = Coordinate<T>>,
 ) -> (Coordinate<T>, Coordinate<T>) {
     let (min_x, min_y, max_x, max_y) = points.fold(

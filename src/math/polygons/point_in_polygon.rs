@@ -1,8 +1,4 @@
-use std::ops::Neg;
-
-use num::Num;
-
-use crate::prelude::Coordinate;
+use crate::prelude::{Coordinate, CoordinateNum};
 
 /// Point in polygon algorithm
 ///
@@ -15,7 +11,7 @@ use crate::prelude::Coordinate;
 /// NOTE: This is a bit wonky with integer math. You may want to either increase
 ///       your number's resolution or resort to using floating point numbers.
 ///
-pub fn point_in_polygon<T: Num + Ord + Copy + Neg<Output = T>>(
+pub fn point_in_polygon<T: CoordinateNum>(
     vertices: &[Coordinate<T>],
     query: Coordinate<T>,
 ) -> bool {

@@ -3,15 +3,28 @@ use std::{
     ops::{Add, AddAssign, Mul, MulAssign, Neg, Rem, RemAssign, Sub, SubAssign},
 };
 
-use num::{FromPrimitive, Num};
+use num::{rational::Ratio, FromPrimitive, Num, Rational64, Signed};
 
 use super::Direction;
+
+pub trait CoordinateNum: Num + Copy + PartialOrd + PartialEq + Neg<Output = Self> + Signed {}
+
+impl CoordinateNum for i8 {}
+impl CoordinateNum for i16 {}
+impl CoordinateNum for i32 {}
+impl CoordinateNum for i64 {}
+impl CoordinateNum for isize {}
+impl CoordinateNum for i128 {}
+impl CoordinateNum for f32 {}
+impl CoordinateNum for f64 {}
+impl CoordinateNum for Rational64 {}
+impl CoordinateNum for Ratio<i128> {}
 
 /// A coordinate in a 2D grid.
 #[derive(Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Coordinate<T = i32>
 where
-    T: Num + Copy + PartialOrd + PartialEq + Neg,
+    T: CoordinateNum,
 {
     pub x: T,
     pub y: T,
@@ -19,7 +32,7 @@ where
 
 impl<T> Coordinate<T>
 where
-    T: Num + Copy + PartialOrd + PartialEq + Neg<Output = T>,
+    T: CoordinateNum,
 {
     pub fn new(x: T, y: T) -> Self {
         Self { x, y }
@@ -136,7 +149,7 @@ where
 
 impl<T> Coordinate<T>
 where
-    T: Num + FromPrimitive + Copy + PartialOrd + PartialEq + Neg<Output = T>,
+    T: CoordinateNum + FromPrimitive,
 {
     pub fn rotate(self, angle: f64) -> Self {
         let angle = angle.to_radians();
@@ -150,7 +163,7 @@ where
 
 impl<T> From<Direction> for Coordinate<T>
 where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+    T: CoordinateNum,
 {
     fn from(dir: Direction) -> Self {
         match dir {
@@ -168,7 +181,7 @@ where
 
 impl<T> From<(T, T)> for Coordinate<T>
 where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+    T: CoordinateNum,
 {
     fn from((x, y): (T, T)) -> Self {
         Self::new(x, y)
@@ -177,7 +190,7 @@ where
 
 impl<T> Display for Coordinate<T>
 where
-    T: Num + Copy + PartialOrd + PartialEq + Neg + Display,
+    T: CoordinateNum + Display,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "({}, {})", self.x, self.y)
@@ -186,7 +199,7 @@ where
 
 impl<T> Debug for Coordinate<T>
 where
-    T: Num + Copy + PartialOrd + PartialEq + Neg + Debug,
+    T: CoordinateNum + Debug,
 {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         write!(f, "({:?}, {:?})", self.x, self.y)
@@ -207,7 +220,7 @@ impl PartialOrd for Coordinate {
 
 impl<T> Add<Coordinate<T>> for Coordinate<T>
 where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+    T: CoordinateNum,
 {
     type Output = Self;
 
@@ -218,7 +231,7 @@ where
 
 impl<T> Add<Direction> for Coordinate<T>
 where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+    T: CoordinateNum,
 {
     type Output = Self;
 
@@ -273,7 +286,7 @@ impl SubAssign<Direction> for Coordinate {
 
 impl<T> Mul<T> for Coordinate<T>
 where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+    T: CoordinateNum,
 {
     type Output = Self;
 
@@ -284,7 +297,7 @@ where
 
 impl<T> MulAssign<T> for Coordinate<T>
 where
-    T: Num + Neg<Output = T> + Copy + PartialOrd + PartialEq,
+    T: CoordinateNum,
 {
     fn mul_assign(&mut self, other: T) {
         *self = *self * other;
