@@ -91,6 +91,45 @@ pub fn line_intersection_point<T: CoordinateNum>(
     Some(result)
 }
 
+/// Computes the intersection point of two line segments, if one exists.
+///
+/// # Arguments
+///
+/// * `a` - The first line segment, given as a pair of points.
+/// * `b` - The second line segment, given as a pair of points.
+/// * `eps` - A small value (e.g. 1e-9) to help with limited floating point precision.
+pub fn segment_intersection_point<T: CoordinateNum>(
+    a: (Coordinate<T>, Coordinate<T>),
+    b: (Coordinate<T>, Coordinate<T>),
+    eps: T,
+) -> Option<Coordinate<T>> {
+    // First check if the infinite lines intersect
+    let intersection = line_intersection_point(a, b, eps)?;
+
+    // Check if intersection point lies within both segments
+    let in_segment = |p: &Coordinate<T>, seg: &(Coordinate<T>, Coordinate<T>)| {
+        let (min_x, max_x) = if seg.0.x <= seg.1.x {
+            (seg.0.x, seg.1.x)
+        } else {
+            (seg.1.x, seg.0.x)
+        };
+
+        let (min_y, max_y) = if seg.0.y <= seg.1.y {
+            (seg.0.y, seg.1.y)
+        } else {
+            (seg.1.y, seg.0.y)
+        };
+
+        p.x >= min_x - eps && p.x <= max_x + eps && p.y >= min_y - eps && p.y <= max_y + eps
+    };
+
+    if in_segment(&intersection, &a) && in_segment(&intersection, &b) {
+        Some(intersection)
+    } else {
+        None
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -210,5 +249,38 @@ mod tests {
         let b = (Coordinate::new(x2, y2), Coordinate::new(x2 + 1, y2 - 1));
 
         assert!(line_intersection_point(a, b, Ratio::new(0i128, 1i128)).is_some());
+    }
+
+    #[test]
+    fn test_segment_intersection() {
+        // Segments that intersect
+        assert_eq!(
+            segment_intersection_point(
+                ((0., 0.).into(), (1., 1.).into()),
+                ((0., 1.).into(), (1., 0.).into()),
+                1e-9
+            ),
+            Some((0.5, 0.5).into())
+        );
+
+        // Segments that don't intersect (but their infinite lines would)
+        assert_eq!(
+            segment_intersection_point(
+                ((0., 0.).into(), (1., 1.).into()),
+                ((2., -1.).into(), (3., -2.).into()),
+                1e-9
+            ),
+            None
+        );
+
+        // Parallel segments
+        assert_eq!(
+            segment_intersection_point(
+                ((0., 0.).into(), (1., 1.).into()),
+                ((0., 1.).into(), (1., 2.).into()),
+                1e-9
+            ),
+            None
+        );
     }
 }
