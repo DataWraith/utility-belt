@@ -4,6 +4,7 @@ use super::Coordinate;
 
 /// An enum representing the eight directions in a grid
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Hash)]
+#[repr(u8)]
 pub enum Direction {
     #[default]
     Up = 0,
