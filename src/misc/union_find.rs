@@ -27,6 +27,14 @@ impl From<DisjointSetIndex> for usize {
 }
 
 impl UnionFind {
+    /// Creates a new UnionFind data structure with a given capacity.
+    pub fn with_capacity(capacity: usize) -> Self {
+        Self {
+            parents: Vec::with_capacity(capacity),
+            sizes: Vec::with_capacity(capacity),
+        }
+    }
+
     /// Adds a singleton set to the data structure and returns the index of the
     /// set.
     pub fn add_set(&mut self) -> DisjointSetIndex {
