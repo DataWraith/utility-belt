@@ -1,33 +1,40 @@
-// Parses all integers in the input string, regardless of other characters.
+use std::str::FromStr;
+
+/// A flexible parsing function that can handle any type implementing FromStr
+pub fn parse_values<T: FromStr>(input: &str, is_delimiter: impl Fn(char) -> bool) -> Vec<T> {
+    input
+        .split(is_delimiter)
+        .filter(|w| !w.is_empty())
+        .filter_map(|w| w.parse().ok())
+        .collect()
+}
+
 pub fn parse_ints(input: &str) -> Vec<i64> {
-    input
-        .split(|c: char| !c.is_ascii_digit() && c != '-')
-        .filter(|w| !w.is_empty())
-        .filter_map(|w| w.parse::<i64>().ok())
-        .collect()
+    parse_values(input, |c| !c.is_ascii_digit() && c != '-')
 }
 
-// Parses all unsigned integers in the input string, regardless of other characters.
 pub fn parse_uints(input: &str) -> Vec<u64> {
-    input
-        .split(|c: char| !c.is_ascii_digit())
-        .filter(|w| !w.is_empty())
-        .map(|w| w.parse::<u64>().unwrap())
-        .collect()
+    parse_values(input, |c| !c.is_ascii_digit())
 }
 
-// Parses all uppercase strings in the input string, regardless of other characters.
 pub fn parse_capitals(input: &str) -> Vec<String> {
-    input
-        .split(|c: char| !c.is_ascii_uppercase())
-        .filter(|w| !w.is_empty())
-        .map(|w| w.to_string())
-        .collect()
+    parse_values(input, |c| !c.is_ascii_uppercase())
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn test_parse_values() {
+        // Parse floats
+        let floats: Vec<f64> = parse_values("1.5 2.7 3.14", char::is_whitespace);
+        assert_eq!(floats, vec![1.5, 2.7, 3.14]);
+
+        // Parse words
+        let words: Vec<String> = parse_values::<String>("hello,world", |c| c == ',');
+        assert_eq!(words, vec!["hello", "world"]);
+    }
 
     #[test]
     fn test_parse_ints() {
