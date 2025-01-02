@@ -63,14 +63,10 @@ impl UnionFind {
 
     /// Returns the indices of all distinct sets.
     pub fn roots(&mut self) -> HashSet<DisjointSetIndex> {
-        let mut result = HashSet::default();
-
-        for p in self.parents.clone().into_iter() {
-            let root = self.find(DisjointSetIndex(p)).unwrap();
-            result.insert(root);
-        }
-
-        result
+        (0..self.parents.len())
+            .map(DisjointSetIndex)
+            .filter_map(|x| self.find(x))
+            .collect()
     }
 
     /// Returns the index of the set that `x` belongs to.
