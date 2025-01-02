@@ -1,5 +1,3 @@
-use std::ops::{Add, Sub};
-
 use num::Num;
 
 /// Binary search
@@ -11,11 +9,7 @@ use num::Num;
 /// Returns None if no such index exists (e.g. if `pred(lo)` is true or
 /// `pred(hi)` is false).
 ///
-pub fn bisect<T: Num + Copy + PartialOrd + Add + Sub>(
-    lo: T,
-    hi: T,
-    pred: impl Fn(&T) -> bool,
-) -> Option<T> {
+pub fn bisect<T: Num + Copy + PartialOrd>(lo: T, hi: T, pred: impl Fn(&T) -> bool) -> Option<T> {
     if let Some((left, _right)) = bsearch(
         |lo, hi| {
             if *lo + T::one() < *hi {
