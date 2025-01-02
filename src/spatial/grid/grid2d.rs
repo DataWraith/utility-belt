@@ -123,7 +123,7 @@ impl<T: Clone> Grid2D<T> {
 
     /// Returns whether a given coordinate is within the grid
     #[must_use]
-    pub fn contains(&self, coord: Coordinate) -> bool {
+    pub fn contains_coord(&self, coord: Coordinate) -> bool {
         coord.x >= 0 && coord.y >= 0 && coord.x < self.width && coord.y < self.height
     }
 
@@ -131,7 +131,7 @@ impl<T: Clone> Grid2D<T> {
     /// `None`.
     #[must_use]
     pub fn get(&self, coord: Coordinate) -> Option<&T> {
-        if !self.contains(coord) {
+        if !self.contains_coord(coord) {
             return None;
         }
 
@@ -152,7 +152,7 @@ impl<T: Clone> Grid2D<T> {
     /// or `None` if the coordinate is out-of-bounds.
     #[must_use]
     pub fn get_mut(&mut self, coord: Coordinate) -> Option<&mut T> {
-        if !self.contains(coord) {
+        if !self.contains_coord(coord) {
             return None;
         }
 
@@ -172,7 +172,7 @@ impl<T: Clone> Grid2D<T> {
     /// Sets the value at the given coordinate. Out-of-bounds accesses are
     /// ignored.
     pub fn set(&mut self, coord: Coordinate, value: T) -> Option<T> {
-        if !self.contains(coord) {
+        if !self.contains_coord(coord) {
             return None;
         }
 
@@ -638,7 +638,7 @@ mod tests {
         assert_eq!(padded.width(), 9);
         assert_eq!(padded.height(), 9);
 
-        assert!(!padded.contains(Coordinate::new(-1, -1)));
+        assert!(!padded.contains_coord(Coordinate::new(-1, -1)));
         assert_eq!(padded[Coordinate::new(0, 0)], 0);
         assert_eq!(padded[Coordinate::new(1, 1)], 0);
         assert_eq!(padded[Coordinate::new(2, 2)], 0);
@@ -648,6 +648,6 @@ mod tests {
         assert_eq!(padded[Coordinate::new(6, 6)], 0);
         assert_eq!(padded[Coordinate::new(7, 7)], 0);
         assert_eq!(padded[Coordinate::new(8, 8)], 0);
-        assert!(!padded.contains(Coordinate::new(9, 9)));
+        assert!(!padded.contains_coord(Coordinate::new(9, 9)));
     }
 }
