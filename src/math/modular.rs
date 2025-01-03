@@ -1,24 +1,21 @@
 use num::integer::gcd;
 use num::{Integer, Unsigned};
 
-pub use num_modular::{ModularCoreOps, ModularInteger, ModularPow, ModularUnaryOps};
+use num_modular::ModularRefOps;
 
 pub struct Congruence<T: Integer + Unsigned> {
     pub a: T,
     pub m: T,
 }
 
-pub fn chinese_remainder_theorem<
-    'a,
-    T: Clone + Integer + Unsigned + ModularUnaryOps<&'a T, Output = T>,
->(
-    congruences: &'a [Congruence<T>],
+pub fn chinese_remainder_theorem<T: Clone + Integer + Unsigned + ModularRefOps>(
+    congruences: &[Congruence<T>],
 ) -> Option<T> {
     let mut n = T::one();
 
     for congruence in congruences.iter() {
         assert!(congruence.m != T::zero());
-        debug_assert!(gcd(n.clone(), congruence.m.clone()) == T::one());
+        assert!(gcd(n.clone(), congruence.m.clone()) == T::one());
 
         n = n * congruence.m.clone();
     }
