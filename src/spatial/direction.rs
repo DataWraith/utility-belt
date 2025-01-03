@@ -196,6 +196,12 @@ impl From<Direction> for u8 {
     }
 }
 
+impl From<Direction> for u32 {
+    fn from(dir: Direction) -> Self {
+        dir as u32
+    }
+}
+
 impl From<Direction> for usize {
     fn from(dir: Direction) -> Self {
         dir as usize
