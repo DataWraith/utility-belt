@@ -1,21 +1,23 @@
 /// Beam search
-pub struct BeamSearch<N, SC>
+pub struct BeamSearch<N, SC, S, IN>
 where
     SC: Ord + Clone,
+    S: FnMut(&N) -> IN,
+    IN: IntoIterator<Item = (N, SC)>,
 {
+    beam_size: usize,
+    successors: S,
     cur: Vec<(N, SC)>,
     next: Vec<(N, SC)>,
-    beam_size: usize,
 }
 
-impl<N, SC> BeamSearch<N, SC>
+impl<N, SC, S, IN> BeamSearch<N, SC, S, IN>
 where
     SC: Ord + Clone,
+    S: FnMut(&N) -> IN,
+    IN: IntoIterator<Item = (N, SC)>,
 {
-    pub fn new<IN>(beam_size: usize, start: IN) -> Self
-    where
-        IN: IntoIterator<Item = (N, SC)>,
-    {
+    pub fn new(beam_size: usize, start: IN, successors: S) -> Self {
         assert!(beam_size > 0, "Beam size cannot be 0.");
 
         let mut cur = Vec::with_capacity(beam_size);
@@ -27,21 +29,27 @@ where
             cur,
             next,
             beam_size,
+            successors,
         }
     }
 
     pub fn beam_size(&self) -> usize {
         self.beam_size
     }
+}
 
-    pub fn next<S, IN>(&mut self, mut successors: S) -> Option<(N, SC)>
-    where
-        S: FnMut(&N) -> IN,
-        IN: IntoIterator<Item = (N, SC)>,
-    {
+impl<N, SC, S, IN> Iterator for BeamSearch<N, SC, S, IN>
+where
+    SC: Ord + Clone,
+    S: FnMut(&N) -> IN,
+    IN: IntoIterator<Item = (N, SC)>,
+{
+    type Item = (N, SC);
+
+    fn next(&mut self) -> Option<(N, SC)> {
         loop {
             if let Some((cur, score)) = self.cur.pop() {
-                for next in successors(&cur) {
+                for next in (self.successors)(&cur) {
                     self.next.push(next);
                 }
 
@@ -78,7 +86,7 @@ mod tests {
     fn test_beam_search() {
         let mut seen = Set::new(0u32);
 
-        let mut successors = |n: &i32| {
+        let successors = |n: &i32| {
             if n.abs() < 5 && !seen.test_bit((5 + n) as u32) {
                 seen.set_bit((5 + n) as u32);
                 vec![(n + 1, 2), (n - 1, 1)]
@@ -87,10 +95,10 @@ mod tests {
             }
         };
 
-        let mut bs = BeamSearch::new(1, vec![(0, 0)]);
+        let mut bs = BeamSearch::new(1, vec![(0, 0)], successors);
         let mut visited_states = Vec::new();
 
-        while let Some((cur, _score)) = bs.next(&mut successors) {
+        while let Some((cur, _score)) = bs.next() {
             visited_states.push(cur);
         }
 
