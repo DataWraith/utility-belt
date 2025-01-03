@@ -159,6 +159,14 @@ impl TryFrom<usize> for Direction {
     }
 }
 
+impl TryFrom<u32> for Direction {
+    type Error = ();
+
+    fn try_from(c: u32) -> Result<Self, Self::Error> {
+        TryFrom::try_from(c as u8)
+    }
+}
+
 impl TryFrom<Direction> for char {
     type Error = ();
 
