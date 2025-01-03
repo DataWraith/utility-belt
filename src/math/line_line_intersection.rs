@@ -74,7 +74,7 @@ pub fn line_intersection_point<T: CoordinateNum>(
     // => -m * x + y = b
     //
     let matrix = array![
-        //   -m * x     +   1*y    =    b
+        // -m*x  +  1*y    =    b
         [-slope1, T::one(), intercept1],
         [-slope2, T::one(), intercept2],
     ];
