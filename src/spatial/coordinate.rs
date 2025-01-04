@@ -81,6 +81,24 @@ where
         Self::new(self.x, height - T::one() - self.y)
     }
 
+    /// Folds the coordinate upwards along the y-axis.
+    pub fn fold_up_along_row(self, row: T) -> Self {
+        if self.y < row {
+            self
+        } else {
+            Self::new(self.x, row + row - self.y)
+        }
+    }
+
+    /// Folds the coordinate left along the x-axis.
+    pub fn fold_left_along_column(self, column: T) -> Self {
+        if self.x < column {
+            self
+        } else {
+            Self::new(column + column - self.x, self.y)
+        }
+    }
+
     /// Returns neighboring Coordinate in the given direction
     pub fn neighbor(self, dir: Direction) -> Self {
         self + dir
@@ -381,6 +399,36 @@ mod tests {
         assert_eq!(
             Coordinate::from(input).mirror_x_wrap(3),
             Coordinate::from(expected)
+        );
+    }
+
+    #[test]
+    fn test_fold_up_along_row() {
+        // Case 1: y is less than row
+        assert_eq!(
+            Coordinate::new(1, 2).fold_up_along_row(3),
+            Coordinate::new(1, 2)
+        );
+
+        // Case 2: y is greater than row
+        assert_eq!(
+            Coordinate::new(1, 4).fold_up_along_row(3),
+            Coordinate::new(1, 2 * 3 - 4)
+        );
+    }
+
+    #[test]
+    fn test_fold_left_along_column() {
+        // Case 1: x is less than column
+        assert_eq!(
+            Coordinate::new(1, 2).fold_left_along_column(3),
+            Coordinate::new(1, 2)
+        );
+
+        // Case 2: x is greater than column
+        assert_eq!(
+            Coordinate::new(3, 2).fold_left_along_column(1),
+            Coordinate::new(2 * 1 - 3, 2)
         );
     }
 
