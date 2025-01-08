@@ -28,10 +28,6 @@ pub use crate::optimization::*;
 // parsing
 pub use crate::parsing::*;
 
-// rstest
-pub use rstest;
-pub use rstest::*;
-
 // search
 pub use crate::search::*;
 
