@@ -23,6 +23,7 @@ Most of the heavy-lifting is done by the other libraries this crate re-exports:
 
 - [ahash](https://docs.rs/ahash) - fast HashMap and HashSet implementation
 - [bittle](https://docs.rs/bittle) - zero-cost bitsets over native Rust types
+- [counter](https://docs.rs/counter) - count elements in iterables
 - [indoc](https://docs.rs/indoc) - exposes macros for convenient inline String formatting
 - [itertools](https://docs.rs/itertools) - various tools for working with iterators
 - [ndarray](https://docs.rs/ndarray) - n-dimensional container for general elements

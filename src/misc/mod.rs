@@ -1,10 +1,9 @@
 pub mod union_find;
 pub use union_find::*;
 
-pub mod counter;
-pub use counter::*;
-
 use std::hash::Hash;
+
+use counter::Counter;
 
 use crate::prelude::HashMap;
 
@@ -37,7 +36,7 @@ where
 
     for (state, count) in states.iter() {
         for new_state in transition(state, &input) {
-            new_states.add_many(new_state, *count);
+            new_states.entry(new_state).and_modify(|s| *s += count).or_insert(*count);
         }
     }
 
@@ -134,12 +133,12 @@ mod tests {
 
     #[test]
     fn test_state_iteration() {
-        let states = Counter::from([0]);
+        let states = [0i32].into_iter().collect::<Counter<i32>>();
 
         let result = state_iteration(&states, |n, _| vec![n + 1, n + 1, n + 2], 0);
 
-        assert_eq!(result[1138], 0);
-        assert_eq!(result[1], 2);
-        assert_eq!(result[2], 1);
+        assert_eq!(result[&1138], 0);
+        assert_eq!(result[&1], 2);
+        assert_eq!(result[&2], 1);
     }
 }

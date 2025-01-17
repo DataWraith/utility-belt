@@ -6,6 +6,9 @@ pub use ahash::AHashSet as HashSet;
 pub use bittle::prelude::*;
 pub use bittle::Set;
 
+// counter
+pub use counter::Counter;
+
 // indoc
 pub use indoc::indoc;
 
